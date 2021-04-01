@@ -1,0 +1,145 @@
+; = uneval BLOCK
+	: IF ? __arg TRUE  : "T"
+	: IF ? __arg FALSE : "F"
+	: IF ? __arg NULL  : "N"
+	: IF ! ? __arg + "" __arg
+		: IF < __arg 0
+			: + "-0 " - 0 __arg
+			: + "" __arg
+	# it's a string
+	; = __repr_ret '+"'
+	; WHILE LENGTH __arg
+		; = __repr_chr GET __arg 0 1
+		; = __arg SET __arg 0 1 ""
+		: = __repr_ret + __repr_ret
+			IF ? '"' __repr_chr
+				: + '"++' + "'" + '"' + "'"'"'
+				: __repr_chr
+	: + __repr_ret '"""'
+
+; = __arg '"abc"'
+; OUTPUT CALL uneval
+; Q 0
+
+; = __array_next_array_index 0
+; = __array_next_name BLOCK
+	: + "__array_i" = __array_next_array_index + 1 __array_next_array_index
+
+
+# Get an empty array.
+# ARGUMENTS: none
+# CLOBBERS: nothing
+; = empty BLOCK
+	; = __array_name CALL __array_next_name
+	; EVAL ++ '=' __array_name ' NULL'
+	: __array_name
+
+# A list that starts with `__data`, followed by `__list`.
+# ARGUMENTS
+#    - `__data`: the element
+#    - `__list`: the remainder of the list
+# CLOBBERS:
+#    - `__arg`
+; = cons BLOCK
+	; = __array_name CALL __array_next_name
+	; EVAL ++++ '=' __array_name '"' __array_name '"'
+	; = __arg __data
+	; EVAL +++ '=' __array_name '_d ' CALL uneval
+	; EVAL +++ '=' __array_name '_n ' __list
+	: __array_name
+
+; = car BLOCK
+	: EVAL ++ '' __list '_d'
+
+; = cdr BLOCK
+	: EVAL ++ '' __list '_n'
+
+; = id BLOCK __data
+
+# ARGUMENTS
+#    __list: the input list to iterate over
+#    __func: the function to call for each element (__data)
+# RETURNS
+#    NULL
+; = foreach BLOCK
+	; WHILE ! (? NULL __list)
+		; = __data CALL car
+		; = __list CALL cdr
+		: CALL __func
+	: NULL
+
+; = select BLOCK
+	; = __select_list __list
+	; = __select_ret CALL empty
+	; = __select_fn_arg __func
+	; = __func __select_fn
+	; CALL foreach
+	: __select_ret
+; = __select_fn BLOCK
+	: IF CALL __select_fn_arg
+		; = __select_fn_list __list
+		; = __list __select_ret
+		; = __select_ret CALL cons
+		: = __list __select_fn_list
+		: NULL
+
+; = map BLOCK
+	; = __map_list __list
+	; = __map_ret CALL empty
+	; = __map_fn_arg __func
+	; = __func __map_fn
+	; CALL foreach
+	: __map_ret
+
+; = __map_fn BLOCK
+	; = __map_fn_list __list
+	; = __list __map_ret
+	; = __map_ret CALL cons
+	: = __list __map_fn_list
+
+
+; = __sep " "
+; = join BLOCK
+	; = __is_first TRUE
+	; = __ret ""
+	; = __func __join_fn
+	; CALL foreach
+	: __ret
+; = __join_fn BLOCK
+	; IF __is_first
+		: = __is_first FALSE
+		: = __ret + __ret __sep
+	: = __ret + __ret __data
+
+; EVAL SYSTEM "cat list.kn" # import list programming lol
+
+# Construct the list
+; = __list CALL empty
+	; = __data 3
+	; = __list CALL cons
+	; = __data 2
+	; = __list CALL cons
+	; = __data 1
+	; = __list CALL cons
+	; = __data 0
+	; = __list CALL cons
+	; = __data - 0 1
+; = list CALL cons
+
+# Print out the original list
+; = __list list
+; OUTPUT + 'list(1) = ' CALL join # => list(1) = -1 0 1 2 3
+
+# Select elements that are even.
+; = __list list
+; = __func BLOCK % __data 2
+; = __list CALL select
+# reverse it because `select` reverses it.
+; = __func id
+; = __list CALL map
+
+# And print them.
+: OUTPUT + 'list(2) = ' CALL join # => list(2) = -1 1 3
+
+
+

@@ -1,0 +1,13 @@
+; OUTPUT "Maximum number? \"
+; = max + 0 PROMPT
+; = secret + 1 (% RANDOM max)
+; = guess (= guesses 0)
+; WHILE (! ? guess secret) {
+	; OUTPUT ++ "Guess a number from 1-" max "\"
+	; = guess + 0 PROMPT
+	; = guesses + guesses 1
+	: OUTPUT (
+		IF (< guess secret) "too low!"
+		IF (> guess secret) "too high!" "perfect!")
+}
+: OUTPUT ++ "It took you " guesses " guesses"
