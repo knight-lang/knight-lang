@@ -10,23 +10,23 @@ The following is the list of all languages that I've written it in. All in-progr
 
 | Language | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
 | -------- |:---------------------:|:----------:|:-----------------:|:-----:| ----- |
-| [AWK](shell/knight.awk) | X | X | X | X | My AWK interpreter segfaults randomly, but after running each test 100x, they all passed. |
-| [Assembly (x86)](../asm/asm) |   |   |   | X | The parser is completed.|
-| [C](c) | X | X | X | X | Fully functional; Probably the best documented code. |
-| [C++](cpp) | X | X | X | X | Works with C++17; It could use a facelift though, as I used a bit too much dynamic dispatch. |
-| [C#](csharp) | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
-| [Haskell](haskell) |   | ish | X | X | Works for an older spec of Knight, needs to be updated. |
-| [JavaScript](javascript) | X | X | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
-| [Knight](knight.kn) |   |   | X | X | Yes, this is a Knight interpreter, written in Knight; It's yet to be tested for spec compliance, though. |
-| [Perl](perl) | X | X | X | X | Fully Functional on at least v5.18. |
-| [PHP](php) | X | X | X | X | Fully Functional, with type annotations. |
-| [POSIX-Compliant SH](shell/knight.sh) |   |   | X | X | Mostly works, but has some bug fixes that need to be done. It could definitely use some TL&C, though. |
-| [Prolog](../prolog/prolog) |   |   |   | X | The very beginnings of a Prolog implementation. |
-| [Python](python) | X | X | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
-| [Quest](../quest/quest) |   |    |   | X | An implementation in [my other programming language](https://github.com/sampersand/quest). |
-| [Raku](raku) | X | X | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
-| [Ruby](../ruby/ruby) | X |   | X | X | A hacky version currently exists; a more sophisticated one is being worked on. |
-| [Rust](../rust/rust) | X |   | X | X | Simple implementation without comments. It intentionally captures all UB, but eventually will have an efficient implementation. |
+| [AWK](https://github.com/knight-lang/shell/knight.awk) | X | X | X | X | My AWK interpreter segfaults randomly, but after running each test 100x, they all passed. |
+| [Assembly (x86)](https://github.com/knight-lang/asm) |   |   |   | X | The parser is completed.|
+| [C](https://github.com/knight-lang/c) | X | X | X | X | Fully functional; Probably the best documented code. |
+| [C++](https://github.com/knight-lang/cpp) | X | X | X | X | Works with C++17; It could use a facelift though, as I used a bit too much dynamic dispatch. |
+| [C#](https://github.com/knight-lang/csharp) | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
+| [Haskell](https://github.com/knight-lang/haskell) |   | ish | X | X | Works for an older spec of Knight, needs to be updated. |
+| [JavaScript](https://github.com/knight-lang/knight.js) | X | X | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
+| [Knight](https://github.com/knight-lang/knight/knight.kn) |   |   | X | X | Yes, this is a Knight interpreter, written in Knight; It's yet to be tested for spec compliance, though. |
+| [Perl](https://github.com/knight-lang/perl) | X | X | X | X | Fully Functional on at least v5.18. |
+| [PHP](https://github.com/knight-lang/php) | X | X | X | X | Fully Functional, with type annotations. |
+| [POSIX-Compliant SH](https://github.com/knight-lang/shell/knight.sh) |   |   | X | X | Mostly works, but has some bug fixes that need to be done. It could definitely use some TL&C, though. |
+| [Prolog](https://github.com/knight-lang/prolog) |   |   |   | X | The very beginnings of a Prolog implementation. |
+| [Python](https://github.com/knight-lang/python) | X | X | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
+| [Quest](https://github.com/knight-lang/quest) |   |    |   | X | An implementation in [my other programming language](https://github.com/sampersand/quest). |
+| [Raku](https://github.com/knight-lang/raku) | X | X | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
+| [Ruby](https://github.com/knight-lang/ruby) | X |   | X | X | A hacky version currently exists; a more sophisticated one is being worked on. |
+| [Rust](https://github.com/knight-lang/rust) | X |   | X | X | Simple implementation without comments. It intentionally captures all UB, but eventually will have an efficient implementation. |
 | Java |   |   |   |   | Planned; I know Java already, so this should be fairly simple. |
 | SML |   |   |   |   | Planned. I used this in college, and enjoyed it. |
 | Racket |   |   |   |   | Planned. I used this in college, and enjoyed it. |
@@ -40,7 +40,7 @@ Note that these are simply benchmarks of _my_ implementations of Knight, and not
 
 |  Language  |  Time   | `<implementation>` | Notes |
 | ---------- |--------:|--------------------|-------|
-| C          |   7.01s | `c/ast/knight`        | Compiled using `COMPUTED_GOTOS=1 make optimized`; See [c/ast/README.md](c/ast/README.md) for details. |
+| C          |   7.01s | `c/ast/knight`        | Compiled using `COMPUTED_GOTOS=1 make optimized`; See [https://github.com/knight-lang/c/ast/README.md](c/ast/README.md) for details. |
 | C#         |  13.75s | `csharp/bin/Release/netcoreapp2.1/<impl>/Knight` | |
 | C++        |  21.48s | `cpp/knight`       | Copiled using `make optimized` |
 | Rust       |  28.99s | `rust/target/release/knight` | Built with `cargo build --release` and the `reckless` flag. |
