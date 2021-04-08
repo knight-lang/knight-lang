@@ -51,14 +51,19 @@ describe '4. Function' do
 
 		describe '4.1.4 PROMPT' do
 			it 'should return a string without the \n or \r\n' do
-				return pass # TODO: prompt
 				old_stdin = $stdin
-				$stdin = StringIO.new("line one\nline two\r\nline three")
-				assert_equal "line one", eval("PROMPT")
-				assert_equal "line two", eval("PROMPT")
-				assert_equal "line three", eval("PROMPT")
-			ensure
-				$stdin = old_stdin
+				IO.pipe do |r,w|
+					w.write "line one\nline two\r\na\r\n\r\n\nline three"
+					$stdin = r
+					assert_equal 'line one', eval('PROMPT')
+					assert_equal 'line two', eval('PROMPT')
+					assert_equal 'a', eval('PROMPT')
+					assert_equal '', eval('PROMPT')
+					assert_equal '', eval('PROMPT')
+					assert_equal 'line three', eval('PROMPT')
+				ensure
+					$stdin = old_stdin
+				end
 			end
 		end
 
