@@ -19,7 +19,7 @@ module Kn::Test::Shared
 	def parse(expr)
 		case expr
 		when /\ANull\(\)\Z/ then :null
-		when /\AString\((.*?)\)\Z/m then p $1
+		when /\AString\((.*?)\)\Z/m then $1
 		when /\ABoolean\((true|false)\)\Z/ then $1 == 'true'
 		when /\ANumber\(((?:-(?!0\)))?\d+)\)\Z/ then $1.to_i # `-0` is invalid.
 		when /\AFunction\((.*?)\)\Z/m then Kn::Test::Function.new $1

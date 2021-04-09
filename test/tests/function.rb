@@ -84,6 +84,8 @@ describe '4. Function' do
 				assert_equal :null, eval(': NULL')
 				assert_equal "", eval(': ""')
 				assert_equal "a", eval(': "a"')
+				assert_runs { eval(': BLOCK QUIT 1') }
+				assert_runs { eval(': BLOCK a') }
 			end
 		end
 
