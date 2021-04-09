@@ -30,7 +30,7 @@ module Kn::Test::Shared
 
 	def execute(expr, raise_on_failure: true)
 		IO.pipe do |r, w|
-			unless system(*Array($executable_to_test), '-e', expr, out: w, in: $stdin, err: :close)
+			unless system(*Array($executable_to_test), '-e', expr, out: w, in: $stdin)#, err: :close)
 				raise InvalidExpression, expr if raise_on_failure
 			end
 

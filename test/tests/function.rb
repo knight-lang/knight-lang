@@ -36,13 +36,11 @@ describe '4. Function' do
 				assert_equal true, eval('TRUE')
 			end
 		end
-
 		describe '4.1.2 FALSE' do
 			it 'is false' do
 				assert_equal false, eval('FALSE')
 			end
 		end
-
 		describe '4.1.3 NULL' do
 			it 'is null' do
 				assert_equal :null, eval('NULL')
@@ -53,14 +51,17 @@ describe '4. Function' do
 			it 'should return a string without the \n or \r\n' do
 				old_stdin = $stdin
 				IO.pipe do |r,w|
-					w.write "line one\nline two\r\na\r\n\r\n\nline three"
+					w.write "line one\x0Aline two\x0D\x0Aa\x0D\x0A\x0D\x0A\x0Aline three"
+					w.close
 					$stdin = r
-					assert_equal 'line one', eval('PROMPT')
-					assert_equal 'line two', eval('PROMPT')
-					assert_equal 'a', eval('PROMPT')
-					assert_equal '', eval('PROMPT')
-					assert_equal '', eval('PROMPT')
-					assert_equal 'line three', eval('PROMPT')
+					assert_equal 'line one|line two|a|||line three|', eval(<<-EOS)
+						+ + PROMPT '|' # line one
+						+ + PROMPT '|' # line two
+						+ + PROMPT '|' # a
+						+ + PROMPT '|' # <blank1>
+						+ + PROMPT '|' # <blank2>
+					    + PROMPT '|' # line three
+					EOS
 				ensure
 					$stdin = old_stdin
 				end
@@ -371,4 +372,5 @@ describe '4. Function' do
 			# TODO: this
 		end
 	end
+
 end
