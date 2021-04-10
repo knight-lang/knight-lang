@@ -1,7 +1,7 @@
-describe '4. Function' do
+describe '4.1.2 FALSE' do
 	include Kn::Test::Spec
 
-	describe '4.1.2 FALSE' do
-		# TODO
+	it 'is false' do
+		assert_equal false, eval('FALSE')
 	end
 end

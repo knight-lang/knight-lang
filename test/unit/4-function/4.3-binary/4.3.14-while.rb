@@ -1,9 +1,6 @@
-describe '4. Function' do
+describe '4.3.14 WHILE' do
 	include Kn::Test::Spec
-
-	describe '4.3.14 WHILE' do
-		# TODO
-	end
+	# TODO
 end
 
 # describe '4.3.14 WHILE' do

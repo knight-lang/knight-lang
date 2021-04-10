@@ -1,7 +1,4 @@
-describe '4. Function' do
+describe '4.4.2 GET' do
 	include Kn::Test::Spec
-
-	describe '4.4.2 GET' do
-		# TODO
-	end
+	# TODO
 end

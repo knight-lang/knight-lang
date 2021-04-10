@@ -106,18 +106,35 @@ module Kn::Test::Spec
 		# Checks to see if overflow occurs on _any_ numeric operation.
 		:overflow,
 
-		# when a value 
+		# when a bad value is passed to a function
 		:invalid_values,
+
+		# When an undefined variable is accessed
+		:undefined_variables,
+
+		# For things that, while technically UB, are not really that easy to sanitize.
+		:strict_compliance
 	].freeze
 
 	$enabled_sanitizations ||= [
 		:zero_division,
 		:invalid_types,
-		:argument_count
+		:argument_count,
+		:undefined_variables
 	]
 
 	def it(description, when_testing: nil)
 		super(description) if testing?(*Array(when_testing))
+	end
+
+	def validate_required_arguments(func, *args)
+		it "requires exactly #{args.length} argument#{args.length == 1 ? '' : 's'}", when_testing: :argument_count do
+			args.length.pred.times do |n|
+				assert_fails { args[..n].join(' ') }
+			end
+
+			assert_runs { args.join(' ') }
+		end
 	end
 
 	def testing?(*value)

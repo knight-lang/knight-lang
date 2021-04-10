@@ -1,7 +1,7 @@
-describe '4. Function' do
+describe '4.1.3 NULL' do
 	include Kn::Test::Spec
 
-	describe '4.1.3 NULL' do
-		# TODO
+	it 'is null' do
+		assert_equal :null, eval('NULL')
 	end
 end

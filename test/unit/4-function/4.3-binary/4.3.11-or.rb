@@ -1,9 +1,6 @@
-describe '4. Function' do
+describe '4.3.11 |' do
 	include Kn::Test::Spec
-
-	describe '4.3.11 |' do
-		# TODO
-	end
+	# TODO
 end
 
 # describe '4.3.11 |' do

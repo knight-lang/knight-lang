@@ -1,7 +1,4 @@
-describe '4. Function' do
+describe '4.2.6 QUIT' do
 	include Kn::Test::Spec
-
-	describe '4.2.6 QUIT' do
-		# TODO
-	end
+	# TODO
 end

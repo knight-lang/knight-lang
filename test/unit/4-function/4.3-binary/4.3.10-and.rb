@@ -1,9 +1,6 @@
-describe '4. Function' do
+describe '4.3.10 &' do
 	include Kn::Test::Spec
-
-	describe '4.3.10 &' do
-		# TODO
-	end
+	# TODO
 end
 
 # it 'returns the lhs if its falsey' do
