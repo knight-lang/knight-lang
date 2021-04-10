@@ -57,6 +57,8 @@ In this document, some notation is used to describe what is required of implemen
 	4.4.2 [`GET`](#442-getstring-number-number)  
 
 	4.5.1 [`SUBSTITUTE`](#451-substitutestring-number-number-string)  
+5. [Command Line Arguments](#5-command-line-arguments)  
+6. [Optional Extensions](#6-extensions) 
 
 # 1 Syntax
 The language itself is inspired by Polish Notation (PN): Instead of `output(1 + 2 * 4)`, Knight has `OUTPUT + 1 * 2 4`.
@@ -513,30 +515,45 @@ If the ending index (ie `start+length`) is larger than the length of the string,
 
 For example, `SET "abcd" 1 2 "3"` would return the string `"a3d"`.
 
-# 5 Extensions
+# 5. Command Line Arguments
+If at all possible, knight implementations are expected to parse command line arguments.
+
+If no arguments are passed, the program should display a simple usage message (for example, `usage: knight (-e 'expr' | -f filename)`) and exit. Implementations may write this message to either stdout or stderr, and may exit with whatever status code they choose.
+
+If the first argument passed is `-e`, and there are exactly two arguments, the second argument shall be interpreted as Knight code and executed directly.
+
+If the first argument passed is `-f`, and there are exactly two arguments, the second argument shall be a filename. The file should be read, and then executed as Knight code. This option is equivalent to simply passing the entire file's contents to `-e`.
+
+Implementations are free to define additional flags and behaviours outside of these requirements. (For example, printing a usage message when the first argument is not recognized.) However, these are not required: Programs which are not passed exactly one of the three previous options are considered ill-formed.
+
+## Alternatives
+Some programming languages (such as AWK) are not able to be invoked with a simple `./knight -e 'OUTPUT "hi"'`. While not ideal, implementations may define alternative ways to pass arguments, such as AWK's `./knight.awk -- -e 'OUTPUT "hi'`.
+
+Some programming languages don't provide a way to access command line arguments at all, such as Knight itself. In this case, the program should read lines from stdin in place of command line arguments.
+
+# 6 Extensions
 This section describes possible extensions that Knight implementations could add. Because these are extensions, none of them are required to be compliant. They're simply ways to make Knight more ~~enjoyable~~ bearable to write in. 
 
-### 5.0.1 The `X` Function.
+### 6.0.1 The `X` Function.
 Note that the function `X` is explicitly reserved for extensions: Knight will never use `X` for function names, and implementations are free to use it as they wish. Note that since this is reserved for extensions, they're free to "overload" it. That is, you can have different functions that all start with `X`, eg, `X_OPENFILE`, `X_READFILE`, `X_CLOSEFILE`.
 
-
-## 5.1 `VALUE(string)`: Look up strings as variables
+## 6.1 `VALUE(string)`: Look up strings as variables
 This function would convert its argument to a string, then look it up as if it were a variable name. That is, it could be a replacement for `EVAL string`, when `string` is just a variable name.
 
-## 5.2 `~(number)`: Unary minus
+## 6.2 `~(number)`: Unary minus
 The `~` function could be used to implement unary minus. That is, `~ expression` would be the same as `- 0 expression`.
 
-## 5.3 Counting Parenthesis
+## 6.3 Counting Parenthesis
 Parenthesis in Knight are whitespace, and are used simply as a way to visually group things. However, as Knight programs are quite hard to debug, you could count parenthesis and ensure that parens match
 
-## 5.4 Handle undefined behaviour
+## 6.4 Handle undefined behaviour
 The Knight specs have a lot of undefined behaviour to leave a lot up to implementations. However, this means that writing Knight programs has a lot of potential pitfalls. As such, you may want to catch most forms of undefined behaviour and exit gracefully. (catching _all_ forms is a bit much, eg integer overflow.)
 
-## 5.5 `USE(string)`: Import other knight files
+## 6.5 `USE(string)`: Import other knight files
 Currently, to import files, you need to use the `` ` `` function: `` EVAL ` + "cat " filename ``. However, this is quite dangerous if `filename` has any shell characters in it. 
 
-## 5.6 Extensibility 
-### 5.6.1 Ability to register new, arbitrary native functions
-### 5.6.2 Ability to register new, arbitrary native types
+## 6.6 Extensibility 
+### 6.6.1 Ability to register new, arbitrary native functions
+### 6.6.2 Ability to register new, arbitrary native types
 (eg arrays, floats)
-### 5.6.3 Embedability (ie toggle "dangerous"/io commands.)
+### 6.6.3 Embedability (ie toggle "dangerous"/io commands.)
