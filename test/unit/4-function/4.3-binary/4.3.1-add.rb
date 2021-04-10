@@ -1,4 +1,6 @@
-describe '4. Function' do
+require_relative '../function-spec'
+
+section '4.', 'Function' do
 	include Kn::Test::Spec
 
 	describe '4.3.1 +' do
@@ -80,12 +82,6 @@ describe '4. Function' do
 			end
 		end
 
-		it 'requires exactly two arguments', when_testing: :argument_count do
-			assert_fails { eval('+') }
-			assert_fails { eval('+ 1') }
-			assert_fails { eval('+ "1"') }
-			assert_runs  { eval('+ 1 1') }
-			assert_runs  { eval('+ "1" 1') }
-		end
+		test_argument_count '+', '1', '2'
 	end
 end

@@ -1,4 +1,6 @@
-describe '4.2.6 QUIT' do
+require_relative '../function-spec'
+
+section '4.2.6', 'QUIT' do
 	include Kn::Test::Spec
 
 	def exit_code(expr)
@@ -30,10 +32,7 @@ describe '4.2.6 QUIT' do
 		assert_equal 0, exit_code('NULL')
 	end
 
-	it 'requires exactly one argument', when_testing: :argument_count do
-		assert_fails { eval('QUIT') }
-		assert_runs  { eval('QUIT 0') }
-	end
+	test_argument_count 'QUIT', '0'
 
 	it 'does not allow blocks as the first operand', when_testing: :strict_types do
 		assert_fails { eval('; = a 0 : QUIT BLOCK a') }

@@ -1,6 +1,10 @@
-describe '4.3.10 &' do
+require_relative '../function-spec'
+
+section '4.3.10', '&' do
 	include Kn::Test::Spec
 	# TODO
+
+	test_argument_count '&', '1', '2'
 end
 
 # it 'returns the lhs if its falsey' do

@@ -1,4 +1,6 @@
-describe '4.1.3 NULL' do
+require_relative '../function-spec'
+
+section '4.1.3', 'NULL' do
 	include Kn::Test::Spec
 
 	it 'is null' do

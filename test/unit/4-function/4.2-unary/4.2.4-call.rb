@@ -1,4 +1,6 @@
-describe '4.2.4 CALL' do
+require_relative '../function-spec'
+
+section '4.2.4', 'CALL' do
 	include Kn::Test::Spec
 
 	it 'should evaluate something returned by `BLOCK`' do
@@ -21,8 +23,5 @@ describe '4.2.4 CALL' do
 		assert_fails { eval('CALL NULL') }
 	end
 
-	it 'requires exactly one argument', when_testing: :argument_count do
-		assert_fails { eval('CALL') }
-		assert_runs  { eval('CALL BLOCK 1') }
-	end
+	test_argument_count 'CALL', 'BLOCK 1'
 end

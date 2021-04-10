@@ -1,4 +1,6 @@
-describe '4.2.5 `' do
+require_relative '../function-spec'
+
+section '4.2.5', '`' do
 	include Kn::Test::Spec
 
 	it 'should return the stdout of the subshell' do
@@ -23,10 +25,7 @@ describe '4.2.5 `' do
 		assert_fails { eval('` exit 1') } 
 	end
 
-	it 'requires exactly one argument', when_testing: :argument_count do
-		assert_fails { eval('`') }
-		assert_runs  { eval('` "exit 0"') }
-	end
+	test_argument_count '`', '"exit 0"'
 
 	it 'does not allow blocks as the first operand', when_testing: :strict_types do
 		assert_fails { eval('; = a "exit 0" : ` BLOCK a') }

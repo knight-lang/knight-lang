@@ -1,4 +1,6 @@
-describe '4.2.3 BLOCK' do
+require_relative '../function-spec'
+
+section '4.2.3', 'BLOCK' do
 	include Kn::Test::Spec
 
 	it 'should not evaluate its argument' do
@@ -25,10 +27,7 @@ describe '4.2.3 BLOCK' do
 		assert_equal 3, eval('; = bar BLOCK + 4 foo ; = foo 3 : CALL bar')
 	end
 
-	it 'requires exactly one argument', when_testing: :argument_count do
-		assert_fails { eval('BLOCK') }
-		assert_runs  { eval('BLOCK 1') }
-	end
+	test_argument_count 'BLOCK', '1'
 
 	# TODO: is `BLOCK BLOCK` valid?
 end

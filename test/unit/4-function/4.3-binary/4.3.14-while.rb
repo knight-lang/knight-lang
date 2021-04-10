@@ -1,6 +1,9 @@
-describe '4.3.14 WHILE' do
+require_relative '../function-spec'
+
+section '4.3.14', 'WHILE' do
 	include Kn::Test::Spec
 	# TODO
+	test_argument_count 'W', '0', '2'
 end
 
 # describe '4.3.14 WHILE' do

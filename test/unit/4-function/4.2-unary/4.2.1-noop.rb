@@ -1,6 +1,6 @@
-describe '4.2.1 :' do
-	include Kn::Test::Spec
+require_relative '../function-spec'
 
+section '4.2.1', ':' do
 	it 'simply returns its argument' do
 		assert_equal 4, eval(': 4')
 		assert_equal "hi", eval(': "hi"')
@@ -14,8 +14,5 @@ describe '4.2.1 :' do
 		assert_equal 5, eval('; = a 3 CALL : BLOCK + a 2')
 	end
 
-	it 'requires exactly one argument', when_testing: :argument_count do
-		assert_fails { eval(':') }
-		assert_runs  { eval(': 1') }
-	end
+	test_argument_count ':', '1'
 end

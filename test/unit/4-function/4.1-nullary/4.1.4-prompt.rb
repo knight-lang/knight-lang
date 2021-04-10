@@ -1,4 +1,6 @@
-describe '4.1.4 PROMPT' do
+require_relative '../function-spec'
+
+section '4.1.4', 'PROMPT' do
 	include Kn::Test::Spec
 
 	# it 'should return a string without'

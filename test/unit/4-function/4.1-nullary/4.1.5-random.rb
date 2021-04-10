@@ -1,4 +1,6 @@
-describe '4.1.5 RANDOM' do
+require_relative '../function-spec'
+
+section '4.1.5', 'RANDOM' do
 	include Kn::Test::Spec
 
 	it 'should not return negative numbers' do

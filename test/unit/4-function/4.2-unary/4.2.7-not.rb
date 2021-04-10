@@ -1,4 +1,6 @@
-describe '4.2.7 !' do
+require_relative '../function-spec'
+
+section '4.2.7', '!' do
 	include Kn::Test::Spec
 
 	it 'negates its argument' do
@@ -17,10 +19,7 @@ describe '4.2.7 !' do
 		assert_equal false, eval('! 1')
 	end
 
-	it 'requires exactly one argument', when_testing: :argument_count do
-		assert_fails { eval('!') }
-		assert_runs  { eval('! TRUE') }
-	end
+	test_argument_count '!', 'TRUE'
 
 	it 'does not allow blocks as the first operand', when_testing: :strict_types do
 		assert_fails { eval('; = a 0 : ! BLOCK a') }

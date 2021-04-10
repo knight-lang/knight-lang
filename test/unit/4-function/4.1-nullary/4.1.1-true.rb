@@ -1,4 +1,6 @@
-describe '4.1.1 TRUE' do
+require_relative '../function-spec'
+
+section '4.1.1', 'TRUE' do
 	include Kn::Test::Spec
 
 	it 'is true' do
