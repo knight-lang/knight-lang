@@ -78,8 +78,6 @@ Implementations are **required** to recognize the following characters as whites
 - All parentheses (`(`, `)`, `[`, `]`, `{`, `}`).
 (Because all functions have a fixed arity (see `Built-in Functions`), all forms of parentheses in Knight are considered whitespace.) Implementations may define other characters as whitespace if they wish---notably, this means that you may use regex's `\s` to strip away whitespace.
 
-Additionally, the `:` function is a no op, and as such may safely be considered whitespace as well.
-
 ## 1.2 Comments
 Comments in Knight start with `#` and go until a newline character (`\n`) is encountered, or the end of the file; everything after the `#` is ignored.
 
@@ -121,8 +119,6 @@ The list of required functions are as follows. Implementations may define additi
 - Arity `4`: `SUBSTITUTE`
 
 Short note on `TRUE`/`FALSE`/`NULL`: As they are functions that take no arguments, and should simply return a true, false, or null value, they can be instead interpreted as literals. That is, there's no functional difference between parsing `TRUE` as a function, and then executing that function and parsing `TRUE` as a boolean literal.
-
-Note that `:` is the "no-op" function, and can safely be considered a piece of whitespace.
 
 ### 1.5.1 Implementation-Defined Functions
 Implementations may define their own functions, as long as they start with an upper-case letter, or a symbol. 
@@ -291,6 +287,8 @@ Note that `RANDOM` _should_ return different numbers across subsequent calls and
 ### 4.2.1 `:(unchanged)`
 A no-op: Simply returns its value unchanged. 
 
+Note that `:` is the "no-op" function, and can (usually) be considered whitespace. (Technically, a program that is _only_ `+ 4 :` would be undefined, as it doesn't have any arguments for `:`. however, it'd be the same as `+ 4` being undefined as well.)
+
 ### 4.2.2 `EVAL(string)`
 This function takes a single string argument, which should be executed as if it where Knight source code. As such, the string should be valid Knight source code for your implementation. (ie a single expression, possibly with trailing tokens, depending on how the parser was impelmented.)
 
@@ -329,7 +327,14 @@ All other uses constitute undefined behaviour.
 ### 4.2.4 `CALL(<special>)`
 The only valid parameter to give to `CALL` is the return value of a `BLOCK`---any other value is considered undefined behaviour. 
 
-`CALL` will simply evaluate its argument, returning whatever the result of evaluating its argument is.
+`CALL` will simply evaluate its argument, as if its argument were defined (without the `BLOCK`) at the invocation sight of `CALL`:
+```
+; = foo BLOCK bar
+; = bar 3
+; OUTPUT CALL foo # => 3
+; = bar 4
+: OUTPUT CALL foo # => 4
+```
 
 ### 4.2.5 `` `(string) ``
 Runs the string as a shell command, returning the stdout of the subshell.
