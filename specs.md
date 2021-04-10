@@ -10,17 +10,18 @@ In this document, some notation is used to describe what is required of implemen
 
 1. [Syntax](#1-syntax)  
 	1.1 [Whitespace](#11-whitespace)  
-	1.2 [Comments](#12-comments)  
-	1.3 [Literals](#13-literals)  
-	1.4 [Variables](#14-variables)  
-	1.5 [Functions](#15-functions)  
+	1.2 [Comment](#12-comment)  
+	1.3 [Number](#13-number)  
+	1.4 [String](#14-string)  
+	1.5 [Variable](#15-variable)  
+	1.6 [Function](#16-function)  
 2. [Types](#2-types)  
 	2.1 [Number](#21-number)  
 	2.2 [String](#22-string)  
 	2.3 [Boolean](#23-boolean)  
 	2.4 [Null](#24-null)  
-3. [Variables](#3-variables)  
-4. [Functions](#4-functions)  
+3. [Variable](#3-variable)  
+4. [Function](#4-function)  
 	4.1.1 [`TRUE`](#411-true)  
 	4.1.2 [`FALSE`](#412-false)  
 	4.1.3 [`NULL`](#413-null)  
@@ -67,7 +68,7 @@ Knight does not have a distinction between statements and expressions: Every fun
 
 All characters other than those mentioned in this document are considered invalid within Knight, both within source code and strings. Notably, the NUL character (`\0`) is not permissible within Knight strings, and can be used as a deliminator within implementations.
 
-Each Knight program consists of a single expression---such as `OUTPUT 3` or `; (= a 4) : OUTPUT(+ "a=" a)`. Any additional tokens after this first expression (ie anything other than [Whitespace](#11-whitespace) and [Comments](1.2)) is undefined behaviour.
+Each Knight program consists of a single expression---such as `OUTPUT 3` or `; (= a 4) : OUTPUT(+ "a=" a)`. Any additional tokens after this first expression (ie anything other than [Whitespace](#11-whitespace) and [Comment](#12-comment)) is undefined behaviour.
 
 ## 1.1 Whitespace
 Implementations are **required** to recognize the following characters as whitespace:
@@ -76,18 +77,25 @@ Implementations are **required** to recognize the following characters as whites
 - Carriage return (`0x0d`, ie `\r`)
 - Space (`0x20`, ie a space---` `)
 - All parentheses (`(`, `)`, `[`, `]`, `{`, `}`).
-(Because all functions have a fixed arity (see `Built-in Functions`), all forms of parentheses in Knight are considered whitespace.) Implementations may define other characters as whitespace if they wish---notably, this means that you may use regex's `\s` to strip away whitespace.
+(Because all functions have a fixed arity (see [4. Function](#4-function)), all forms of parentheses in Knight are considered whitespace.) Implementations may define other characters as whitespace if they wish---notably, this means that you may use regex's `\s` to strip away whitespace.
 
+<<<<<<< HEAD
 ## 1.2 Comments
+=======
+Additionally, the `:` function is a no op, and as such may safely be considered whitespace as well.
+
+## 1.2 Comment
+>>>>>>> master
 Comments in Knight start with `#` and go until a newline character (`\n`) is encountered, or the end of the file; everything after the `#` is ignored.
 
 There are no multiline or embedded comments in Knight.
 
-## 1.3 Literals
-In Knight, there are two literals: Numbers and Strings.
-
+## 1.3 Number
 Number literals are simply a sequence of ASCII digits (ie `0` (`0x30`) through `9` (`0x39`)). Leading `0`s do not indicate octal numbers (eg, `011` is the number eleven, not nine). No other bases are supported, and only integral numbers are allowed.
 
+Note that there are no negative number literals in Knight---they're constructed via the [`-`]((#432--unchanged-number) function: `- 0 5`.
+
+## 1.4 String
 String literals in Knight begin with with either a single quote (`'`) or a double quote (`"`). All characters are taken literally until the opening close is encountered again. This means that there are no escape sequences within string literals; if you want a newline character, you will have to do:
 ```text
 OUTPUT "this is a newline:
@@ -95,12 +103,10 @@ cool, right?"
 ```
 Due to the lack of escape sequences, each string may only contain one of the two types of quotes (as the other quote will denote the end of the string.)
 
-There are also boolean and null values within Knight. See `Functions` for more details on them.
-
-## 1.4 Variables
+## 1.5 Variable
 In Knight, all variables are lower case---upper case letters are reserved for functions. Variable names must start with an ASCII lower case letter (ie `a` (`0x61`) through `z` (`0x7a`)) or an underscore (`_` (`0x5f`)). After the initial letter, variable names may also include ASCII digits (ie `0` (`0x30`) through `9` (`0x39`)). The maximum length of variables should only be constrained by available memory.
 
-## 1.5 Functions
+## 1.6 Functions
 In Knight, there are two different styles of functions: symbolic and word-based functions. In both cases, the function is uniquely identified by its first character. 
 
 Word-based functions start with a single uppercase letter, such as `I` for `IF` or `R` for `RANDOM`, and may contain any amount of upper case letters and `_` afterwards. This means that `R`, `RAND`, `RANDOM`, `RAND_INT`, `RAND_OM_NUMBER`, etc. are all the same function---the `R` function.
@@ -121,7 +127,7 @@ The list of required functions are as follows. Implementations may define additi
 Short note on `TRUE`/`FALSE`/`NULL`: As they are functions that take no arguments, and should simply return a true, false, or null value, they can be instead interpreted as literals. That is, there's no functional difference between parsing `TRUE` as a function, and then executing that function and parsing `TRUE` as a boolean literal.
 
 ### 1.5.1 Implementation-Defined Functions
-Implementations may define their own functions, as long as they start with an upper-case letter, or a symbol. 
+Implementations may define their own functions, as long as they start with an upper-case letter or a symbol. Note that the `X` function name is explicitly reserved for extensions. See [6. Extensions](#6-extensions) for more details.
 
 ## Example
 here's an example of a simple guessing game and how it should parse:
@@ -224,7 +230,7 @@ The `NULL` type is used to indicate the absence of a value within Knight, and is
 - **boolean**: Null must become `FALSE` in boolean contexts.
 
 
-# 3 Variables
+# 3 Variable
 Variables in Knight must be able to hold all the builtin types, including other variable names and functions (both of which are returned by the `BLOCK` function).
 
 All variables in Knight are global and last for the duration of the program. (There are no function-local variables, and all `EVAL`s are done at the global scope too.). That is, once a value is assigned to a variable name, that variable name will then never be "deallocated"---value associated with it may change, but the variable will never become undefined. 
@@ -486,7 +492,7 @@ For example, `| "2" (QUIT 1)` shall return the value `"2"`, whilst `| FALSE 4` s
 This function simply returns its second argument. It's entire purpose is to act as a "sequence" function, where the first argument's value can be safely ignored.
 
 ### 4.3.13 `=(unevaluated, unchanged)`
-Unless the first argument is a [Variable](#3-variables), this function is undefined.
+Unless the first argument is a [Variable](#3-variable), this function is undefined.
 
 This function assigns the variable identified by the first argument (which shall not be evaluated) to the second argument's value, after which it should return the second argument's value. That is, it performs the "assignment" operation for strings.
 
