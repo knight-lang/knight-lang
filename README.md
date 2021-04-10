@@ -16,6 +16,7 @@ The following is the list of all languages that I've written it in. All in-progr
 | [C++](https://github.com/knight-lang/cpp) | X | X | X | X | Works with C++17; It could use a facelift though, as I used a bit too much dynamic dispatch. |
 | [C#](https://github.com/knight-lang/csharp) | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [Haskell](https://github.com/knight-lang/haskell) |   | ish | X | X | Works for an older spec of Knight, needs to be updated. |
+| [Java](https://github.com/knight-lang/java) | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [JavaScript](https://github.com/knight-lang/knight.js) | X | X | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
 | [Knight](https://github.com/knight-lang/knight/knight.kn) |   |   | X | X | Yes, this is a Knight interpreter, written in Knight; It's yet to be tested for spec compliance, though. |
 | [Perl](https://github.com/knight-lang/perl) | X | X | X | X | Fully Functional on at least v5.18. |
@@ -27,7 +28,6 @@ The following is the list of all languages that I've written it in. All in-progr
 | [Raku](https://github.com/knight-lang/raku) | X | X | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
 | [Ruby](https://github.com/knight-lang/ruby) | X |   | X | X | A hacky version currently exists; a more sophisticated one is being worked on. |
 | [Rust](https://github.com/knight-lang/rust) | X |   | X | X | Simple implementation without comments. It intentionally captures all UB, but eventually will have an efficient implementation. |
-| Java |   |   |   |   | Planned; I know Java already, so this should be fairly simple. |
 | SML |   |   |   |   | Planned. I used this in college, and enjoyed it. |
 | Racket |   |   |   |   | Planned. I used this in college, and enjoyed it. |
 | LaTeX |   |   |   |   | Eventually; Because why not? I did a lot of LaTeX in college. |
