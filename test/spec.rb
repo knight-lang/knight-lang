@@ -1,3 +1,6 @@
+require 'minitest'
+require 'minitest/spec'
+
 module Kn
 	module Test
 		Variable = Struct.new :ident
@@ -6,7 +9,7 @@ module Kn
 end
 
 
-module Kn::Test::Shared
+module Kn::Test::Spec
 	class InvalidExpression < Exception
 		attr_reader :expr
 
@@ -82,14 +85,43 @@ module Kn::Test::Shared
 		val
 	end
 
-	$sanitizations = [:undefined_variables]
 
 	def self.included(x)
 		x.extend self
 	end
 
-	def checks?(*value)
-		value.all? { |x| $sanitizations.include? x }
+	ALL_SANITIZATIONS = [
+		# division by zero, modulo by zero, and 0 to a negative power.
+		:zero_division,
+
+		# when a bad type is given as the first arg to a binary function
+		:invalid_types,
+
+		# when an identifier/block is given as the fist arg.
+		:strict_types,
+
+		# ensure that the function only parses with the correct amount of arguments
+		:argument_count,
+
+		# Checks to see if overflow occurs on _any_ numeric operation.
+		:overflow,
+
+		# when a value 
+		:invalid_values,
+	].freeze
+
+	$enabled_sanitizations ||= [
+		:zero_division,
+		:invalid_types,
+		:argument_count
+	]
+
+	def it(description, when_testing: nil)
+		super(description) if testing?(*Array(when_testing))
+	end
+
+	def testing?(*value)
+		value.all? { |x| $enabled_sanitizations.include? x }
 	end
 
 	def basic_sanitization?

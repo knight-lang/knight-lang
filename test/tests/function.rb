@@ -3,6 +3,9 @@ require 'minitest/spec'
 require 'stringio'
 require_relative 'shared'
 
+require_relative 'function/noop'
+
+return
 describe '4. Function' do
 	include Kn::Test::Shared
 	parallelize_me!

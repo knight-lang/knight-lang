@@ -60,7 +60,7 @@ describe '2.1 Number' do
 				assert_equal 0, eval('+ 0 0')
 				assert_equal 3, eval('+ 1 2')
 				assert_equal 10, eval('+ 4 6')
-				assert_equal 111, eval('+ 112 (- 0 1)"')
+				assert_equal 111, eval('+ 112 (- 0 1)')
 
 				assert_equal 17, eval('+ 4 13')
 				assert_equal -9, eval('+ 4 (- 0 13)')
@@ -82,16 +82,12 @@ describe '2.1 Number' do
 				assert_equal 0, eval('- 0 0')
 				assert_equal -1, eval('- 1 2')
 				assert_equal -2, eval('- 4 6')
-				assert_equal 113, eval('- 112 (- 0 1)"')
+				assert_equal 113, eval('- 112 (- 0 1)')
 
 				assert_equal -9, eval('- 4 13')
 				assert_equal 17, eval('- 4 (- 0 13)')
 				assert_equal -17, eval('- (- 0 4) 13')
 				assert_equal 9, eval('- (- 0 4) (- 0 13)')
-			end
-
-			it 'has `0` equal to `- 0 0`' do
-				assert_equal eval('- 0 0'), 0
 			end
 
 			it 'converts other values to integers' do
@@ -108,7 +104,7 @@ describe '2.1 Number' do
 				assert_equal 0, eval('* 0 0')
 				assert_equal 2, eval('* 1 2')
 				assert_equal 24, eval('* 4 6')
-				assert_equal -36, eval('* 12 (- 0 3)"')
+				assert_equal -36, eval('* 12 (- 0 3)')
 
 				assert_equal 52, eval('* 4 13')
 				assert_equal -52, eval('* 4 (- 0 13)')
@@ -345,3 +341,4 @@ describe '2.1 Number' do
 		end
 	end
 end
+ 
