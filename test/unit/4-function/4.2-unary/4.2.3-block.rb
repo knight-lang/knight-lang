@@ -29,4 +29,6 @@ describe '4.2.3 BLOCK' do
 		assert_fails { eval('BLOCK') }
 		assert_runs  { eval('BLOCK 1') }
 	end
+
+	# TODO: is `BLOCK BLOCK` valid?
 end

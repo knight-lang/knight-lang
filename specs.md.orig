@@ -79,7 +79,13 @@ Implementations are **required** to recognize the following characters as whites
 - All parentheses (`(`, `)`, `[`, `]`, `{`, `}`).
 (Because all functions have a fixed arity (see [4. Function](#4-function)), all forms of parentheses in Knight are considered whitespace.) Implementations may define other characters as whitespace if they wish---notably, this means that you may use regex's `\s` to strip away whitespace.
 
+<<<<<<< HEAD
+## 1.2 Comments
+=======
+Additionally, the `:` function is a no op, and as such may safely be considered whitespace as well.
+
 ## 1.2 Comment
+>>>>>>> master
 Comments in Knight start with `#` and go until a newline character (`\n`) is encountered, or the end of the file; everything after the `#` is ignored.
 
 There are no multiline or embedded comments in Knight.

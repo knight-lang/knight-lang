@@ -8,7 +8,6 @@ module Kn
 	end
 end
 
-
 module Kn::Test::Spec
 	class InvalidExpression < Exception
 		attr_reader :expr
@@ -31,19 +30,20 @@ module Kn::Test::Spec
 		end
 	end
 
-	def execute(expr, raise_on_failure: true)
-		IO.pipe do |r, w|
-			unless system(
+	def exec(expr, stdin: :close, stdout: :capture, stderr: $DEBUG ? nil : :silent, raise_on_failure: true)
+		IO.pipe do |read, write|
+
+			system(
 				*Array($executable_to_test), '-e', expr,
-				out: w,
-				in: $stdin,
-				**($DEBUG ? {} : { err: :close })
+				out: write,
+				in: stdin,
+				err: err,
 			)
 				raise InvalidExpression, expr if raise_on_failure
 			end
 
-			w.close
-			r.read
+			write.close
+			read.read
 		end
 	end
 
@@ -55,16 +55,12 @@ module Kn::Test::Spec
 		yield
 	end
 
-	def dump(expr)
-		execute("D #{expr}")
+	def dump(expr, **kwargs)
+		exec("D #{expr}", **kwargs)
 	end
 
-	def check_ub?
-		$check_ub
-	end
-
-	def eval(expr)
-		parse dump expr
+	def eval(expr, **kwargs)
+		parse dump(expr, **kwargs)
 	end
 
 	def to_string(expr)
@@ -84,7 +80,6 @@ module Kn::Test::Spec
 		raise "not a boolean: #{val.inspect}" unless val == true || val == false
 		val
 	end
-
 
 	def self.included(x)
 		x.extend self
@@ -113,7 +108,10 @@ module Kn::Test::Spec
 		:undefined_variables,
 
 		# For things that, while technically UB, are not really that easy to sanitize.
-		:strict_compliance
+		:strict_compliance,
+
+		# If we catch problems with i/o. (ie `OUTPUT`, `DUMP`, `PROMPT`, and `` ` ``.)
+		:io_errors
 	].freeze
 
 	$enabled_sanitizations ||= [
@@ -127,10 +125,31 @@ module Kn::Test::Spec
 		super(description) if testing?(*Array(when_testing))
 	end
 
-	def validate_required_arguments(func, *args)
+
+	# it 'requires exactly one argument', when_testing: :argument_count do
+	# 	assert_fails { eval('!') }
+	# 	assert_runs  { eval('! TRUE') }
+	# end
+
+	# it 'does not allow blocks as the first operand', when_testing: :strict_types do
+	# 	assert_fails { eval('; = a 0 : ! BLOCK a') }
+	# 	assert_fails { eval('! BLOCK QUIT 0') }
+	# end
+
+	# def validate_required_arguments(func, *args)
+	# 	it "requires exactly #{args.length} argument#{args.length == 1 ? '' : 's'}", when_testing: :argument_count do
+	# 		args.length.pred.times do |n|
+	# 			assert_fails { eval func + ' ' +args[0..n].join(' ') }
+	# 		end
+
+	# 		assert_runs { args.join(' ') }
+	# 	end
+	# end
+
+	def validate_block_as_operand(func, *args)
 		it "requires exactly #{args.length} argument#{args.length == 1 ? '' : 's'}", when_testing: :argument_count do
 			args.length.pred.times do |n|
-				assert_fails { args[..n].join(' ') }
+				assert_fails { args[0..n].join(' ') }
 			end
 
 			assert_runs { args.join(' ') }
@@ -139,13 +158,5 @@ module Kn::Test::Spec
 
 	def testing?(*value)
 		value.all? { |x| $enabled_sanitizations.include? x }
-	end
-
-	def basic_sanitization?
-		1 <= $sanitization
-	end
-
-	def advanced_sanitiation?
-		2 <= $sanitization
 	end
 end

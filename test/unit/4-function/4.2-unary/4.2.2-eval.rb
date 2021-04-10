@@ -36,4 +36,9 @@ describe '4.2.2 EVAL' do
 		assert_fails { eval('EVAL') }
 		assert_runs  { eval('EVAL 1') }
 	end
+
+	it 'does not allow blocks as the first operand', when_testing: :strict_types do
+		assert_fails { eval('; = a "3" : EVAL BLOCK a') }
+		assert_fails { eval('EVAL BLOCK QUIT 0') }
+	end
 end
