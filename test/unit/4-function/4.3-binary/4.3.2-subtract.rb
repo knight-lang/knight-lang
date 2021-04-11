@@ -1,9 +1,6 @@
 require_relative '../function-spec'
 
-
-describe '4.3.2 -' do
-	include Kn::Test::Spec
-
+section '4.3.2', '-' do
 	it 'adds numbers normally' do
 		assert_equal 0, eval('- 0 0')
 		assert_equal -1, eval('- 1 2')

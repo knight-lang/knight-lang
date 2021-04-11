@@ -14,6 +14,12 @@ module Kn::Test::Spec::Function
 		end
 	end
 
+	def test_evaluation_order(expected, expression)
+		it 'evaluates arguments in order' do
+			assert_equal expected, eval(expression)
+		end
+	end
+
 	module Expectation
 		def section(*a, &b)
 			super(*a) do

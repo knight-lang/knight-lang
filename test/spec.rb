@@ -31,7 +31,7 @@ module Kn::Test
 			end
 		end
 
-		def exec(expr, stdin: :close, stdout: :capture, stderr: $DEBUG ? nil : $stderr, raise_on_failure: true)
+		def exec(expr, stdin: :close, stdout: :capture, stderr: $DEBUG ? nil : :close, raise_on_failure: true)
 			IO.pipe do |read, write|
 				unless system(
 					*Array($executable_to_test), '-e', expr,

@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 require 'minitest/autorun'
 
+require 'minitest/autorun';$executable_to_test = '../../c/ast/knight'
 $check_ub = true
+
 $executable_to_test ||= $*.shift or abort "usage: #$0 <program to test>"
 
 # require_relative 'tests/number'
@@ -10,4 +12,8 @@ $executable_to_test ||= $*.shift or abort "usage: #$0 <program to test>"
 # require_relative 'tests/string'
 # require_relative 'tests/block'
 # require_relative 'tests/variable'
+Dir.glob 'unit/4-function/**/*.rb' do |x|
+	require_relative x
+end
+
 require_relative 'tests/function'
