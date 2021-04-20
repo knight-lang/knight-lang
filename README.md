@@ -44,7 +44,7 @@ Note that these are simply benchmarks of _my_ implementations of Knight, and not
 | C          |   3.74s | `c/ast/knight`     | Compiled using `COMPUTED_GOTOS=1 CFLAGS='-DKN_RECKLESS -DKN_USE_EXTENSIONS' make optimized`; See [https://github.com/knight-lang/c/ast/README.md](c/ast/README.md) for details. |
 | Java       |   6.99s | `java/knight` | Requires a larger stack to prevent overflow; `java -Xss515m` was used. |
 | C#         |  11.82s | `csharp/bin/Release/netcoreapp2.1/<impl>/Knight` | |
-| C++        |  21.48s | `cpp/knight`       | Copiled using `make optimized` |
+| C++        |  13.61s | `cpp/knight`       | Copiled using `make optimized` |
 | Rust       |  28.99s | `rust/target/release/knight` | Built with `cargo build --release` and the `reckless` flag. |
 | JavaScript |  30.64s | `node --stack-size=1000000 javasript/bin/knight.js` | Default stack's too small, so we had to bump it up. |
 | PHP        |  64.73s | `php/knight.php`   | |
