@@ -14,7 +14,7 @@ The following is the list of all languages that I've written it in. All in-progr
 | [Assembly (x86)](https://github.com/knight-lang/asm) |   |   |   | X | The parser is completed.|
 | [C](https://github.com/knight-lang/c) | X | X | X | X | Fully functional, and the fastest. |
 | [C++](https://github.com/knight-lang/cpp) | X | X | X | X | Works with C++17; It could use a facelift though, as I used a bit too much dynamic dispatch. |
-| [C#](https://github.com/knight-lang/csharp) | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
+| [C#](https://github.com/knight-lang/csharp) | X | X | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [Haskell](https://github.com/knight-lang/haskell) |   | ish | X | X | Works for an older spec of Knight, needs to be updated. |
 | [Java](https://github.com/knight-lang/java) | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [JavaScript](https://github.com/knight-lang/knight.js) | X | X | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
@@ -42,6 +42,7 @@ Note that these are simply benchmarks of _my_ implementations of Knight, and not
 |  Language  |  Time   | `<implementation>` | Notes |
 | ---------- |--------:|--------------------|-------|
 | C          |   3.74s | `c/ast/knight`     | Compiled using `COMPUTED_GOTOS=1 CFLAGS='-DKN_RECKLESS -DKN_USE_EXTENSIONS' make optimized`; See [https://github.com/knight-lang/c/ast/README.md](c/ast/README.md) for details. |
+| Java       |   6.99s | `java/knight` | Requires a larger stack to prevent overflow; `java -Xss515m` was used. |
 | C#         |  11.82s | `csharp/bin/Release/netcoreapp2.1/<impl>/Knight` | |
 | C++        |  21.48s | `cpp/knight`       | Copiled using `make optimized` |
 | Rust       |  28.99s | `rust/target/release/knight` | Built with `cargo build --release` and the `reckless` flag. |
