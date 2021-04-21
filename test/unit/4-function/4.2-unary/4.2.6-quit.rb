@@ -1,15 +1,17 @@
 require_relative '../function-spec'
+require_relative '../../../autorun' if $0 == __FILE__
 
 section '4.2.6', 'QUIT' do
 	include Kn::Test::Spec
+	before do
+		def exit_code(expr)
+			# exit codes shouldn't print anything.
+			assert_silent do
+				execute "QUIT #{expr}", raise_on_failure: false
+			end
 
-	def exit_code(expr)
-		# exit codes shouldn't print anything.
-		assert_silent do
-			exec "QUIT #{expr}", raise_on_failure: false
+			$?.exitstatus
 		end
-
-		$?.exitstatus
 	end
 
 	it 'must quit the process with the given return value' do
@@ -35,7 +37,7 @@ section '4.2.6', 'QUIT' do
 	test_argument_count 'QUIT', '0'
 
 	it 'does not allow blocks as the first operand', when_testing: :strict_types do
-		assert_fails { eval('; = a 0 : QUIT BLOCK a') }
-		assert_fails { eval('QUIT BLOCK QUIT 0') }
+		assert_fails '; = a 0 : QUIT BLOCK a'
+		assert_fails 'QUIT BLOCK QUIT 0'
 	end
 end

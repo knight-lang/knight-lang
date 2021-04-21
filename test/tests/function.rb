@@ -13,22 +13,22 @@ describe '4. Function' do
 	describe 'parsing' do
 		describe 'symbol functions' do
 			it 'should only consume one character' do
-				assert_equal false, eval('!1')
-				assert_equal 2, eval('+1 1')
+				assert_equal false, evaluate('!1')
+				assert_equal 2, evaluate('+1 1')
 			end
 
 			it 'will not consume additional symbolic chars' do
-				assert_equal 5, eval('--9 3 1')
+				assert_equal 5, evaluate('--9 3 1')
 			end
 		end
 
 		describe 'keyword functions' do
 			it 'should strip trailing uppercase chars and _' do
-				assert_equal 3, eval('LABCDEFH_IJKLMNOPQRSTUVWXYZ"foo"')
+				assert_equal 3, evaluate('LABCDEFH_IJKLMNOPQRSTUVWXYZ"foo"')
 			end
 
 			it 'should not strip trailing `_`s' do
-				assert_equal 3, eval('; = _ 99 : + LENGTH _T') # 99 + true = 99 + 1 = 100
+				assert_equal 3, evaluate('; = _ 99 : + LENGTH _T') # 99 + true = 99 + 1 = 100
 			end
 		end
 	end
@@ -36,17 +36,17 @@ describe '4. Function' do
 	describe '4.1 Nullary' do
 		describe '4.1.1 TRUE' do
 			it 'is true' do
-				assert_equal true, eval('TRUE')
+				assert_equal true, evaluate('TRUE')
 			end
 		end
 		describe '4.1.2 FALSE' do
 			it 'is false' do
-				assert_equal false, eval('FALSE')
+				assert_equal false, evaluate('FALSE')
 			end
 		end
 		describe '4.1.3 NULL' do
 			it 'is null' do
-				assert_equal :null, eval('NULL')
+				assert_equal :null, evaluate('NULL')
 			end
 		end
 
@@ -57,7 +57,7 @@ describe '4. Function' do
 					w.write "line one\x0Aline two\x0D\x0Aa\x0D\x0A\x0D\x0A\x0Aline three"
 					w.close
 					$stdin = r
-					assert_equal 'line one|line two|a|||line three|', eval(<<-EOS)
+					assert_equal 'line one|line two|a|||line three|', evaluate(<<-EOS)
 						+ + PROMPT '|' # line one
 						+ + PROMPT '|' # line two
 						+ + PROMPT '|' # a
@@ -73,7 +73,7 @@ describe '4. Function' do
 
 		describe '4.1.5 RANDOM' do
 			it 'should return a random value each time its called.' do
-				assert_equal false, eval('? RANDOM RANDOM')
+				assert_equal false, evaluate('? RANDOM RANDOM')
 			end
 		end
 	end
@@ -81,34 +81,34 @@ describe '4. Function' do
 	describe '4.2 Unary' do
 		describe '4.2.1 :' do
 			it 'should return its argument unchanged, but evaluated' do
-				assert_equal 0, eval(': 0')
-				assert_equal 1, eval(': 1')
-				assert_equal true, eval(': TRUE')
-				assert_equal false, eval(': FALSE')
-				assert_equal :null, eval(': NULL')
-				assert_equal "", eval(': ""')
-				assert_equal "a", eval(': "a"')
-				assert_runs { eval(': BLOCK QUIT 1') }
-				assert_runs { eval(': BLOCK a') }
+				assert_equal 0, evaluate(': 0')
+				assert_equal 1, evaluate(': 1')
+				assert_equal true, evaluate(': TRUE')
+				assert_equal false, evaluate(': FALSE')
+				assert_equal :null, evaluate(': NULL')
+				assert_equal "", evaluate(': ""')
+				assert_equal "a", evaluate(': "a"')
+				assert_runs { evaluate(': BLOCK QUIT 1') }
+				assert_runs { evaluate(': BLOCK a') }
 			end
 		end
 
-		describe '4.2.2 EVAL' do
+		describe '4.2.2 evaluate' do
 			it 'should evaluate text' do
-				assert_equal 12, eval('EVAL "12"')
-				assert_fails { eval('EVAL "missing identifier"') }
-				assert_equal 12, eval('EVAL "12"') # convert to a string
+				assert_equal 12, evaluate('evaluate "12"')
+				assert_fails { evaluate('evaluate "missing identifier"') }
+				assert_equal 12, evaluate('evaluate "12"') # convert to a string
 			end
 
 			it 'should convert values to a string' do
-				assert_equal 23, eval('; = true 23 : EVAL TRUE')
-				assert_equal 23, eval('; = false 23 : EVAL FALSE')
-				assert_equal 23, eval('; = null 23 : EVAL NULL')
-				assert_equal 19, eval('EVAL 19')
+				assert_equal 23, evaluate('; = true 23 : evaluate TRUE')
+				assert_equal 23, evaluate('; = false 23 : evaluate FALSE')
+				assert_equal 23, evaluate('; = null 23 : evaluate NULL')
+				assert_equal 19, evaluate('evaluate 19')
 			end
 
 			it 'should update the global scope' do
-				assert_equal 591, eval('; EVAL "= foo 591" foo')
+				assert_equal 591, evaluate('; evaluate "= foo 591" foo')
 			end
 		end
 
@@ -131,36 +131,36 @@ describe '4. Function' do
 			end
 
 			it 'should be usable as the sole argument of CALL' do
-				assert_equal 12, eval('CALL BLOCK 12')
-				assert_equal 3, eval('; = foo 3 ; = bar BLOCK foo : CALL bar')
+				assert_equal 12, evaluate('CALL BLOCK 12')
+				assert_equal 3, evaluate('; = foo 3 ; = bar BLOCK foo : CALL bar')
 			end
 		end
 
 		describe '4.2.4 CALL' do
 			it 'should evaluate something returned by `BLOCK`' do
-				assert_equal 12, eval('CALL BLOCK 12')
-				assert_equal "12", eval('CALL BLOCK "12"')
+				assert_equal 12, evaluate('CALL BLOCK 12')
+				assert_equal "12", evaluate('CALL BLOCK "12"')
 	
-				assert_equal true, eval('CALL BLOCK TRUE')
-				assert_equal false, eval('CALL BLOCK FALSE')
-				assert_equal :null, eval('CALL BLOCK NULL')
+				assert_equal true, evaluate('CALL BLOCK TRUE')
+				assert_equal false, evaluate('CALL BLOCK FALSE')
+				assert_equal :null, evaluate('CALL BLOCK NULL')
 
-				assert_equal "twelve", eval('; = foo BLOCK bar ; = bar "twelve" : CALL foo')
-				assert_equal 15, eval('; = foo BLOCK * x 5 ; = x 3 : CALL foo')
+				assert_equal "twelve", evaluate('; = foo BLOCK bar ; = bar "twelve" : CALL foo')
+				assert_equal 15, evaluate('; = foo BLOCK * x 5 ; = x 3 : CALL foo')
 			end
 		end
 
 		describe '4.2.5 `' do
 			it 'should return the stdout of the subshell' do
-				assert_equal "and then there was -1\n", eval(%q|` 'echo "and then there was -1"'|)
+				assert_equal "and then there was -1\n", evaluate(%q|` 'echo "and then there was -1"'|)
 			end
 
 			it 'should return an empty string with no output' do
-				assert_equal '', eval('` ":"')
+				assert_equal '', evaluate('` ":"')
 			end
 
 			it 'should convert its argument to a string' do
-				assert_equal '', eval('` TRUE')
+				assert_equal '', evaluate('` TRUE')
 				# we can't test any of the others, as `false` has a nonzero exit status,
 				# and numbers and null aren't likely to be valid programs.
 			end
@@ -198,36 +198,36 @@ describe '4. Function' do
 
 		describe '4.2.7 !' do
 			it 'negates its argument' do
-				assert_equal true,  eval('! FALSE')
-				assert_equal false, eval('! TRUE')
+				assert_equal true,  evaluate('! FALSE')
+				assert_equal false, evaluate('! TRUE')
 			end
 
 			it 'converts its argument to a boolean' do
-				assert_equal true,  eval('! ""')
-				assert_equal false, eval('! "0"')
-				assert_equal false, eval('! "1"')
+				assert_equal true,  evaluate('! ""')
+				assert_equal false, evaluate('! "0"')
+				assert_equal false, evaluate('! "1"')
 
-				assert_equal true,  eval('! NULL')
+				assert_equal true,  evaluate('! NULL')
 
-				assert_equal true, eval('! 0')
-				assert_equal false,  eval('! 1')
+				assert_equal true, evaluate('! 0')
+				assert_equal false,  evaluate('! 1')
 			end
 		end
 
 		describe '4.2.8 LENGTH' do
 			it 'gets the length of a string' do
-				assert_equal 0, eval('LENGTH ""')
-				assert_equal 1, eval('LENGTH "0"')
-				assert_equal 3, eval('LENGTH "foo"')
-				assert_equal 10, eval("LENGTH 'fooba\nrbaz'")
+				assert_equal 0, evaluate('LENGTH ""')
+				assert_equal 1, evaluate('LENGTH "0"')
+				assert_equal 3, evaluate('LENGTH "foo"')
+				assert_equal 10, evaluate("LENGTH 'fooba\nrbaz'")
 			end
 
 			it 'converts its value to a string' do
-				assert_equal 1, eval('LENGTH 0')
-				assert_equal 3, eval('LENGTH 923')
-				assert_equal 4, eval('LENGTH TRUE')
-				assert_equal 5, eval('LENGTH FALSE')
-				assert_equal 4, eval('LENGTH NULL')
+				assert_equal 1, evaluate('LENGTH 0')
+				assert_equal 3, evaluate('LENGTH 923')
+				assert_equal 4, evaluate('LENGTH TRUE')
+				assert_equal 5, evaluate('LENGTH FALSE')
+				assert_equal 4, evaluate('LENGTH NULL')
 			end
 		end
 
@@ -281,18 +281,18 @@ describe '4. Function' do
 
 		describe '4.3.10 &' do
 			it 'returns the lhs if its falsey' do
-				assert_equal 0, eval('& 0 QUIT 1')
-				assert_equal false, eval('& FALSE QUIT 1')
-				assert_equal :null, eval('& NULL QUIT 1')
-				assert_equal '', eval('& "" QUIT 1')
+				assert_equal 0, evaluate('& 0 QUIT 1')
+				assert_equal false, evaluate('& FALSE QUIT 1')
+				assert_equal :null, evaluate('& NULL QUIT 1')
+				assert_equal '', evaluate('& "" QUIT 1')
 			end
 
 			it 'executes the rhs only if the lhs is truthy' do
-				assert_equal 1, eval('; & 1 (= a 1) a')
-				assert_equal 2, eval('; & TRUE (= a 2) a')
-				assert_equal 3, eval('; & "hi" (= a 3) a')
-				assert_equal 4, eval('; & "0" (= a 4) a')
-				assert_equal 5, eval('; & "NaN" (= a 5) a')
+				assert_equal 1, evaluate('; & 1 (= a 1) a')
+				assert_equal 2, evaluate('; & TRUE (= a 2) a')
+				assert_equal 3, evaluate('; & "hi" (= a 3) a')
+				assert_equal 4, evaluate('; & "0" (= a 4) a')
+				assert_equal 5, evaluate('; & "NaN" (= a 5) a')
 			end
 
 			it 'returns the lhs if its falsey' do end
@@ -301,50 +301,50 @@ describe '4. Function' do
 
 		describe '4.3.11 |' do
 			it 'returns the lhs if its truthy' do
-				assert_equal 1, eval('| 1 QUIT 1')
-				assert_equal 2, eval('| 2 QUIT 1')
-				assert_equal true, eval('| TRUE QUIT 1')
-				assert_equal 'hi', eval('| "hi" QUIT 1')
-				assert_equal '0', eval('| "0" QUIT 1')
-				assert_equal 'NaN', eval('| "NaN" QUIT 1')
+				assert_equal 1, evaluate('| 1 QUIT 1')
+				assert_equal 2, evaluate('| 2 QUIT 1')
+				assert_equal true, evaluate('| TRUE QUIT 1')
+				assert_equal 'hi', evaluate('| "hi" QUIT 1')
+				assert_equal '0', evaluate('| "0" QUIT 1')
+				assert_equal 'NaN', evaluate('| "NaN" QUIT 1')
 			end
 
 			it 'executes the rhs only if the lhs is falsey' do
-				assert_equal 1, eval('; | 0 (= a 1) a')
-				assert_equal 2, eval('; | FALSE (= a 2) a')
-				assert_equal 3, eval('; | NULL (= a 3) a')
-				assert_equal 4, eval('; | "" (= a 4) a')
+				assert_equal 1, evaluate('; | 0 (= a 1) a')
+				assert_equal 2, evaluate('; | FALSE (= a 2) a')
+				assert_equal 3, evaluate('; | NULL (= a 3) a')
+				assert_equal 4, evaluate('; | "" (= a 4) a')
 			end
 		end
 
 		describe '4.3.12 ;' do
 			it "executes the first argument, then the second, then returns the second's value" do
-				assert_equal 1, eval('; 0 1')
-				assert_equal 3, eval('; = a 3 : a')
+				assert_equal 1, evaluate('; 0 1')
+				assert_equal 3, evaluate('; = a 3 : a')
 			end
 		end
 
 		describe '4.3.13 =' do
 			it 'assigns to variables' do
-				assert_equal 12, eval('; = a 12 : a')
+				assert_equal 12, evaluate('; = a 12 : a')
 			end
 
 			it 'returns its given value' do
-				assert_equal 12, eval('= a 12')
+				assert_equal 12, evaluate('= a 12')
 			end
 		end
 
 		describe '4.3.14 WHILE' do
 			it 'returns null' do
-				assert_equal :null, eval('WHILE 0 0')
+				assert_equal :null, evaluate('WHILE 0 0')
 			end
 
 			it 'will not evaluate the body if the condition is true' do
-				assert_equal 12, eval('; WHILE FALSE (QUIT 1) : 12')
+				assert_equal 12, evaluate('; WHILE FALSE (QUIT 1) : 12')
 			end
 
 			it 'will evaluate the body until the condition is false' do
-				assert_equal 10, eval('; = i 0 ; WHILE (< i 10) (= i + i 1) : i')
+				assert_equal 10, evaluate('; = i 0 ; WHILE (< i 10) (= i + i 1) : i')
 			end
 		end
 	end
@@ -352,15 +352,15 @@ describe '4. Function' do
 	describe '4.4 Ternary' do
 		describe '4.4.1 IF' do
 			it 'only executes and returns the second argument if the condition is truthy' do
-				assert_equal 12, eval('IF 1 12 (QUIT 1)')
+				assert_equal 12, evaluate('IF 1 12 (QUIT 1)')
 			end
 
 			it 'only executes and returns the third argument if the condition is falsey' do
-				assert_equal 12, eval('IF NULL (QUIT 1) 12')
+				assert_equal 12, evaluate('IF NULL (QUIT 1) 12')
 			end
 
 			it 'executes the condition before the result' do
-				assert_equal 12, eval('IF (= a 3) (+ a 9) (QUIT 1)')
+				assert_equal 12, evaluate('IF (= a 3) (+ a 9) (QUIT 1)')
 			end
 		end
 

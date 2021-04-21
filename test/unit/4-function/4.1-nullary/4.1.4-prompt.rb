@@ -1,4 +1,5 @@
 require_relative '../function-spec'
+require_relative '../../../autorun' if $0 == __FILE__
 
 section '4.1.4', 'PROMPT' do
 	include Kn::Test::Spec
@@ -10,7 +11,7 @@ section '4.1.4', 'PROMPT' do
 	# 				w.write "line one\x0Aline two\x0D\x0Aa\x0D\x0A\x0D\x0A\x0Aline three"
 	# 				w.close
 	# 				$stdin = r
-	# 				assert_equal 'line one|line two|a|||line three|', eval(<<-EOS)
+	# 				assert_equal 'line one|line two|a|||line three|', evaluate(<<-EOS)
 	# 					+ + PROMPT '|' # line one
 	# 					+ + PROMPT '|' # line two
 	# 					+ + PROMPT '|' # a

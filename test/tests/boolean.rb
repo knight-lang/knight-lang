@@ -24,99 +24,99 @@ describe '2.3 Boolean' do
 
 	describe 'parsing' do
 		it 'parses a simple `T` or `F` properly' do
-			assert_equal true, eval('T')
-			assert_equal false, eval('F')
+			assert_equal true, evaluate('T')
+			assert_equal false, evaluate('F')
 		end
 
 		it 'does not parse `true` or `false`' do
 			# when its not in scope, it fails.
-			assert_fails { eval('true') }
-			assert_fails { eval('false') }
+			assert_fails { evaluate('true') }
+			assert_fails { evaluate('false') }
 
 			# when it is in scope, its evaluates to what its assigned.
-			assert_equal 12, eval('; = true 12 : true')
-			assert_equal 12, eval('; = false 12 : false')
+			assert_equal 12, evaluate('; = true 12 : true')
+			assert_equal 12, evaluate('; = false 12 : false')
 		end
 
 		it 'strips trailing keywords properly' do
-			assert_equal 12, eval(';T12')
-			assert_equal 12, eval(';TR12')
-			assert_equal 12, eval(';TRU12')
-			assert_equal 12, eval(';TRUE12')
-			assert_equal 12, eval(';F12')
-			assert_equal 12, eval(';FA12')
-			assert_equal 12, eval(';FAL12')
-			assert_equal 12, eval(';FALS12')
-			assert_equal 12, eval(';FALSE12')
+			assert_equal 12, evaluate(';T12')
+			assert_equal 12, evaluate(';TR12')
+			assert_equal 12, evaluate(';TRU12')
+			assert_equal 12, evaluate(';TRUE12')
+			assert_equal 12, evaluate(';F12')
+			assert_equal 12, evaluate(';FA12')
+			assert_equal 12, evaluate(';FAL12')
+			assert_equal 12, evaluate(';FALS12')
+			assert_equal 12, evaluate(';FALSE12')
 		end
 	end
 
 	describe 'operators' do
 		describe '4.3.9 ?' do
 			it 'only is equal to itself' do
-				assert_equal true, eval('? TRUE TRUE')
-				assert_equal true, eval('? FALSE FALSE')
+				assert_equal true, evaluate('? TRUE TRUE')
+				assert_equal true, evaluate('? FALSE FALSE')
 			end
 
 			it 'is not equal to anything else' do
-				assert_equal false, eval('? TRUE 1')
-				assert_equal false, eval('? TRUE "1"')
-				assert_equal false, eval('? TRUE "TRUE"')
-				assert_equal false, eval('? TRUE "true"')
+				assert_equal false, evaluate('? TRUE 1')
+				assert_equal false, evaluate('? TRUE "1"')
+				assert_equal false, evaluate('? TRUE "TRUE"')
+				assert_equal false, evaluate('? TRUE "true"')
 
-				assert_equal false, eval('? FALSE 0')
-				assert_equal false, eval('? FALSE ""')
-				assert_equal false, eval('? FALSE "0"')
-				assert_equal false, eval('? FALSE "FALSE"')
-				assert_equal false, eval('? FALSE "false"')
+				assert_equal false, evaluate('? FALSE 0')
+				assert_equal false, evaluate('? FALSE ""')
+				assert_equal false, evaluate('? FALSE "0"')
+				assert_equal false, evaluate('? FALSE "FALSE"')
+				assert_equal false, evaluate('? FALSE "false"')
 			end
 		end
 
 		describe '4.3.7 <' do
 			it 'is only true when FALSE and the rhs is truthy' do
-				assert_equal true, eval('< FALSE TRUE')
-				assert_equal true, eval('< FALSE 1')
-				assert_equal true, eval('< FALSE "1"')
+				assert_equal true, evaluate('< FALSE TRUE')
+				assert_equal true, evaluate('< FALSE 1')
+				assert_equal true, evaluate('< FALSE "1"')
 			end
 
 			it 'is false all other times' do
-				assert_equal false, eval('< FALSE FALSE')
-				assert_equal false, eval('< FALSE 0')
-				assert_equal false, eval('< FALSE ""')
-				assert_equal false, eval('< FALSE NULL')
-				assert_equal true, eval('< FALSE (- 0 1)')
+				assert_equal false, evaluate('< FALSE FALSE')
+				assert_equal false, evaluate('< FALSE 0')
+				assert_equal false, evaluate('< FALSE ""')
+				assert_equal false, evaluate('< FALSE NULL')
+				assert_equal true, evaluate('< FALSE (- 0 1)')
 
-				assert_equal false, eval('< TRUE TRUE')
-				assert_equal false, eval('< TRUE FALSE')
-				assert_equal false, eval('< TRUE 1')
-				assert_equal false, eval('< TRUE "1"')
-				assert_equal false, eval('< TRUE 0')
-				assert_equal false, eval('< TRUE ""')
-				assert_equal false, eval('< TRUE NULL')
+				assert_equal false, evaluate('< TRUE TRUE')
+				assert_equal false, evaluate('< TRUE FALSE')
+				assert_equal false, evaluate('< TRUE 1')
+				assert_equal false, evaluate('< TRUE "1"')
+				assert_equal false, evaluate('< TRUE 0')
+				assert_equal false, evaluate('< TRUE ""')
+				assert_equal false, evaluate('< TRUE NULL')
 			end
 		end
 
 		describe '4.3.8 >' do
 			it 'is only true when TRUTHY and the rhs is falsey' do
-				assert_equal true, eval('> TRUE FALSE')
-				assert_equal true, eval('> TRUE 0')
-				assert_equal true, eval('> TRUE ""')
-				assert_equal true, eval('> TRUE NULL')
+				assert_equal true, evaluate('> TRUE FALSE')
+				assert_equal true, evaluate('> TRUE 0')
+				assert_equal true, evaluate('> TRUE ""')
+				assert_equal true, evaluate('> TRUE NULL')
 			end
 
 			it 'is false all other times' do
-				assert_equal false, eval('> TRUE TRUE')
-				assert_equal false, eval('> TRUE 1')
-				assert_equal false, eval('> TRUE "1"')
+				assert_equal false, evaluate('> TRUE TRUE')
+				assert_equal false, evaluate('> TRUE 1')
+				assert_equal false, evaluate('> TRUE "1"')
 
-				assert_equal false, eval('> FALSE (- 0 1)')
-				assert_equal false, eval('> FALSE TRUE')
-				assert_equal false, eval('> FALSE FALSE')
-				assert_equal false, eval('> FALSE 1')
-				assert_equal false, eval('> FALSE "1"')
-				assert_equal false, eval('> FALSE 0')
-				assert_equal false, eval('> FALSE ""')
-				assert_equal false, eval('> FALSE NULL')
+				assert_equal false, evaluate('> FALSE (- 0 1)')
+				assert_equal false, evaluate('> FALSE TRUE')
+				assert_equal false, evaluate('> FALSE FALSE')
+				assert_equal false, evaluate('> FALSE 1')
+				assert_equal false, evaluate('> FALSE "1"')
+				assert_equal false, evaluate('> FALSE 0')
+				assert_equal false, evaluate('> FALSE ""')
+				assert_equal false, evaluate('> FALSE NULL')
 			end
 		end
 	end

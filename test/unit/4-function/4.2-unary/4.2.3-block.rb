@@ -23,8 +23,8 @@ section '4.2.3', 'BLOCK' do
 	end
 
 	it 'should be usable as the sole argument of CALL' do
-		assert_equal 12, eval('CALL BLOCK 12')
-		assert_equal 3, eval('; = bar BLOCK + 4 foo ; = foo 3 : CALL bar')
+		assert_equal 12, evaluate('CALL BLOCK 12')
+		assert_equal 7, evaluate('; = bar BLOCK + 4 foo ; = foo 3 : CALL bar')
 	end
 
 	test_argument_count 'BLOCK', '1'

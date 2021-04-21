@@ -10,7 +10,34 @@ end
 
 module Kn::Test
 	module Spec
-		class InvalidExpression < Exception
+		class << self
+			attr_reader :executable
+			attr_accessor :sanitizations
+			attr_accessor :sections
+			self.executable = 
+		# sections.each do |section|
+		# 	abort "invalid section '#{section}'" unless section.match? /\A\d+(\.\d+){,2}\z/
+		# end
+
+
+			def executable=(executable)
+				executable = Array(executable)
+				old_executable, @executable = @executable, executable
+
+				begin
+					execute 'DUMP 1'
+				rescue
+					# do nothing, fallthroguh
+				else
+					return @executable # if we're able to dump, return the executble
+				end
+
+				@executable = old_executable
+				raise ArgumentError, "invalid executable: #{executable}"
+			end
+		end
+
+		class InvalidExpression < RuntimeError
 			attr_reader :expr
 
 			def initialize(expr)
@@ -31,10 +58,10 @@ module Kn::Test
 			end
 		end
 
-		def exec(expr, stdin: :close, stdout: :capture, stderr: $DEBUG ? nil : :close, raise_on_failure: true)
+		module_function def execute(expr, stdin: :close, stdout: :capture, stderr: $DEBUG ? nil : :close, raise_on_failure: true)
 			IO.pipe do |read, write|
 				unless system(
-					*Array($executable_to_test), '-e', expr,
+					*Kn::Test::Spec.executable, '-e', expr,
 					out: write,
 					in: stdin,
 					err: stderr,
@@ -47,36 +74,41 @@ module Kn::Test
 			end
 		end
 
-		def assert_fails
-			assert_raises(InvalidExpression) { yield }
+		def execute(*a, **k)
+			Kn::Test::Spec.execute(*a, **k)
 		end
 
-		def assert_runs
-			yield
+		def assert_fails(cmd=nil)
+			assert_raises(InvalidExpression) { cmd ? execute(cmd) : yield }
+		end
+
+		def assert_runs(cmd=nil)
+			cmd ? execute(cmd) : yield
+			assert true # todo: "pass"
 		end
 
 		def dump(expr, **kwargs)
-			exec("D #{expr}", **kwargs)
+			execute("DUMP #{expr}", **kwargs)
 		end
 
-		def eval(expr, **kwargs)
+		def evaluate(expr, **kwargs)
 			parse dump(expr, **kwargs)
 		end
 
 		def to_string(expr)
-			val = eval "+ '' #{expr}"
+			val = evaluate "+ '' #{expr}"
 			raise "not a string: #{val.inspect}" unless val.is_a? String
 			val
 		end
 
 		def to_number(expr)
-			val = eval "+ 0 #{expr}"
+			val = evaluate "+ 0 #{expr}"
 			raise "not a number: #{val.inspect}" unless val.is_a? Integer
 			val
 		end
 
 		def to_boolean(expr)
-			val = eval "! ! #{expr}"
+			val = evaluate "! ! #{expr}"
 			raise "not a boolean: #{val.inspect}" unless val == true || val == false
 			val
 		end
@@ -114,7 +146,7 @@ module Kn::Test
 			:io_errors
 		].freeze
 
-		$enabled_sanitizations ||= [
+		DEFAULT_SANITIATIONS = [
 			:zero_division,
 			:invalid_types,
 			:argument_count,
@@ -139,7 +171,7 @@ module Kn::Test
 		end
 
 		def testing?(*value)
-			value.all? { |x| $enabled_sanitizations.include? x }
+			value.all? { |x| Kn::Test::Spec.sanitizations.include? x }
 		end
 	end
 

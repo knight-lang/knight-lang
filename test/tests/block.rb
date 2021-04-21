@@ -42,7 +42,7 @@ describe 'Block' do
 	it 'wont execute its body until called' do
 		assert_runs { execute 'BLOCK QUIT 1' }
 		assert_runs { execute 'BLOCK missing' }
-		assert_runs { execute 'BLOCK EVAL "nope"' }
+		assert_runs { execute 'BLOCK evaluate "nope"' }
 	end
 
 	# note that `BLOCK` simply returns its argument, unevaluated. But in the case of 
@@ -50,31 +50,31 @@ describe 'Block' do
 	describe 'operators' do
 		describe 'CALL' do
 			it 'executes its body' do
-				assert_equal 12, eval('CALL BLOCK + 5 7')
-				assert_equal 18, eval('; = foo BLOCK + bar 5 ; = bar 13 : CALL foo')
+				assert_equal 12, evaluate('CALL BLOCK + 5 7')
+				assert_equal 18, evaluate('; = foo BLOCK + bar 5 ; = bar 13 : CALL foo')
 			end
 
 
 			it 'can be called with any type' do
 				# we call these because they may be implemented as a function.
-				assert_equal 1, eval('CALL BLOCK 1')
-				assert_equal 'foo', eval('CALL BLOCK "foo"')
-				assert_equal true, eval('CALL BLOCK TRUE')
-				assert_equal false, eval('CALL BLOCK FALSE')
-				assert_equal :null, eval('CALL BLOCK NULL')
-				assert_equal 1, eval('; = ident 1 : CALL BLOCK ident')
-				assert_equal 3, eval('CALL BLOCK + 1 2')
+				assert_equal 1, evaluate('CALL BLOCK 1')
+				assert_equal 'foo', evaluate('CALL BLOCK "foo"')
+				assert_equal true, evaluate('CALL BLOCK TRUE')
+				assert_equal false, evaluate('CALL BLOCK FALSE')
+				assert_equal :null, evaluate('CALL BLOCK NULL')
+				assert_equal 1, evaluate('; = ident 1 : CALL BLOCK ident')
+				assert_equal 3, evaluate('CALL BLOCK + 1 2')
 			end
 		end
 =begin
 		describe '?' do
 			it 'is only equivalent to _the exact instance_' do
-				assert_equal true, eval('; = x B R : ? x x')
+				assert_equal true, evaluate('; = x B R : ? x x')
 			end
 
 			it 'is not equal to anything else' do
-				assert_equal false, eval('? B (! TRUE) B (! TRUE)')
-				assert_equal false, eval('? B (! TRUE) FALSE')
+				assert_equal false, evaluate('? B (! TRUE) B (! TRUE)')
+				assert_equal false, evaluate('? B (! TRUE) FALSE')
 			end
 		end
 =end

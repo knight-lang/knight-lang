@@ -60,24 +60,24 @@ module Kn::Test::Shared
 		$check_ub
 	end
 
-	def eval(expr)
+	def evaluate(expr)
 		parse dump expr
 	end
 
 	def to_string(expr)
-		val = eval "+ '' #{expr}"
+		val = evaluate "+ '' #{expr}"
 		raise "not a string: #{val.inspect}" unless val.is_a? String
 		val
 	end
 
 	def to_number(expr)
-		val = eval "+ 0 #{expr}"
+		val = evaluate "+ 0 #{expr}"
 		raise "not a number: #{val.inspect}" unless val.is_a? Integer
 		val
 	end
 
 	def to_boolean(expr)
-		val = eval "! ! #{expr}"
+		val = evaluate "! ! #{expr}"
 		raise "not a boolean: #{val.inspect}" unless val == true || val == false
 		val
 	end

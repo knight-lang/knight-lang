@@ -93,38 +93,38 @@ describe 'String' do
 
 	describe 'parsing' do
 		it 'parses empty strings' do
-			assert_equal '', eval(%|""|)
-			assert_equal '', eval(%|''|)
+			assert_equal '', evaluate(%|""|)
+			assert_equal '', evaluate(%|''|)
 		end
 
 		it 'parses normal single and double quoted strings' do
-			assert_equal '0', eval(%|"0"|)
-			assert_equal '1', eval(%|'1'|)
-			assert_equal 'Epicurus', eval(%|"Epicurus"|)
-			assert_equal 'Epicurus', eval(%|'Epicurus'|)
-			assert_equal 'to be or not to be, that is FF', eval(%|"to be or not to be, that is FF"|)
-			assert_equal 'to be or not to be, that is FF', eval(%|'to be or not to be, that is FF'|)
+			assert_equal '0', evaluate(%|"0"|)
+			assert_equal '1', evaluate(%|'1'|)
+			assert_equal 'Epicurus', evaluate(%|"Epicurus"|)
+			assert_equal 'Epicurus', evaluate(%|'Epicurus'|)
+			assert_equal 'to be or not to be, that is FF', evaluate(%|"to be or not to be, that is FF"|)
+			assert_equal 'to be or not to be, that is FF', evaluate(%|'to be or not to be, that is FF'|)
 		end
 
 		it 'allows quotes of the other type' do
-			assert_equal %|"|, eval(%|'"'|)
-			assert_equal %|a"b|, eval(%|'a"b'|)
-			assert_equal %|Then I said: "why not?"|, eval(%|'Then I said: "why not?"'|)
+			assert_equal %|"|, evaluate(%|'"'|)
+			assert_equal %|a"b|, evaluate(%|'a"b'|)
+			assert_equal %|Then I said: "why not?"|, evaluate(%|'Then I said: "why not?"'|)
 
-			assert_equal %|'|, eval(%|"'"|)
-			assert_equal %|c'd|, eval(%|"c'd"|)
-			assert_equal %|And they said I'd get where I'm going|, eval(%|"And they said I'd get where I'm going"|)
+			assert_equal %|'|, evaluate(%|"'"|)
+			assert_equal %|c'd|, evaluate(%|"c'd"|)
+			assert_equal %|And they said I'd get where I'm going|, evaluate(%|"And they said I'd get where I'm going"|)
 		end
 
 		it 'parses newlines' do
-			assert_equal %|\n|, eval(%|'\n'|)
-			assert_equal %|\n|, eval(%|"\n"|)
+			assert_equal %|\n|, evaluate(%|'\n'|)
+			assert_equal %|\n|, evaluate(%|"\n"|)
 
-			assert_equal %|foo\nbar|, eval(%|'foo\nbar'|)
-			assert_equal %|foo\nbar|, eval(%|"foo\nbar"|)
+			assert_equal %|foo\nbar|, evaluate(%|'foo\nbar'|)
+			assert_equal %|foo\nbar|, evaluate(%|"foo\nbar"|)
 
-			assert_equal %|foo\r\nbar|, eval(%|'foo\r\nbar'|)
-			assert_equal %|foo\r\nbar|, eval(%|"foo\r\nbar"|)
+			assert_equal %|foo\r\nbar|, evaluate(%|'foo\r\nbar'|)
+			assert_equal %|foo\r\nbar|, evaluate(%|"foo\r\nbar"|)
 		end
 
 		it 'ignores escapes entirely' do
@@ -133,213 +133,213 @@ describe 'String' do
 				%w(\0 \x03 \x0a \n \r \t \f \v \" \' \").each do |escape|
 					next if escape == '\\' + quote # skip `\'` when `'` and `\"` when `"`.
 
-					assert_equal escape, eval("#{quote}#{escape}#{quote}")
+					assert_equal escape, evaluate("#{quote}#{escape}#{quote}")
 				end
 			end
 
 			# make sure they all are ignored together together
-			assert_equal %q|\0\x03\x0a\n\r\n\t\f\v\"\\|, eval(%q|'\0\x03\x0a\n\r\n\t\f\v\"\\'|)
-			assert_equal %q|\0\x03\x0a\n\r\n\t\f\v\'\\|, eval(%q|"\0\x03\x0a\n\r\n\t\f\v\'\\"|)
+			assert_equal %q|\0\x03\x0a\n\r\n\t\f\v\"\\|, evaluate(%q|'\0\x03\x0a\n\r\n\t\f\v\"\\'|)
+			assert_equal %q|\0\x03\x0a\n\r\n\t\f\v\'\\|, evaluate(%q|"\0\x03\x0a\n\r\n\t\f\v\'\\"|)
 		end
 	end
 
 	describe 'operators' do
 		describe '4.3.1 +' do
 			it 'concatenates' do
-				assert_equal "1121a3", eval('+ "112" "1a3"')
-				assert_equal "Plato Aristotle", eval('+ "Plato" " Aristotle"')
-				assert_equal "Because why not?", eval('++ "Because " "why" " not?"')
+				assert_equal "1121a3", evaluate('+ "112" "1a3"')
+				assert_equal "Plato Aristotle", evaluate('+ "Plato" " Aristotle"')
+				assert_equal "Because why not?", evaluate('++ "Because " "why" " not?"')
 			end
 
 			it 'coerces to a string' do
-				assert_equal 'truth is true', eval('+ "truth is " TRUE')
-				assert_equal 'falsehood is false', eval('+ "falsehood is " FALLSE')
-				assert_equal 'it is null and void', eval('++ "it is " NULL " and void"')
-				assert_equal 'twelve is 12', eval('+ "twelve is " 12')
+				assert_equal 'truth is true', evaluate('+ "truth is " TRUE')
+				assert_equal 'falsehood is false', evaluate('+ "falsehood is " FALLSE')
+				assert_equal 'it is null and void', evaluate('++ "it is " NULL " and void"')
+				assert_equal 'twelve is 12', evaluate('+ "twelve is " 12')
 			end
 		end
 
 		describe '4.3.3 *' do
 			it 'duplicates itself with positive integers' do
-				assert_equal '', eval('* "" 12')
-				assert_equal 'foo', eval('* "foo" 1')
-				assert_equal 'a1a1a1a1', eval('* "a1" 4')
-				assert_equal 'haihaihaihaihaihaihaihai', eval('* "hai" 8')
+				assert_equal '', evaluate('* "" 12')
+				assert_equal 'foo', evaluate('* "foo" 1')
+				assert_equal 'a1a1a1a1', evaluate('* "a1" 4')
+				assert_equal 'haihaihaihaihaihaihaihai', evaluate('* "hai" 8')
 			end
 
 			it 'returns an empty string when zero' do
-				assert_equal '', eval('* "hi" 0')
-				assert_equal '', eval('* "what up?" 0')
+				assert_equal '', evaluate('* "hi" 0')
+				assert_equal '', evaluate('* "what up?" 0')
 			end
 
 			it 'coerces the RHS to a number' do
-				assert_equal 'foofoofoo', eval('* "foo" "3"')
-				assert_equal 'foo', eval('* "foo" TRUE')
-				assert_equal '', eval('* "foo" NULL')
-				assert_equal '', eval('* "foo" FALSE')
+				assert_equal 'foofoofoo', evaluate('* "foo" "3"')
+				assert_equal 'foo', evaluate('* "foo" TRUE')
+				assert_equal '', evaluate('* "foo" NULL')
+				assert_equal '', evaluate('* "foo" FALSE')
 			end
 		end
 
 		describe '4.3.9 ?' do
 			it 'is only equal to itself' do
-				assert_equal true, eval('? "" ""')
-				assert_equal true, eval('? "a" "a"')
-				assert_equal true, eval('? "0" "0"')
-				assert_equal true, eval('? "1" "1"')
-				assert_equal true, eval('? "foobar" "foobar"')
-				assert_equal true, eval('? "this is a test" "this is a test"')
-				assert_equal true, eval(%|? (+ "'" '"') (+ "'" '"')|)
+				assert_equal true, evaluate('? "" ""')
+				assert_equal true, evaluate('? "a" "a"')
+				assert_equal true, evaluate('? "0" "0"')
+				assert_equal true, evaluate('? "1" "1"')
+				assert_equal true, evaluate('? "foobar" "foobar"')
+				assert_equal true, evaluate('? "this is a test" "this is a test"')
+				assert_equal true, evaluate(%|? (+ "'" '"') (+ "'" '"')|)
 			end
 
 			it 'is not equal to other strings' do
-				assert_equal false, eval('? "" " "')
-				assert_equal false, eval('? " " ""')
-				assert_equal false, eval('? "a" "A"')
-				assert_equal false, eval('? "0" "00"')
-				assert_equal false, eval('? "1.0" "1"')
-				assert_equal false, eval('? "1" "1.0"')
-				assert_equal false, eval('? "0" "0x0"')
-				assert_equal false, eval('? "is this a test" "this is a test"')
+				assert_equal false, evaluate('? "" " "')
+				assert_equal false, evaluate('? " " ""')
+				assert_equal false, evaluate('? "a" "A"')
+				assert_equal false, evaluate('? "0" "00"')
+				assert_equal false, evaluate('? "1.0" "1"')
+				assert_equal false, evaluate('? "1" "1.0"')
+				assert_equal false, evaluate('? "0" "0x0"')
+				assert_equal false, evaluate('? "is this a test" "this is a test"')
 			end
 
 			it 'is not equal to equivalent types' do
-				assert_equal false, eval('? "0" 0')
-				assert_equal false, eval('? "1" 1')
+				assert_equal false, evaluate('? "0" 0')
+				assert_equal false, evaluate('? "1" 1')
 
-				assert_equal false, eval('? "T" TRUE')
-				assert_equal false, eval('? "TRUE" TRUE')
-				assert_equal false, eval('? "True" TRUE')
-				assert_equal false, eval('? "true" TRUE')
+				assert_equal false, evaluate('? "T" TRUE')
+				assert_equal false, evaluate('? "TRUE" TRUE')
+				assert_equal false, evaluate('? "True" TRUE')
+				assert_equal false, evaluate('? "true" TRUE')
 
-				assert_equal false, eval('? "F" FALSE')
-				assert_equal false, eval('? "FALSE" FALSE')
-				assert_equal false, eval('? "False" FALSE')
-				assert_equal false, eval('? "false" FALSE')
+				assert_equal false, evaluate('? "F" FALSE')
+				assert_equal false, evaluate('? "FALSE" FALSE')
+				assert_equal false, evaluate('? "False" FALSE')
+				assert_equal false, evaluate('? "false" FALSE')
 
-				assert_equal false, eval('? "N" NULL')
-				assert_equal false, eval('? "NULL" NULL')
-				assert_equal false, eval('? "Null" NULL')
-				assert_equal false, eval('? "null" NULL')
+				assert_equal false, evaluate('? "N" NULL')
+				assert_equal false, evaluate('? "NULL" NULL')
+				assert_equal false, evaluate('? "Null" NULL')
+				assert_equal false, evaluate('? "null" NULL')
 			end
 		end
 
 		describe '4.3.7 <' do
 			it 'performs lexicographical comparison' do
-				assert_equal true,  eval('< "a" "aa"')
-				assert_equal false, eval('< "b" "aa"')
+				assert_equal true,  evaluate('< "a" "aa"')
+				assert_equal false, evaluate('< "b" "aa"')
 
-				assert_equal false, eval('< "aa" "a"')
-				assert_equal true,  eval('< "aa" "b"')
+				assert_equal false, evaluate('< "aa" "a"')
+				assert_equal true,  evaluate('< "aa" "b"')
 
-				assert_equal true,  eval('< "A" "AA"')
-				assert_equal false, eval('< "B" "AA"')
+				assert_equal true,  evaluate('< "A" "AA"')
+				assert_equal false, evaluate('< "B" "AA"')
 
-				assert_equal false, eval('< "AA" "A"')
-				assert_equal true,  eval('< "AA" "B"')
+				assert_equal false, evaluate('< "AA" "A"')
+				assert_equal true,  evaluate('< "AA" "B"')
 
 				# ensure it obeys ascii
-				assert_equal false, eval('< "a" "A"')
-				assert_equal true,  eval('< "A" "a"')
-				assert_equal false, eval('< "z" "Z"')
-				assert_equal true,  eval('< "Z" "z"')
+				assert_equal false, evaluate('< "a" "A"')
+				assert_equal true,  evaluate('< "A" "a"')
+				assert_equal false, evaluate('< "z" "Z"')
+				assert_equal true,  evaluate('< "Z" "z"')
 
-				assert_equal true, eval('< "/" 0')
-				assert_equal true, eval('< "8" 9')
+				assert_equal true, evaluate('< "/" 0')
+				assert_equal true, evaluate('< "8" 9')
 
 			end
 
 			it 'performs it even with numbers' do
-				assert_equal true, eval('< "0" "00"')
-				assert_equal true, eval('< "1" "12"')
-				assert_equal true, eval('< "100" "12"')
-				assert_equal false, eval('< "00" "0"')
-				assert_equal false, eval('< "12" "1"')
-				assert_equal false, eval('< "12" "100"')
+				assert_equal true, evaluate('< "0" "00"')
+				assert_equal true, evaluate('< "1" "12"')
+				assert_equal true, evaluate('< "100" "12"')
+				assert_equal false, evaluate('< "00" "0"')
+				assert_equal false, evaluate('< "12" "1"')
+				assert_equal false, evaluate('< "12" "100"')
 
-				assert_equal true, eval('< "  0" "  00"')
-				assert_equal true, eval('< "  1" "  12"')
-				assert_equal true, eval('< "  100" "  12"')
+				assert_equal true, evaluate('< "  0" "  00"')
+				assert_equal true, evaluate('< "  1" "  12"')
+				assert_equal true, evaluate('< "  100" "  12"')
 			end
 
 			it 'coerces the RHS to a number' do
-				assert_equal true, eval('< "0" 1')
-				assert_equal true, eval('< "1" 12')
-				assert_equal true, eval('< "100" 12')
-				assert_equal false, eval('< "00" 0')
-				assert_equal false, eval('< "12" 100')
-				assert_equal false, eval('< "12" 100')
+				assert_equal true, evaluate('< "0" 1')
+				assert_equal true, evaluate('< "1" 12')
+				assert_equal true, evaluate('< "100" 12')
+				assert_equal false, evaluate('< "00" 0')
+				assert_equal false, evaluate('< "12" 100')
+				assert_equal false, evaluate('< "12" 100')
 
-				assert_equal true, eval('< "trud" TRUE')
-				assert_equal false, eval('< "true" TRUE')
-				assert_equal false, eval('< "truf" TRUE')
+				assert_equal true, evaluate('< "trud" TRUE')
+				assert_equal false, evaluate('< "true" TRUE')
+				assert_equal false, evaluate('< "truf" TRUE')
 
-				assert_equal true, eval('< "falsd" FALSE')
-				assert_equal false, eval('< "false" FALSE')
-				assert_equal false, eval('< "faslf" FALSE')
+				assert_equal true, evaluate('< "falsd" FALSE')
+				assert_equal false, evaluate('< "false" FALSE')
+				assert_equal false, evaluate('< "faslf" FALSE')
 
-				assert_equal true, eval('< "nulk" NULL')
-				assert_equal false, eval('< "null" NULL')
-				assert_equal false, eval('< "nulm" NULL')
+				assert_equal true, evaluate('< "nulk" NULL')
+				assert_equal false, evaluate('< "null" NULL')
+				assert_equal false, evaluate('< "nulm" NULL')
 			end
 		end
 
 		describe '4.3.8 >' do
 			it 'performs lexicographical comparison' do
-				assert_equal false, eval('> "a" "aa"')
-				assert_equal true,  eval('> "b" "aa"')
+				assert_equal false, evaluate('> "a" "aa"')
+				assert_equal true,  evaluate('> "b" "aa"')
 
-				assert_equal true,  eval('> "aa" "a"')
-				assert_equal false, eval('> "aa" "b"')
+				assert_equal true,  evaluate('> "aa" "a"')
+				assert_equal false, evaluate('> "aa" "b"')
 
-				assert_equal false, eval('> "A" "AA"')
-				assert_equal true,  eval('> "B" "AA"')
+				assert_equal false, evaluate('> "A" "AA"')
+				assert_equal true,  evaluate('> "B" "AA"')
 
-				assert_equal true,  eval('> "AA" "A"')
-				assert_equal false, eval('> "AA" "B"')
+				assert_equal true,  evaluate('> "AA" "A"')
+				assert_equal false, evaluate('> "AA" "B"')
 
 				# ensure it obeys ascii
-				assert_equal true,  eval('> "a" "A"')
-				assert_equal false, eval('> "A" "a"')
-				assert_equal true,  eval('> "z" "Z"')
-				assert_equal false, eval('> "Z" "z"')
+				assert_equal true,  evaluate('> "a" "A"')
+				assert_equal false, evaluate('> "A" "a"')
+				assert_equal true,  evaluate('> "z" "Z"')
+				assert_equal false, evaluate('> "Z" "z"')
 
-				assert_equal true, eval('> ":" 9')
-				assert_equal true, eval('> "1" 0')
+				assert_equal true, evaluate('> ":" 9')
+				assert_equal true, evaluate('> "1" 0')
 
 			end
 
 			it 'performs it even with numbers' do
-				assert_equal false, eval('> "0" "00"')
-				assert_equal false, eval('> "1" "12"')
-				assert_equal false, eval('> "100" "12"')
-				assert_equal true, eval('> "00" "0"')
-				assert_equal true, eval('> "12" "1"')
-				assert_equal true, eval('> "12" "100"')
+				assert_equal false, evaluate('> "0" "00"')
+				assert_equal false, evaluate('> "1" "12"')
+				assert_equal false, evaluate('> "100" "12"')
+				assert_equal true, evaluate('> "00" "0"')
+				assert_equal true, evaluate('> "12" "1"')
+				assert_equal true, evaluate('> "12" "100"')
 
-				assert_equal false, eval('> "  0" "  00"')
-				assert_equal false, eval('> "  1" "  12"')
-				assert_equal false, eval('> "  100" "  12"')
+				assert_equal false, evaluate('> "  0" "  00"')
+				assert_equal false, evaluate('> "  1" "  12"')
+				assert_equal false, evaluate('> "  100" "  12"')
 			end
 
 			it 'coerces the RHS to a number' do
-				assert_equal false, eval('> "0" 1')
-				assert_equal false, eval('> "1" 12')
-				assert_equal false, eval('> "100" 12')
-				assert_equal true, eval('> "00" 0')
-				assert_equal true, eval('> "12" 100')
-				assert_equal true, eval('> "12" 100')
+				assert_equal false, evaluate('> "0" 1')
+				assert_equal false, evaluate('> "1" 12')
+				assert_equal false, evaluate('> "100" 12')
+				assert_equal true, evaluate('> "00" 0')
+				assert_equal true, evaluate('> "12" 100')
+				assert_equal true, evaluate('> "12" 100')
 
-				assert_equal false, eval('> "trud" TRUE')
-				assert_equal false,  eval('> "true" TRUE')
-				assert_equal true,  eval('> "truf" TRUE')
+				assert_equal false, evaluate('> "trud" TRUE')
+				assert_equal false,  evaluate('> "true" TRUE')
+				assert_equal true,  evaluate('> "truf" TRUE')
 
-				assert_equal false, eval('> "falsd" FALSE')
-				assert_equal false,  eval('> "false" FALSE')
-				assert_equal true,  eval('> "faslf" FALSE')
+				assert_equal false, evaluate('> "falsd" FALSE')
+				assert_equal false,  evaluate('> "false" FALSE')
+				assert_equal true,  evaluate('> "faslf" FALSE')
 
-				assert_equal false, eval('> "nulk" NULL')
-				assert_equal false,  eval('> "null" NULL')
-				assert_equal true,  eval('> "nulm" NULL')
+				assert_equal false, evaluate('> "nulk" NULL')
+				assert_equal false,  evaluate('> "null" NULL')
+				assert_equal true,  evaluate('> "nulm" NULL')
 			end
 		end
 	end
