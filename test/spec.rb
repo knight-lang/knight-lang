@@ -41,21 +41,14 @@ module Kn::Test
 	].freeze
 
 	@sanitizations = DEFAULT_SANITIATIONS.dup
-	@sections = %w(4 3 2 1)
 	@executable = [File.join(Dir.pwd, 'knight')] # default 
 
 	module_function
 
 	def sanitizations; @sanitizations end
 	def sanitizations=(san); @sanitizations = san end
-	def sections; @sections end
-	def sections=(sec); @sections = sec end
 	def executable; @executable end
 	def executable=(exec); @executable = Array(exec) end
-
-	def section?(section)
-		@sections == :all || @sections.include?(section)
-	end
 
 	def sanitization?(sanitization)
 		sanitizations.include? sanitization
@@ -139,25 +132,14 @@ module Kn::Test::Spec
 		x.extend self
 	end
 
-	def section?(...)
-		Kn::Test.section?(...)
-	end
 	def sanitization?(...) 
 		Kn::Test.sanitization?(...)
 	end
 	alias sanitized? sanitization?
 
-	def section(number, name, &block)
-		describe("#{number}. #{name}", &block) if section? number
-	end
-
 	# todo: remove `when_testing` and make it `sanitizes`
 	def it(description, when_testing: nil, sanitizes: when_testing)
 		super description if !sanitizes || sanitization?(sanitizes)
-	end
-
-	module Section
-		include Kn::Test::Spec
 	end
 end
 

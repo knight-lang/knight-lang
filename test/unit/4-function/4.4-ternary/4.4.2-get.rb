@@ -6,10 +6,10 @@ section '4.4.2', 'GET' do
 		assert_result '', %|GET "abcd" 3 0|
 	end
 
-	ALPHABET = 'abcdef'
 	it 'works for all possible combinations of 6 characters' do
-		ALPHABET.length.times do |length|
-			word = ALPHABET[0, length]
+		alphabet = 'abcdef'
+		alphabet.length.times do |length|
+			word = alphabet[0, length]
 			(0..length).each do |start|
 				(0..length - start).each do |len|
 					assert_result word[start, len], "GET #{word.inspect} #{start} #{len}"

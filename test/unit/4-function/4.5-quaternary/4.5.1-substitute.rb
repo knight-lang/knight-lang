@@ -6,11 +6,11 @@ section '4.5.1', 'SUBSTITUTE' do
 		assert_result '', %|GET "abcd" 3 0|
 	end
 
-	ALPHABET = 'abcdef'
 	it 'works for all possible combinations of 6 characters' do
-		[*0...ALPHABET.length].product([*0...ALPHABET.length]) do |wordlen, repllen|
-			word = ALPHABET[0, wordlen]
-			replacement = ALPHABET[0, repllen]
+		alphabet = 'abcdef'
+		[*0...alphabet.length].product([*0...alphabet.length]) do |wordlen, repllen|
+			word = alphabet[0, wordlen]
+			replacement = alphabet[0, repllen]
 			(0..wordlen).each do |start|
 				(0..wordlen - start).each do |len|
 					w = word.dup
