@@ -21,8 +21,8 @@ section '4.3.11', '|' do
 	end
 
 	it 'does not accept BLOCK values for the first arg', when_testing: :strict_types do
-		assert_fails { eval('; = a 3 : | (BLOCK a) 1') }
-		assert_fails { eval('| (BLOCK QUIT 0) 1') }
+		refute_runs %#; = a 3 : | (BLOCK a) 1#
+		refute_runs %#| (BLOCK QUIT 0) 1#
 	end
 
 	it 'requires exactly two arguments', when_testing: :argument_count do
