@@ -16,7 +16,7 @@ module Kn::Test::Spec::Function
 
 	def test_evaluation_order(expected, expression)
 		it 'evaluates arguments in order' do
-			assert_equal expected, evaluate(expression)
+			assert_equal expected, eval(expression)
 		end
 	end
 

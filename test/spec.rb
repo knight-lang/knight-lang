@@ -1,192 +1,169 @@
 require 'minitest'
 require 'minitest/spec'
 
-module Kn
-	module Test
-		Variable = Struct.new :ident
-		Function = Struct.new :ast
+module Kn; end
+
+module Kn::Test
+	ALL_SANITIZATIONS = [
+		# division by zero, modulo by zero, and 0 to a negative power.
+		:zero_division,
+
+		# when a bad type is given as the first arg to a binary function
+		:invalid_types,
+
+		# when an identifier/block is given as the fist arg.
+		:strict_types,
+
+		# ensure that the function only parses with the correct amount of arguments
+		:argument_count,
+
+		# Checks to see if overflow occurs on _any_ numeric operation.
+		:overflow,
+
+		# when a bad value is passed to a function
+		:invalid_values,
+
+		# When an undefined variable is accessed
+		:undefined_variables,
+
+		# For things that, while technically UB, are not really that easy to sanitize.
+		:strict_compliance,
+
+		# If we catch problems with i/o. (ie `OUTPUT`, `DUMP`, `PROMPT`, and `` ` ``.)
+		:io_errors,
+	].freeze
+
+	DEFAULT_SANITIATIONS = [
+		:zero_division,
+		:invalid_types,
+		:argument_count,
+		:undefined_variables
+	].freeze
+
+	@sanitizations = DEFAULT_SANITIATIONS.dup
+	@sections = :all
+	@executable = [File.join(Dir.pwd, 'knight')] # default 
+
+	module_function
+
+	def sanitizations; @sanitizations end
+	def sanitizations=(san); @sanitizations = san end
+	def sections; @sections end
+	def sections=(sec); @sections = sec end
+	def executable; @executable end
+	def executable=(exec); @executable = Array(exec) end
+
+	def section?(section)
+		@sections == :all || @sections.include?(section)
+	end
+
+	def sanitization?(sanitization)
+		sanitizations.include? sanitization
 	end
 end
 
-module Kn::Test
-	module Spec
-		class << self
-			attr_reader :executable
-			attr_accessor :sanitizations
-			attr_accessor :sections
-			self.executable = 
-		# sections.each do |section|
-		# 	abort "invalid section '#{section}'" unless section.match? /\A\d+(\.\d+){,2}\z/
-		# end
+module Kn::Test::Spec
+	class BadResult < RuntimeError
+		attr_reader :expr, :result
 
+		def initialize(expr, result)
+			@expr = expr
+			@result = result
 
-			def executable=(executable)
-				executable = Array(executable)
-				old_executable, @executable = @executable, executable
+			super "\n===[expression]===\n#{@expr.inspect}\n===[invalid result]===\n#{@result.inspect}\n"
+		end
+	end
 
-				begin
-					execute 'DUMP 1'
-				rescue
-					# do nothing, fallthroguh
-				else
-					return @executable # if we're able to dump, return the executble
-				end
+	def eval(expr, **k)
+		case (result = exec("DUMP #{expr}", **k).chomp)
+		when /\ANull\(\)\z/                    then :null
+		when /\AString\((.*?)\)\z/m            then $1
+		when /\ABoolean\((?i)(true|false)\)\z/ then $1.downcase == 'true'
+		when /\ANumber\((?!-0\b)(-?\d+)\)\z/   then $1.to_i # `-0` is invalid.
+		else                                        raise BadResult.new expr, result
+		end
+	end
 
-				@executable = old_executable
-				raise ArgumentError, "invalid executable: #{executable}"
+	def exec(expr, stdin: :close, stderr: $DEBUG ? $stderr : :close, raise_on_failure: true)
+		unless File.executable? Kn::Test.executable.first
+			abort "executable file #{Kn::Test.executable.first.inspect} is not executable"
+		end
+
+		IO.pipe do |read, write|
+			unless system(*Kn::Test.executable, '-e', expr, out: write, in: stdin, err: stderr)
+				raise BadResult.new(expr, "#$?") if raise_on_failure
+			end
+
+			write.close
+			read.read
+		end
+	end
+
+	def assert_run_equal(expected, expr)
+		assert_equal expected, eval(expr)
+	end
+
+	def refute_runs(*a, **k)
+		assert_raises BadResult do
+			if block_given?
+				yield
+			else
+				exec(*a, **k)
 			end
 		end
+	end
 
-		class InvalidExpression < RuntimeError
-			attr_reader :expr
-
-			def initialize(expr)
-				@expr = expr
-				super "invalid expression: #{expr.inspect}"
-			end
+	def assert_runs(*a, **k)
+		if block_given?
+			yield
+		else
+			exec(*a, **k)
 		end
 
-		def parse(expr)
-			case expr
-			when /\ANull\(\)\Z/ then :null
-			when /\AString\((.*?)\)\Z/m then $1
-			when /\ABoolean\((true|false)\)\Z/ then $1 == 'true'
-			when /\ANumber\(((?:-(?!0\)))?\d+)\)\Z/ then $1.to_i # `-0` is invalid.
-			when /\AFunction\((.*?)\)\Z/m then Kn::Test::Function.new $1
-			when /\AIdentifier\(([_a-z][_a-z0-9]*)\)\Z/ then Kn::Test::Variable.new $1
-			else fail "bad expression: #{expr.inspect}"
-			end
-		end
+		pass
+	end
 
-		module_function def execute(expr, stdin: :close, stdout: :capture, stderr: $DEBUG ? nil : :close, raise_on_failure: true)
-			IO.pipe do |read, write|
-				unless system(
-					*Kn::Test::Spec.executable, '-e', expr,
-					out: write,
-					in: stdin,
-					err: stderr,
-				)
-					raise InvalidExpression, expr if raise_on_failure
-				end
+	def to_string(expr)
+		eval("+ '' #{expr}").tap { |s| s.is_a? String or raise "not a string: #{val.inspect}" }
+	end
 
-				write.close
-				read.read
-			end
-		end
+	def to_number(expr)
+		eval("+ 0 #{expr}").tap { |s| s.is_a? Integer or raise "not an integer: #{val.inspect}" }
+	end
 
-		def execute(*a, **k)
-			Kn::Test::Spec.execute(*a, **k)
-		end
+	def to_boolean(expr)
+		eval("! ! #{expr}").tap { |s| s.is_a? Integer or raise "not a boolean: #{val.inspect}" }
+	end
 
-		def assert_fails(cmd=nil)
-			assert_raises(InvalidExpression) { cmd ? execute(cmd) : yield }
-		end
+	def self.included(x)
+		x.extend self
+	end
 
-		def assert_runs(cmd=nil)
-			cmd ? execute(cmd) : yield
-			assert true # todo: "pass"
-		end
+	def section?(...)
+		Kn::Test.section?(...)
+	end
+	def sanitization?(...) 
+		Kn::Test.sanitization?(...)
+	end
 
-		def dump(expr, **kwargs)
-			execute("DUMP #{expr}", **kwargs)
-		end
+	def section(number, name, &block)
+		describe("#{number}. #{name}", &block) if section? number
+	end
 
-		def evaluate(expr, **kwargs)
-			parse dump(expr, **kwargs)
-		end
-
-		def to_string(expr)
-			val = evaluate "+ '' #{expr}"
-			raise "not a string: #{val.inspect}" unless val.is_a? String
-			val
-		end
-
-		def to_number(expr)
-			val = evaluate "+ 0 #{expr}"
-			raise "not a number: #{val.inspect}" unless val.is_a? Integer
-			val
-		end
-
-		def to_boolean(expr)
-			val = evaluate "! ! #{expr}"
-			raise "not a boolean: #{val.inspect}" unless val == true || val == false
-			val
-		end
-
-		def self.included(x)
-			x.extend self
-		end
-
-		ALL_SANITIZATIONS = [
-			# division by zero, modulo by zero, and 0 to a negative power.
-			:zero_division,
-
-			# when a bad type is given as the first arg to a binary function
-			:invalid_types,
-
-			# when an identifier/block is given as the fist arg.
-			:strict_types,
-
-			# ensure that the function only parses with the correct amount of arguments
-			:argument_count,
-
-			# Checks to see if overflow occurs on _any_ numeric operation.
-			:overflow,
-
-			# when a bad value is passed to a function
-			:invalid_values,
-
-			# When an undefined variable is accessed
-			:undefined_variables,
-
-			# For things that, while technically UB, are not really that easy to sanitize.
-			:strict_compliance,
-
-			# If we catch problems with i/o. (ie `OUTPUT`, `DUMP`, `PROMPT`, and `` ` ``.)
-			:io_errors
-		].freeze
-
-		DEFAULT_SANITIATIONS = [
-			:zero_division,
-			:invalid_types,
-			:argument_count,
-			:undefined_variables
-		]
-		SECTIONS = {}
-
-		def section(number, name, &block)
-			# TODO: return unless testing_section? number
-
-			describe("#{number}. #{name}", &block)
-		end
-
-		def section(number, name, &block)
-			# TODO: return unless testing_section? number
-
-			describe("#{number}. #{name}", &block)
-		end
-
-		def it(description, when_testing: nil)
-			super(description) if testing?(*Array(when_testing))
-		end
-
-		def testing?(*value)
-			value.all? { |x| Kn::Test::Spec.sanitizations.include? x }
-		end
+	# todo: remove `when_testing` and make it `sanitizes`
+	def it(description, when_testing: nil, sanitizes: when_testing)
+		super description if !sanitizes || sanitization?(sanitizes)
 	end
 
 	module Section
-		def section(number, name, &block)
-			# TODO: return unless testing_section? number
-
-			describe("#{number}. #{name}", &block)
-		end
+		include Kn::Test::Spec
 	end
 end
 
-include Kn::Test::Section
-	# def section(number, name, &block)
-	# 	# TODO: return unless testing_section? number
+def section(number, name, &block)
+	describe "#{number}. #{name}" do
+		include Kn::Test::Spec
 
-	# 	describe("#{number}. #{name}", &block)
-	# end
+		instance_exec(&block)
+	end
+end

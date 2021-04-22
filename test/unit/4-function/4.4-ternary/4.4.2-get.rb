@@ -4,7 +4,7 @@ section '4.4.2', 'GET' do
 	include Kn::Test::Spec
 	# TODO
 
-	test_argument_count 'IF', '"HI"', '0', '1'
+	#test_argument_count 'IF', '"HI"', '0', '1'
 end
 
 __END__

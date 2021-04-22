@@ -1,22 +1,27 @@
 #!/usr/bin/env ruby
 
 require 'optparse'
-require_relative 'spec2'
+require_relative 'spec'
+require 'minitest/autorun'
 
 OptParse.new.instance_exec do
-	on '-t', '--test=SECTION1[,...]', 'Test only the given sections (eg 4.2.2)', Array do |secs|
-		Kn::Test.sections = secs.map(&:to_sym)
+	on '-s', '--section=SECTION1[,...]', 'Test only the given sections (eg 4.2.2)', Array do |secs|
+		secs.each do |sec|
+			abort "invalid section name: '#{sec}'" unless sec.match? /\A\d+(?:\.\d+){,2}$/
+		end
+
+		Kn::Test.sections = secs
 	end
 
 	on '-e', '--executable=PATH[,args...]', "Perform tests against 'PATH' (default=./knight)", Array do |file|
 			Kn::Test.executable = file
 	end
 
-	on '-a', '--also-sanitize=SAN[,...]', 'Test the given sanitizations in addition to', 'the default ones.', Array do |san|
+	on '-t', '--also-sanitize=SAN[,...]', 'Test the given sanitizations in addition to', 'the default ones.', Array do |san|
 		Kn::Test.sanitizations += san
 	end
 
-	on '-s', '--[no-]sanitize=[SAN[,...]]', 'Only test the given sanitizations. With `--no`,',
+	on       '--[no-]sanitize=[SAN[,...]]', 'Only test the given sanitizations. With `--no`,',
 		'disables all. Without arguments, enables all', Array do |sans| 
 		case sans
 		when false then Kn::Test.sanitizations.clear
@@ -50,6 +55,24 @@ OptParse.new.instance_exec do
 	parse!
 end
 
-unless File.executable? Kn::Test.executable
-	Kernel::warn "WARNING: File '#{Kn::Test.executable}' is not executable."
+unless File.executable? Kn::Test.executable.first
+	Kernel::warn "WARNING: File '#{Kn::Test.executable.first}' is not executable."
+end
+
+# require_relative 'unit/4.1-nullary/all'
+# require_relative 'unit/all'
+# require_relative ''
+Kn::Test.sections.each do |section|
+	major, minor, patch = section.split('.')
+	glob = 
+		case
+		when patch then File.join "#{major}-*", "#{major}.#{minor}-*", "#{section}-*.rb"
+		when minor then File.join "#{major}-*", "#{major}.#{minor}-*", "*.rb"
+		when major then File.join "#{major}-*", "**/*.rb"
+		else raise "bad section: #{section.inspect}"
+		end
+
+	Dir.glob File.join __dir__, "unit", glob do |testfile|
+		require testfile
+	end
 end

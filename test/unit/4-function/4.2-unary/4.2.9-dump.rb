@@ -15,5 +15,5 @@ section '4.2.9', 'DUMP' do
 	it 'dumps null correctly' do
 	end
 
-	test_argument_count 'DUMP', '"hi"'
+	#test_argument_count 'DUMP', '"hi"'
 end

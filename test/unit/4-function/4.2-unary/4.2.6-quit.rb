@@ -34,7 +34,7 @@ section '4.2.6', 'QUIT' do
 		assert_equal 0, exit_code('NULL')
 	end
 
-	test_argument_count 'QUIT', '0'
+	#test_argument_count 'QUIT', '0'
 
 	it 'does not allow blocks as the first operand', when_testing: :strict_types do
 		assert_fails '; = a 0 : QUIT BLOCK a'

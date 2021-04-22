@@ -3,7 +3,7 @@ require_relative '../function-spec'
 section '4.2.3', 'BLOCK' do
 	include Kn::Test::Spec
 
-	it 'should not evaluate its argument' do
+	it 'should not eval its argument' do
 		assert_runs { 'BLOCK variable' }
 		assert_runs { 'BLOCK QUIT 1' }
 		assert_runs { 'BLOCK + a 4' }
@@ -23,11 +23,11 @@ section '4.2.3', 'BLOCK' do
 	end
 
 	it 'should be usable as the sole argument of CALL' do
-		assert_equal 12, evaluate('CALL BLOCK 12')
-		assert_equal 7, evaluate('; = bar BLOCK + 4 foo ; = foo 3 : CALL bar')
+		assert_equal 12, eval('CALL BLOCK 12')
+		assert_equal 7, eval('; = bar BLOCK + 4 foo ; = foo 3 : CALL bar')
 	end
 
-	test_argument_count 'BLOCK', '1'
+	#test_argument_count 'BLOCK', '1'
 
 	# TODO: is `BLOCK BLOCK` valid?
 end
