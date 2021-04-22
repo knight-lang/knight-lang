@@ -1,18 +1,14 @@
-require_relative '../function-spec'
-
 section '4.3.14', 'WHILE' do
-	include Kn::Test::Spec
-
 	it 'returns null' do
-		assert_equal :null, eval('WHILE 0 0')
+		assert_result :null, 'WHILE 0 0'
 	end
 
 	it 'will not eval the body if the condition is true' do
-		assert_equal 12, eval('; WHILE FALSE (QUIT 1) : 12')
+		assert_result 12, %|; WHILE FALSE (QUIT 1) : 12|
 	end
 
 	it 'will eval the body until the condition is false' do
-		assert_equal 55, eval(<<-EOS)
+		assert_result 45, <<~EOS
 			; = i 0
 			; = sum 0
 			; WHILE (< i 10)
@@ -23,11 +19,15 @@ section '4.3.14', 'WHILE' do
 	end
 
 	it 'does not accept BLOCK values', when_testing: :strict_types do
-		assert_fails { eval('; = a 0 : WHILE (BLOCK a) 1') }
-		assert_fails { eval('; = a 0 : WHILE 1 (BLOCK a)') }
-		assert_fails { eval('WHILE (BLOCK QUIT 0) 1') }
-		assert_fails { eval('WHILE 1 (BLOCK QUIT 0)') }
+		refute_result %|; = a 0 : WHILE (BLOCK a) 1|
+		refute_result %|; = a 0 : WHILE 1 (BLOCK a)|
+		refute_result %|WHILE (BLOCK QUIT 0) 1|
+		refute_result %|WHILE 1 (BLOCK QUIT 0)|
 	end
 
-	#test_argument_count 'W', '0', '2'
+	it 'requires exactly two arguments', when_testing: :argument_count do
+		refute_runs %|WHILE|
+		refute_runs %|WHILE 0|
+		assert_runs %|WHILE 0 1|
+	end
 end
