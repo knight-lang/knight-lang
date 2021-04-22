@@ -56,10 +56,6 @@ OptParse.new.instance_exec do
 	parse!
 end
 
-unless File.executable? Kn::Test.executable.first
-	Kernel::warn "WARNING: File '#{Kn::Test.executable.first}' is not executable."
-end
-
 SECTIONS.each do |section|
 	major, minor, patch = section.split('.')
 	glob = 
