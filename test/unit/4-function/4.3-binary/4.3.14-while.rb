@@ -20,9 +20,7 @@ section '4.3.14', 'WHILE' do
 
 	it 'does not accept BLOCK values', when_testing: :strict_types do
 		refute_runs %|; = a 0 : WHILE (BLOCK a) 1|
-		refute_runs %|; = a 0 : WHILE 1 (BLOCK a)|
 		refute_runs %|WHILE (BLOCK QUIT 0) 1|
-		refute_runs %|WHILE 1 (BLOCK QUIT 0)|
 	end
 
 	it 'requires exactly two arguments', when_testing: :argument_count do
