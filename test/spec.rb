@@ -41,7 +41,7 @@ module Kn::Test
 	].freeze
 
 	@sanitizations = DEFAULT_SANITIATIONS.dup
-	@sections = :all
+	@sections = %w(4 3 2 1)
 	@executable = [File.join(Dir.pwd, 'knight')] # default 
 
 	module_function

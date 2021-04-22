@@ -1,27 +1,50 @@
-require_relative '../function-spec'
-
 section '4.5.1', 'SUBSTITUTE' do
-	include Kn::Test::Spec
-	# TODO
+	it 'returns a substring of the original string' do
+		assert_result 'a', %|GET "abcd" 0 1|
+		assert_result 'bc', %|GET "abcd" 1 2|
+		assert_result 'cd', %|GET "abcd" 2 2|
+		assert_result '', %|GET "abcd" 3 0|
+	end
 
-	#test_argument_count 'SUBS', '"HI"', '0', '1', '"BA"'
-end
-__END__
-todo: this. also this doens't account for empty strings.
-alphabet = ('a'..'k').to_a.join
-
-alphabet.length.times do |len|
-	line = alphabet[..len]
-	[*0..len].product([*0..len], [*0..10]) do |start, length, repl|
-		repl = alphabet[..len]
-		cmd = %(DUMP SUBS #{line.inspect} #{start} #{length} #{repl.inspect})
-		/\AString\((.*)\)\Z/ =~ (x = `/users/samp/me/knight/cpp/knight -e '#{cmd}'`) or warn "bad: #{x}"
-
-		tmp = (line.to_s).dup
-		tmp[start, length] = repl
-		if tmp != $1
-			puts "invalid: <#{cmd}> (got #{x})"
+	ALPHABET = 'abcdef'
+	it 'works for all possible combinations of 6 characters' do
+		[*0...ALPHABET.length].product([*0...ALPHABET.length]) do |wordlen, repllen|
+			word = ALPHABET[0, wordlen]
+			replacement = ALPHABET[0, repllen]
+			(0..wordlen).each do |start|
+				(0..wordlen - start).each do |len|
+					w = word.dup
+					w[start, len] = replacement
+					assert_result w, "SUBSTITUTE #{word.inspect} #{start} #{len} #{replacement.inspect}"
+				end
+			end
 		end
 	end
-	p len
+
+	it 'converts its arguments to the correct types' do
+		assert_result '1!34', %|SUBSTITUTE 1234 1 1 "!"|
+		assert_result 'tr0', %|SUBSTITUTE TRUE 2 2 "0"|
+		assert_result 'alse', %|SUBSTITUTE FALSE 0 1 ""|
+		assert_result 'nIl', %|SUBSTITUTE NULL 1 2 "I"|
+		assert_result 'falsearfoo', %|SUBSTITUTE "barfoo" NULL TRUE FALSE|
+	end
+
+	it 'does not accept BLOCK values anywhere', when_testing: :strict_types do
+		refute_runs %|SUBSTITUTE (BLOCK QUIT 0) 0 0 0|
+		refute_runs %|SUBSTITUTE 0 (BLOCK QUIT 0) 0 0|
+		refute_runs %|SUBSTITUTE 0 0 (BLOCK QUIT 0) 0|
+		refute_runs %|SUBSTITUTE 0 0 0 (BLOCK QUIT 0)|
+		refute_runs %|; = a 3 : SUBSTITUTE (BLOCK a) 0 0 0|
+		refute_runs %|; = a 3 : SUBSTITUTE 0 (BLOCK a) 0 0|
+		refute_runs %|; = a 3 : SUBSTITUTE 0 0 (BLOCK a) 0|
+		refute_runs %|; = a 3 : SUBSTITUTE 0 0 0 (BLOCK a)|
+	end
+
+	it 'requires exactly four arguments', when_testing: :argument_count do
+		refute_runs %|SUBSTITUTE|
+		refute_runs %|SUBSTITUTE 0|
+		refute_runs %|SUBSTITUTE 0 0|
+		refute_runs %|SUBSTITUTE 0 0 0|
+		assert_runs %|SUBSTITUTE 0 0 0 0|
+	end
 end
