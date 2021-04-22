@@ -17,11 +17,11 @@ OptParse.new.instance_exec do
 			Kn::Test.executable = file
 	end
 
-	on '-t', '--also-sanitize=SAN[,...]', 'Test the given sanitizations in addition to', 'the default ones.', Array do |san|
+	on '-z', '--also-sanitize=SAN[,...]', 'Test the given sanitizations in addition to', 'the default ones.', Array do |san|
 		Kn::Test.sanitizations += san
 	end
 
-	on       '--[no-]sanitize=[SAN[,...]]', 'Only test the given sanitizations. With `--no`,',
+	on      '--[no-]sanitize=[SAN[,...]]', 'Only test the given sanitizations. With `--no`,',
 		'disables all. Without arguments, enables all', Array do |sans| 
 		case sans
 		when false then Kn::Test.sanitizations.clear

@@ -18,7 +18,7 @@ section '4.2.5', '`' do
 	end
 
 	it 'aborts on a non-zero exit status', when_testing: :io_errors do
-		assert_fails { %|` exit 1| } 
+		refute_runs %|` exit 1|
 	end
 
 	it 'requires exactly one argument', when_testing: :argument_count do
@@ -27,7 +27,7 @@ section '4.2.5', '`' do
 	end
 
 	it 'does not allow blocks as the first operand', when_testing: :strict_types do
-		assert_fails { %|; = a "exit 0" : ` BLOCK a| }
-		assert_fails { %|` BLOCK QUIT 0| }
+		refute_runs %|; = a "exit 0" : ` BLOCK a|
+		refute_runs %|` BLOCK QUIT 0|
 	end
 end
