@@ -1,24 +1,32 @@
-require_relative '../function-spec'
-
 section '4.4.1', 'IF' do
-	include Kn::Test::Spec
-
-	it 'only executes and returns the second argument if the condition is truthy' do
-		assert_equal 12, eval('IF 1 12 (QUIT 1)')
-	end
-
-	it 'only executes and returns the third argument if the condition is falsey' do
-		assert_equal 12, eval('IF NULL (QUIT 1) 12')
+	it 'executes and returns only the correct value' do
+		assert_result 12, %|IF TRUE 12 (QUIT 1)|
+		assert_result 12, %|IF FALSE (QUIT 1) 12|
 	end
 
 	it 'executes the condition before the result' do
-		assert_equal 12, eval('IF (= a 3) (+ a 9) (QUIT 1)')
+		assert_result 12, %|IF (= a 3) (+ a 9) (QUIT 1)|
+	end
+
+	it 'converts values to a boolean' do
+		assert_result 12, %|IF 123 12 (QUIT 1)|
+		assert_result 12, %|IF 0 (QUIT 1) 12 |
+		assert_result 12, %|IF "123" 12 (QUIT 1)|
+		assert_result 12, %|IF "0" 12 (QUIT 1)|
+		assert_result 12, %|IF "" (QUIT 1) 12|
+		assert_result 12, %|IF NULL (QUIT 1) 12|
 	end
 
 	it 'does not accept BLOCK values as the condition', when_testing: :strict_types do
-		assert_fails { eval('IF (BLOCK QUIT 0) 0 0') }
-		assert_fails { eval('; = a 3 : IF (BLOCK a) 0 0') }
+		refute_runs %|IF (BLOCK QUIT 0) 0 0|
+		refute_runs %|; = a 3 : IF (BLOCK a) 0 0|
 	end
 
-	#test_argument_count 'IF', '1', '2', '3'
+
+	it 'requires exactly three arguments', when_testing: :argument_count do
+		refute_runs %|IF|
+		refute_runs %|IF TRUE|
+		refute_runs %|IF TRUE 1|
+		assert_runs %|IF TRUE 1 2|
+	end
 end
