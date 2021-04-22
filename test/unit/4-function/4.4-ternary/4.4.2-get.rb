@@ -1,25 +1,44 @@
-require_relative '../function-spec'
-
 section '4.4.2', 'GET' do
-	include Kn::Test::Spec
-	# TODO
+	it 'returns a substring of the original string' do
+		assert_result 'a', %|GET "abcd" 0 1|
+		assert_result 'bc', %|GET "abcd" 1 2|
+		assert_result 'cd', %|GET "abcd" 2 2|
+		assert_result '', %|GET "abcd" 3 0|
+	end
 
-	#test_argument_count 'IF', '"HI"', '0', '1'
-end
-
-__END__
-todo: test this
-
-alphabet = ('a'..'z').to_a.join
-
-alphabet.length.times do |len|
-	line = alphabet[..len]
-	[*0..26].product([*0..26]) do |start, length|
-		cmd = %(DUMP GET #{line.inspect} #{start} #{length})
-		/\AString\((.*)\)\Z/ =~ (x = `/users/samp/me/knight/cpp/knight -e '#{cmd}'`) or warn "bad: #{x}"
-		if line[start, length].to_s != $1
-			puts "invalid: <#{cmd}> (got #{x})"
+	ALPHABET = 'abcdef'
+	it 'works for all possible combinations of 6 characters' do
+		ALPHABET.length.times do |length|
+			word = ALPHABET[0, length]
+			(0..length).each do |start|
+				(0..length - start).each do |len|
+					assert_result word[start, len], "GET #{word.inspect} #{start} #{len}"
+				end
+			end
 		end
 	end
-	p len
+
+	it 'converts its arguments to the correct types' do
+		assert_result '1', %|GET 1234 0 1|
+		assert_result 't', %|GET TRUE 0 1|
+		assert_result 'f', %|GET FALSE 0 1|
+		assert_result 'n', %|GET NULL 0 1|
+		assert_result 'f', %|GET "foobar" NULL TRUE|
+	end
+
+	it 'does not accept BLOCK values anywhere', when_testing: :strict_types do
+		refute_runs %|GET (BLOCK QUIT 0) 0 0|
+		refute_runs %|GET 0 (BLOCK QUIT 0) 0|
+		refute_runs %|GET 0 0 (BLOCK QUIT 0)|
+		refute_runs %|; = a 3 : GET (BLOCK a) 0 0|
+		refute_runs %|; = a 3 : GET 0 (BLOCK a) 0|
+		refute_runs %|; = a 3 : GET 0 0 (BLOCK a)|
+	end
+
+	it 'requires exactly three arguments', when_testing: :argument_count do
+		refute_runs %|GET|
+		refute_runs %|GET 0|
+		refute_runs %|GET 0 0|
+		assert_runs %|GET 0 0 0|
+	end
 end
