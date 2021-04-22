@@ -1,19 +1,7 @@
-require_relative '../function-spec'
-
+# Note that `DUMP`'s normal cases are tested by running unit tests.
 section '4.2.9', 'DUMP' do
-	include Kn::Test::Spec
-
-	it 'dumps strings correctly' do
+	it 'requires exactly one argument', when_testing: :argument_count do
+		refute_runs %|DUMP|
+		assert_runs %|DUMP "1"|
 	end
-
-	it 'dumps numbers correctly' do
-	end
-
-	it 'dumps booleans correctly' do
-	end
-
-	it 'dumps null correctly' do
-	end
-
-	#test_argument_count 'DUMP', '"hi"'
 end

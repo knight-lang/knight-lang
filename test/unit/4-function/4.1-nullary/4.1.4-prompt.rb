@@ -1,9 +1,4 @@
-require_relative '../function-spec'
-require_relative '../../../autorun' if $0 == __FILE__
-
 section '4.1.4', 'PROMPT' do
-	include Kn::Test::Spec
-
 	# it 'should return a string without'
 	# 		it 'should return a string without the \n or \r\n' do
 	# 			old_stdin = $stdin

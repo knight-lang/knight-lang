@@ -1,35 +1,39 @@
-require_relative '../function-spec'
-
 section '4.2.8', 'L' do
-	include Kn::Test::Spec
-
 	it 'performs under normal conditions' do
-		assert_equal 3, eval('LENGTH "foo"')
-		assert_equal 27, eval('LENGTH "a man a plan a canal panama"')
-		assert_equal 21, eval('LENGTH "and then I questioned"')
-		assert_equal 100, eval("LENGTH '#{'x' * 100}'")
+		assert_result 3, %|LENGTH "foo"|
+		assert_result 27, %|LENGTH "a man a plan a canal panama"|
+		assert_result 21, %|LENGTH "and then I questioned"|
+		assert_result 100, %|LENGTH '#{'x' * 100}'|
 	end
 
 	it 'returns 0 for empty strings' do
-		assert_equal 0, eval('LENGTH ""')
+		assert_result 0, %|LENGTH ""|
 	end
 
 	it 'does not coerce its argument to a number and back' do
-		assert_equal 2, eval('LENGTH "-0"')
-		assert_equal 5, eval('LENGTH "49.12"')
+		assert_result 2, %|LENGTH "-0"|
+		assert_result 5, %|LENGTH "49.12"|
 	end
 
 	it 'works with multiline strings.' do
-		assert_equal 10, eval("LENGTH 'fooba\nrbaz'")
+		assert_result 10, %|LENGTH 'fooba\nrbaz'|
 	end
 
 	it 'converts its value to a string' do
-		assert_equal 1, eval('LENGTH 0')
-		assert_equal 3, eval('LENGTH 923')
-		assert_equal 4, eval('LENGTH TRUE')
-		assert_equal 5, eval('LENGTH FALSE')
-		assert_equal 4, eval('LENGTH NULL')
+		assert_result 1, %|LENGTH 0|
+		assert_result 3, %|LENGTH 923|
+		assert_result 4, %|LENGTH TRUE|
+		assert_result 5, %|LENGTH FALSE|
+		assert_result 4, %|LENGTH NULL|
 	end
 
-	#test_argument_count 'LENGTH', '"hi"'
+	it 'requires exactly one argument', when_testing: :argument_count do
+		refute_runs %|LENGTH|
+		assert_runs %|LENGTH "hi"|
+	end
+
+	it 'does not allow blocks as the first operand', when_testing: :strict_types do
+		refute_runs %|; = a 0 : LENGTH BLOCK a|
+		refute_runs %|LENGTH BLOCK QUIT 0|
+	end
 end

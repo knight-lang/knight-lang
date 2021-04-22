@@ -1,27 +1,26 @@
-require_relative '../function-spec'
-
 section '4.2.4', 'CALL' do
-	include Kn::Test::Spec
+	it 'should run something returned by `BLOCK`' do
+		assert_result 12, %|CALL BLOCK 12|
+		assert_result '12', %|CALL BLOCK "12"|
 
-	it 'should eval something returned by `BLOCK`' do
-		assert_equal 12, eval('CALL BLOCK 12')
-		assert_equal "12", eval('CALL BLOCK "12"')
+		assert_result true, %|CALL BLOCK TRUE|
+		assert_result false, %|CALL BLOCK FALSE|
+		assert_result :null, %|CALL BLOCK NULL|
 
-		assert_equal true, eval('CALL BLOCK TRUE')
-		assert_equal false, eval('CALL BLOCK FALSE')
-		assert_equal :null, eval('CALL BLOCK NULL')
-
-		assert_equal "twelve", eval('; = foo BLOCK bar ; = bar "twelve" : CALL foo')
-		assert_equal 15, eval('; = foo BLOCK * x 5 ; = x 3 : CALL foo')
+		assert_result 'twelve', %|; = foo BLOCK bar ; = bar "twelve" : CALL foo|
+		assert_result 15, %|; = foo BLOCK * x 5 ; = x 3 : CALL foo|
 	end
 
 	it 'should _only_ eval BLOCK return values', when_testing: :strict_compliance do
-		assert_fails { eval('CALL 1') }
-		assert_fails { eval('CALL "1"') }
-		assert_fails { eval('CALL TRUE') }
-		assert_fails { eval('CALL FALSE') }
-		assert_fails { eval('CALL NULL') }
+		refute_runs %|CALL 1|
+		refute_runs %|CALL "1"|
+		refute_runs %|CALL TRUE|
+		refute_runs %|CALL FALSE|
+		refute_runs %|CALL NULL|
 	end
 
-	#test_argument_count 'CALL', 'BLOCK 1'
+	it 'requires exactly one argument', when_testing: :argument_count do
+		refute_runs %|CALL|
+		assert_runs %|CALL BLOCK + 1 2|
+	end
 end

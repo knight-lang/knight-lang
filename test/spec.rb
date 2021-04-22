@@ -99,7 +99,7 @@ module Kn::Test::Spec
 		end
 	end
 
-	def assert_run_equal(expected, expr)
+	def assert_result(expected, expr)
 		assert_equal expected, eval(expr)
 	end
 
@@ -145,6 +145,7 @@ module Kn::Test::Spec
 	def sanitization?(...) 
 		Kn::Test.sanitization?(...)
 	end
+	alias sanitized? sanitization?
 
 	def section(number, name, &block)
 		describe("#{number}. #{name}", &block) if section? number
@@ -160,9 +161,10 @@ module Kn::Test::Spec
 	end
 end
 
-def section(number, name, &block)
+def section(number, name, parallelize: true, &block)
 	describe "#{number}. #{name}" do
 		include Kn::Test::Spec
+		parallelize_me! if parallelize
 
 		instance_exec(&block)
 	end

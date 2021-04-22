@@ -1,28 +1,27 @@
-require_relative '../function-spec'
-
 section '4.2.7', '!' do
-	include Kn::Test::Spec
-
 	it 'negates its argument' do
-		assert_equal true,  eval('! FALSE')
-		assert_equal false, eval('! TRUE')
+		assert_result true,  %|! FALSE|
+		assert_result false, %|! TRUE|
 	end
 
 	it 'converts its argument to a boolean' do
-		assert_equal true,  eval('! ""')
-		assert_equal false, eval('! "0"')
-		assert_equal false, eval('! "1"')
+		assert_result true,  %|! ""|
+		assert_result false, %|! "0"|
+		assert_result false, %|! "1"|
 
-		assert_equal true,  eval('! NULL')
+		assert_result true,  %|! NULL|
 
-		assert_equal true,  eval('! 0')
-		assert_equal false, eval('! 1')
+		assert_result true,  %|! 0|
+		assert_result false, %|! 1|
 	end
 
-	#test_argument_count '!', 'TRUE'
+	it 'requires exactly one argument', when_testing: :argument_count do
+		refute_runs %|!|
+		assert_runs %|! TRUE|
+	end
 
 	it 'does not allow blocks as the first operand', when_testing: :strict_types do
-		assert_fails { eval('; = a 0 : ! BLOCK a') }
-		assert_fails { eval('! BLOCK QUIT 0') }
+		refute_runs %|; = a 0 : ! BLOCK a|
+		refute_runs %|! BLOCK QUIT 0|
 	end
 end
