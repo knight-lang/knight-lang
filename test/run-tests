@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require_relative 'spec'
+require 'minitest/autorun'
+
+SECTIONS = %w(1 2 3 4)
+OptParse.new.instance_exec do
+	on '-s', '--section=SECTION1[,...]', 'Test only the given sections (eg 4.2.2)', Array do |secs|
+		secs.each do |sec|
+			abort "invalid section name: '#{sec}'" unless sec.match? /\A\d+(?:\.\d+){,2}$/
+		end
+
+		SECTIONS.replace secs
+	end
+
+	on '-e', '--executable=PATH[,args...]', "Perform tests against 'PATH' (default=./knight)", Array do |file|
+			Kn::Test.executable = file
+	end
+
+	on '-z', '--also-sanitize=SAN[,...]', 'Test the given sanitizations in addition to', 'the default ones.', Array do |san|
+		Kn::Test.sanitizations += san
+	end
+
+	on      '--[no-]sanitize=[SAN[,...]]', 'Only test the given sanitizations. With `--no`,',
+		'disables all. Without arguments, enables all', Array do |sans| 
+		case sans
+		when false then Kn::Test.sanitizations.clear
+		when nil   then Kn::Test.sanitizations = Kn::Test::ALL_SANITIZATIONS
+		else            Kn::Test.sanitizations.concat sans
+		end
+	end
+
+	on_tail <<~EOS
+	Sanitization:
+	    (Note: Sanitizers expect a nonzero exit code to indicate a program failure).
+
+	    The following sanitizations are enabled by default:
+	    - zero_division         Division by zero, modulo by zero, and raising 0 to a
+	                            negative power.
+	    - invalid_types         Either attempted assignment to a nonvariable, or passing
+	                            one of `+-*/%^<>` a type undefined for the function.
+	    - argument_count        A function is called with too few arguments. (eg `+ 1`.)
+	    - undefined_variables   Fetching the value of an unassigned variale.
+
+	    Additionally, these sanitizations may be enabled via `--also-sanitize`:
+	    - strict_types          The return value of `BLOCK` is passed to a function
+	                            which doesn't have set semantics for it.
+	    - overflow              A function causes an integral number to overflow.
+	    - invalid_values        A function is called with a valid type, but which has an
+	                            invalid value. (e.g. `* "hi" (- 0 1)`)
+	    - io_errors             Problems arising during input/output operations.
+	    - strict_compliance     Misc. undefined behaviour that's hard to verify.
+	EOS
+
+	parse!
+end
+
+unless File.executable? Kn::Test.executable.first
+	Kernel::warn "WARNING: File '#{Kn::Test.executable.first}' is not executable."
+end
+
+SECTIONS.each do |section|
+	major, minor, patch = section.split('.')
+	glob = 
+		case
+		when patch then File.join "#{major}-*", "#{major}.#{minor}-*", "#{section}-*.rb"
+		when minor then File.join "#{major}-*", "#{major}.#{minor}-*", "*.rb"
+		when major then File.join "#{major}-*", "**/*.rb"
+		else raise "bad section: #{section.inspect}"
+		end
+
+	Dir.glob File.join __dir__, "unit", glob do |testfile|
+		require testfile
+	end
+end

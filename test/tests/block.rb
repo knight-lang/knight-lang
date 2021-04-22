@@ -42,7 +42,7 @@ describe 'Block' do
 	it 'wont execute its body until called' do
 		assert_runs { execute 'BLOCK QUIT 1' }
 		assert_runs { execute 'BLOCK missing' }
-		assert_runs { execute 'BLOCK EVAL "nope"' }
+		assert_runs { execute 'BLOCK eval "nope"' }
 	end
 
 	# note that `BLOCK` simply returns its argument, unevaluated. But in the case of 

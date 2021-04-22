@@ -3,6 +3,9 @@ require 'minitest/spec'
 require 'stringio'
 require_relative 'shared'
 
+require_relative 'function/noop'
+
+return
 describe '4. Function' do
 	include Kn::Test::Shared
 	parallelize_me!
@@ -90,27 +93,27 @@ describe '4. Function' do
 			end
 		end
 
-		describe '4.2.2 EVAL' do
-			it 'should evaluate text' do
-				assert_equal 12, eval('EVAL "12"')
-				assert_fails { eval('EVAL "missing identifier"') }
-				assert_equal 12, eval('EVAL "12"') # convert to a string
+		describe '4.2.2 eval' do
+			it 'should eval text' do
+				assert_equal 12, eval('eval "12"')
+				assert_fails { eval('eval "missing identifier"') }
+				assert_equal 12, eval('eval "12"') # convert to a string
 			end
 
 			it 'should convert values to a string' do
-				assert_equal 23, eval('; = true 23 : EVAL TRUE')
-				assert_equal 23, eval('; = false 23 : EVAL FALSE')
-				assert_equal 23, eval('; = null 23 : EVAL NULL')
-				assert_equal 19, eval('EVAL 19')
+				assert_equal 23, eval('; = true 23 : eval TRUE')
+				assert_equal 23, eval('; = false 23 : eval FALSE')
+				assert_equal 23, eval('; = null 23 : eval NULL')
+				assert_equal 19, eval('eval 19')
 			end
 
 			it 'should update the global scope' do
-				assert_equal 591, eval('; EVAL "= foo 591" foo')
+				assert_equal 591, eval('; eval "= foo 591" foo')
 			end
 		end
 
 		describe '4.2.3 BLOCK' do
-			it 'should not evaluate its argument' do
+			it 'should not eval its argument' do
 				assert_runs { 'BLOCK bar' }
 			end
 
@@ -134,7 +137,7 @@ describe '4. Function' do
 		end
 
 		describe '4.2.4 CALL' do
-			it 'should evaluate something returned by `BLOCK`' do
+			it 'should eval something returned by `BLOCK`' do
 				assert_equal 12, eval('CALL BLOCK 12')
 				assert_equal "12", eval('CALL BLOCK "12"')
 	
@@ -336,11 +339,11 @@ describe '4. Function' do
 				assert_equal :null, eval('WHILE 0 0')
 			end
 
-			it 'will not evaluate the body if the condition is true' do
+			it 'will not eval the body if the condition is true' do
 				assert_equal 12, eval('; WHILE FALSE (QUIT 1) : 12')
 			end
 
-			it 'will evaluate the body until the condition is false' do
+			it 'will eval the body until the condition is false' do
 				assert_equal 10, eval('; = i 0 ; WHILE (< i 10) (= i + i 1) : i')
 			end
 		end

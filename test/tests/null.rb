@@ -25,8 +25,10 @@ describe '2.4.1 Null' do
 		end
 
 		it 'does not parse `null`' do
-			# when its not in scope, it fails.
-			assert_fails { eval('null') }
+			if checks? :undefined_variables
+				# when its not in scope, it fails.
+				assert_fails { eval('null') }
+			end
 
 			# when it is in scope, its evaluates to what its assigned.
 			assert_equal 12, eval('; = null 12 : null')
@@ -57,16 +59,18 @@ describe '2.4.1 Null' do
 			end
 		end
 
-		# describe '<' do
-		# 	it 'cannot be compared' do
-		# 		assert_fails { eval('< NULL 1') }
-		# 	end
-		# end
+		if checks? :invalid_operations
+			describe '<' do
+				it 'cannot be compared' do
+					assert_fails { eval('< NULL 1') }
+				end
+			end
 
-		# describe '>' do
-		# 	it 'cannot be compared' do
-		# 		assert_fails { eval('> NULL 1') }
-		# 	end
-		# end
+			describe '>' do
+				it 'cannot be compared' do
+					assert_fails { eval('> NULL 1') }
+				end
+			end
+		end
 	end
 end

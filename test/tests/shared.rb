@@ -81,4 +81,22 @@ module Kn::Test::Shared
 		raise "not a boolean: #{val.inspect}" unless val == true || val == false
 		val
 	end
+
+	$sanitizations = [:undefined_variables]
+
+	def self.included(x)
+		x.extend self
+	end
+
+	def checks?(*value)
+		value.all? { |x| $sanitizations.include? x }
+	end
+
+	def basic_sanitization?
+		1 <= $sanitization
+	end
+
+	def advanced_sanitiation?
+		2 <= $sanitization
+	end
 end

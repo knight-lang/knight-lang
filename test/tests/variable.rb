@@ -56,7 +56,7 @@ describe 'Variable' do
 		end
 
 =begin
-		it 'wont evaluate its value when it is executed' do
+		it 'wont eval its value when it is executed' do
 			assert_kind_of Kn::Test::Function, eval('; = foo BLOCK + 1 2 : foo')
 			assert_equal ident('bar'), eval('; = foo BLOCK bar : foo')
 		end
