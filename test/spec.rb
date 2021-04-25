@@ -63,7 +63,7 @@ module Kn::Test::Spec
 			@expr = expr
 			@result = result
 
-			super "\n===[expression]===\n#{@expr.inspect}\n===[invalid result]===\n#{@result.inspect}\n"
+			super "\n===[expression]===\n#{@expr}\n===[invalid result]===\n#{@result}\n"
 		end
 	end
 

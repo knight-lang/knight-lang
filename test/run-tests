@@ -4,14 +4,24 @@ require 'optparse'
 require_relative 'spec'
 require 'minitest/autorun'
 
-SECTIONS = %w(1 2 3 4)
+SECTIONS = []
+IGNORE_SECTIONS = []
+
 OptParse.new.instance_exec do
-	on '-s', '--section=SECTION1[,...]', 'Test only the given sections (eg 4.2.2)', Array do |secs|
+	on '-s', '--section=SECTION1[,...]', 'Test the given sections (eg 4.2.2)', Array do |secs|
 		secs.each do |sec|
 			abort "invalid section name: '#{sec}'" unless sec.match? /\A\d+(?:\.\d+){,2}$/
 		end
 
-		SECTIONS.replace secs
+		SECTIONS.concat secs
+	end
+
+	on '-S', '--ignore-section=SECTION1[,...]', 'Ignore the given sections (eg 4.2.2)', Array do |secs|
+		secs.each do |sec|
+			abort "invalid section name: '#{sec}'" unless sec.match? /\A\d+(?:\.\d+){,2}$/
+		end
+
+		IGNORE_SECTIONS.concat secs
 	end
 
 	on '-e', '--executable=PATH[,args...]', "Perform tests against 'PATH' (default=./knight)", Array do |file|
@@ -61,7 +71,7 @@ OptParse.new.instance_exec do
 	Kn::Test.executable = $*.shift if $*.length == 1 # allow for trailing program name
 end
 
-SECTIONS.each do |section|
+(SECTIONS.empty? ? %w(1 2 3 4) : SECTIONS).each do |section|
 	major, minor, patch = section.to_s.split('.')
 	glob = 
 		case
@@ -72,6 +82,7 @@ SECTIONS.each do |section|
 		end
 
 	Dir.glob File.join __dir__, "unit", glob do |testfile|
+		next if IGNORE_SECTIONS.any? { |s| testfile.match? %r{/#{Regexp.escape s}-[^/.]*\.rb} }
 		require testfile
 	end
 end
