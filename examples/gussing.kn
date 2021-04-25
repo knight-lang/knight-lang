@@ -3,7 +3,7 @@
 ; = secret + 1 (% RANDOM max)
 ; = guess (= guesses 0)
 ; WHILE (! ? guess secret) {
-	; OUTPUT ++ "Guess a number from 1-" max "\"
+	; OUTPUT ++ "Guess a number from 1-" max "\: "
 	; = guess + 0 PROMPT
 	; = guesses + guesses 1
 	: OUTPUT (

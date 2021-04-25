@@ -10,16 +10,12 @@
 	; = __repr_ret '+"'
 	; WHILE LENGTH __arg
 		; = __repr_chr GET __arg 0 1
-		; = __arg SET __arg 0 1 ""
+		; = __arg SUBSTITUTE __arg 0 1 ""
 		: = __repr_ret + __repr_ret
 			IF ? '"' __repr_chr
 				: + '"++' + "'" + '"' + "'"'"'
 				: __repr_chr
 	: + __repr_ret '"""'
-
-; = __arg '"abc"'
-; OUTPUT CALL uneval
-; Q 0
 
 ; = __array_next_array_index 0
 ; = __array_next_name BLOCK
@@ -110,36 +106,4 @@
 		: = __is_first FALSE
 		: = __ret + __ret __sep
 	: = __ret + __ret __data
-
-; EVAL SYSTEM "cat list.kn" # import list programming lol
-
-# Construct the list
-; = __list CALL empty
-	; = __data 3
-	; = __list CALL cons
-	; = __data 2
-	; = __list CALL cons
-	; = __data 1
-	; = __list CALL cons
-	; = __data 0
-	; = __list CALL cons
-	; = __data - 0 1
-; = list CALL cons
-
-# Print out the original list
-; = __list list
-; OUTPUT + 'list(1) = ' CALL join # => list(1) = -1 0 1 2 3
-
-# Select elements that are even.
-; = __list list
-; = __func BLOCK % __data 2
-; = __list CALL select
-# reverse it because `select` reverses it.
-; = __func id
-; = __list CALL map
-
-# And print them.
-: OUTPUT + 'list(2) = ' CALL join # => list(2) = -1 1 3
-
-
-
+: NULL
