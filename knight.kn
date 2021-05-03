@@ -1,4 +1,3 @@
-
 ## Peeks at the first character in the stream.
 # ARGUMENTS:
 #    stream: The stream to peek into.
@@ -55,7 +54,7 @@
 # RETURNS:
 #    True if the character is between `a` and `z`, or is equal to `_`.
 ; = islower BLOCK
-	:  | (& (< '`' chr) (> '{' chr)) (? '_' chr)
+	: | (& (< '`' chr) (> '{' chr)) (? '_' chr)
 
 ## Checks to see if the given character is an uppercase character.
 # ARGUMENTS:
@@ -63,7 +62,7 @@
 # RETURNS:
 #    True if the character is between `A` and `Z`
 ; = isupper BLOCK
-	:  & (< '@' chr) (> '[' chr)
+	: | & (< '@' chr) (> '[' chr) (? '_' chr)
 
 ## Checks to see if the given character is an end of line character.
 # ARGUMENTS:
@@ -144,6 +143,7 @@
 		     | (? next_function_ret 'Q')
 		     | (? next_function_ret '!')
 		     | (? next_function_ret 'L')
+		     | (? next_function_ret 'D')
 		       (? next_function_ret 'O')
 			: ++ next_function_ret (CALL next_ast) '$'
 			: IF | (? next_function_ret '+')
@@ -247,12 +247,9 @@
 #    A Knight number based on the given value.
 ; = to_number BLOCK
 	; CALL categorize_value
-	: IF | (? 's' value_kind) (? 'n' value_kind)
-		: + 0 value_data
-	: IF ? 'T' value_kind
-		: 1
-	: IF | (? 'F$' value_kind) (? 'N$' value_kind)
-		: 0
+	: IF [| (? 's' value_kind) (? 'n' value_kind)] { + 0 value_data }
+	: IF [? 'T' value_kind] : 1
+	: IF | (? 'F' value_kind) (? 'N' value_kind) : 0
 	; OUTPUT ++ "unknown value '" value "'"
 	: QUIT 2
 
@@ -318,6 +315,16 @@
 	: IF ? 'L' value_kind
 		; CALL eval_arg0
 		: + 'n' LENGTH CALL to_string
+	: IF ? 'D' value_kind
+		; CALL eval_arg0
+		; CALL categorize_value
+		; IF ? 's' value_kind : OUTPUT ++ 'String(' value_data ')'
+		: IF ? 'n' value_kind : OUTPUT ++ 'Number(' value_data ')'
+		: IF ? 'F' value_kind : OUTPUT    'Boolean(false)'
+		: IF ? 'T' value_kind : OUTPUT    'Boolean(true)'
+		: IF ? 'N' value_kind : OUTPUT    'Null()'
+		:                       OUTPUT ++ 'Other(' value ')'
+		: value
 	: IF ? 'O' value_kind
 		; CALL eval_arg0
 		: + 's' OUTPUT CALL to_string
@@ -389,17 +396,19 @@
 	: IF ? '<' value_kind
 		; CALL eval_arg0
 		; CALL categorize_value
-		: IF [IF (? 's' value_kind) 
-				(< value_data ; CALL eval_arg1 : CALL to_string)
-				(< CALL to_number ; CALL eval_arg1 : CALL to_number)]
+		: IF [IF (? 's' value_kind) { < value_data ; CALL eval_arg1 : CALL to_string }
+				IF (? 'T' value_kind) { ; CALL eval_arg1 : FALSE }
+				IF (? 'F' value_kind) { ; CALL eval_arg1 : CALL to_boolean }
+				{ < CALL to_number ; CALL eval_arg1 : CALL to_number }]
 			: 'T$'
 			: 'F$'
 	: IF ? '>' value_kind
 		; CALL eval_arg0
 		; CALL categorize_value
-		: IF [IF (? 's' value_kind) 
-				(> value_data ; CALL eval_arg1 : CALL to_string)
-				(> CALL to_number ; CALL eval_arg1 : CALL to_number)]
+		: IF [IF (? 's' value_kind) { > value_data ; CALL eval_arg1 : CALL to_string }
+				IF (? 'T' value_kind) { ; CALL eval_arg1 : ! CALL to_boolean }
+				IF (? 'F' value_kind) { ; CALL eval_arg1 : FALSE  }
+				{ > CALL to_number ; CALL eval_arg1 : CALL to_number }]
 			: 'T$'
 			: 'F$'
 	: IF ? '&' value_kind
