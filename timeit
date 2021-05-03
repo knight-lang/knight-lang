@@ -1,15 +1,28 @@
 #!/bin/sh
 
 if [ $# = 0 ]; then
-	echo "usage: $0 [executable] [executable arguments...]" >/dev/stderr
+	echo "usage: $0 [-nocapture] [executable]" >/dev/stderr
 	exit 1
 fi
 
-: "${KNIGHT_HOME:=$PWD}"
+if [ '-nocapture' = "$1" ]; then
+	nocapture=1
+	shift
+fi
 
-for _ in $(seq 1 5); do
-	time "$@" -f "$KNIGHT_HOME/knight.kn" <<EOS >/dev/null || exit 1
+: "${KNIGHT_HOME:="$(dirname "$0")"}"
+
+runit () {
+	time "$@" -f "$KNIGHT_HOME/knight.kn" <<EOS
 $KNIGHT_HOME/knight.kn
 $KNIGHT_HOME/examples/fizzbuzz.kn
 EOS
+}
+
+for _ in $(seq 1 5); do
+	if [ -z "$nocapture" ]; then
+		runit "$@" >/dev/null
+	else
+		runit "$@"
+	fi || exit 1
 done
