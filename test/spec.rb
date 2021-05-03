@@ -69,11 +69,11 @@ module Kn::Test::Spec
 
 	def eval(expr, **k)
 		case (result = exec("DUMP #{expr}", **k).chomp)
-		when /\ANull\(\)\z/                    then :null
-		when /\AString\((.*?)\)\z/m            then $1
-		when /\ABoolean\((?i)(true|false)\)\z/ then $1.downcase == 'true'
-		when /\ANumber\((?!-0\b)(-?\d+)\)\z/   then $1.to_i # `-0` is invalid.
-		else                                        raise BadResult.new expr, result
+		when /\A Null\(\) \Z/x                      then :null
+		when /\A String\( (.*?) \) \Z/mx            then $1
+		when /\A Boolean\( (?i)(true|false) \) \Z/x then $1.downcase == 'true'
+		when /\A Number\( (-?\d+) \) \Z/x           then $1.to_i
+		else                                             raise BadResult.new expr, result
 		end
 	end
 
@@ -138,8 +138,8 @@ module Kn::Test::Spec
 	alias sanitized? sanitization?
 
 	# todo: remove `when_testing` and make it `sanitizes`
-	def it(description, when_testing: nil, sanitizes: when_testing)
-		super description if !sanitizes || sanitization?(sanitizes)
+	def it(description, when_testing: nil)
+		super "[#{when_testing}] #{description}" if !when_testing || sanitization?(when_testing)
 	end
 end
 

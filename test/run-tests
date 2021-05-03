@@ -2,7 +2,6 @@
 
 require 'optparse'
 require_relative 'spec'
-require 'minitest/autorun'
 
 SECTIONS = []
 IGNORE_SECTIONS = []
@@ -24,26 +23,34 @@ OptParse.new.instance_exec do
 		IGNORE_SECTIONS.concat secs
 	end
 
-	on '-e', '--executable=PATH[,args...]', "Perform tests against 'PATH' (default=./knight)", Array do |file|
+	on '-e', '--executable=PATH', "Perform tests against 'PATH' (default=./knight)" do |file|
 		Kn::Test.executable = file
 	end
 
-	on '-z', '--also-sanitize=SAN[,...]', 'Test the given sanitizations in addition to', 'the default ones.', Array do |san|
-		Kn::Test.sanitizations.concat san.map(&:to_sym)
-	end
-
-	on '-Z', '--dont-sanitize=SAN[,...]', 'Do not sanitize the given sanitizations', Array do |san|
-		Kn::Test.sanitizations -= san.map(&:to_sym)
-	end
-
-	on      '--[no-]sanitize=[SAN[,...]]', 'Only test the given sanitizations. With `--no`,',
-		'disables all. Without arguments, enables all', Array do |sans| 
-		case sans
-		when false then Kn::Test.sanitizations.clear
-		when nil   then Kn::Test.sanitizations = Kn::Test::ALL_SANITIZATIONS
-		else            Kn::Test.sanitizations = sans.map(&:to_sym)
+	on '-z', '--sanitize=[SAN,...]', 'Also test the SANS; without args, tests all', Array do |san|
+		if san
+			Kn::Test.sanitizations.concat san.map(&:to_sym)
+		else
+			Kn::Test.sanitizations = Kn::Test::ALL_SANITIZATIONS.dup
 		end
 	end
+
+	on '-Z', '--no-sanitize=[ SAN[,...]]', 'Do not test SANS; disables all without args', Array do |san|
+		if san
+			Kn::Test.sanitizations -= san.map(&:to_sym)
+		else
+			Kn::Test.sanitizations.clear
+		end
+	end
+
+	# on      '--[no-]sanitize=[SAN[,...]]', 'Only test the given sanitizations. With `--no`,',
+	# 	'disables all. Without arguments, enables all', Array do |sans| 
+	# 	case sans
+	# 	when false then Kn::Test.sanitizations.clear
+	# 	when nil   then Kn::Test.sanitizations = Kn::Test::ALL_SANITIZATIONS
+	# 	else            Kn::Test.sanitizations = sans.map(&:to_sym)
+	# 	end
+	# end
 
 	on_tail <<~EOS
 	Sanitization:
@@ -71,6 +78,8 @@ OptParse.new.instance_exec do
 	Kn::Test.executable = $*.shift if $*.length == 1 # allow for trailing program name
 end
 
+require 'minitest/autorun' # only after we confirmed we don't have a usage error
+
 (SECTIONS.empty? ? %w(1 2 3 4) : SECTIONS).each do |section|
 	major, minor, patch = section.to_s.split('.')
 	glob = 
@@ -86,3 +95,4 @@ end
 		require testfile
 	end
 end
+
