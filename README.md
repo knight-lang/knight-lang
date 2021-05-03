@@ -1,5 +1,5 @@
 # Knight
-An extremely simple programming language that I've designed to be easy to implement in a variety of languages. It's not actually meant to be used, though it is a fully-functional lang.
+An extremely simple programming language that I've designed to be easy to implement in a variety of languages. It's not actually meant to be used, though it is a fully-functional language.
 
 Unofficial Tag-line: "Knight: Runs everywhere. Not because it's cross-platform, but because it has a implementation in virtually all major languages."
 
@@ -15,7 +15,8 @@ The following is the list of all languages that I've written it in. All in-progr
 | [C](https://github.com/knight-lang/c) | X | X | X | X | Fully functional, and the fastest. |
 | [C++](https://github.com/knight-lang/cpp) | X | X | X | X | Works with C++17; It could use a facelift though, as I used a bit too much dynamic dispatch. |
 | [C#](https://github.com/knight-lang/csharp) | X | X | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
-| [Haskell](https://github.com/knight-lang/haskell) |   | ish | X | X | Works for an older spec of Knight, needs to be updated. |
+| [Go](https://github.com/knight-lang/go) | X |  | X | X | Fully functional, but undocumented. |
+| [Haskell](https://github.com/knight-lang/haskell) |   |  | ish | X | Works for an older spec of Knight, needs to be updated. |
 | [Java](https://github.com/knight-lang/java) | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [JavaScript](https://github.com/knight-lang/knight.js) | X | X | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
 | [Knight](https://github.com/knight-lang/knight/knight.kn) |   |   | X | X | Yes, this is a Knight interpreter, written in Knight; It's yet to be tested for spec compliance, though. |
@@ -41,10 +42,12 @@ Note that these are simply benchmarks of _my_ implementations of Knight, and not
 
 |  Language  |  Time   | `<implementation>` | Notes |
 | ---------- |--------:|--------------------|-------|
-| C          |   3.74s | `c/ast/knight`     | Compiled using `COMPUTED_GOTOS=1 CFLAGS='-DKN_RECKLESS -DKN_USE_EXTENSIONS' make optimized`; See [https://github.com/knight-lang/c/ast/README.md](c/ast/README.md) for details. |
+| C          |   3.31s | `c/ast/knight`     | Compiled using `COMPUTED_GOTOS=1 CFLAGS='-DKN_RECKLESS -DKN_USE_EXTENSIONS' make optimized`; See [https://github.com/knight-lang/c/ast/README.md](c/ast/README.md) for details. |
+| Kotlin     |   5.84s | `kotlin/knight` |  |
 | Java       |   6.99s | `java/knight` | Requires a larger stack to prevent overflow; `java -Xss515m` was used. |
 | C#         |  11.82s | `csharp/bin/Release/netcoreapp2.1/<impl>/Knight` | |
 | C++        |  13.61s | `cpp/knight`       | Copiled using `make optimized` |
+| Go         |  14.17s | `go/knight/knight` | |
 | Rust       |  28.99s | `rust/target/release/knight` | Built with `cargo build --release` and the `reckless` flag. |
 | JavaScript |  30.64s | `node --stack-size=1000000 javasript/bin/knight.js` | Default stack's too small, so we had to bump it up. |
 | PHP        |  64.73s | `php/knight.php`   | |
