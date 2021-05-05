@@ -82,7 +82,7 @@ end
 begin
 	Kn::Test.exec "0"
 rescue
-	abort "The given program program is not executable.\nDid you mean: ./#{Kn::Test.executable.join ' '}"
+	abort "The given program is not executable.\nDid you mean: ./#{Kn::Test.executable.join ' '}"
 end
 
 require 'minitest/autorun' # only after we confirmed we don't have a usage error
