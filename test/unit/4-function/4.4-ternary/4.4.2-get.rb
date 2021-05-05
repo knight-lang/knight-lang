@@ -11,7 +11,7 @@ section '4.4.2', 'GET' do
 		alphabet.length.times do |length|
 			word = alphabet[0, length]
 			(0..length).each do |start|
-				(0..length - start).each do |len|
+				(0...length - start).each do |len|
 					assert_result word[start, len], "GET #{word.inspect} #{start} #{len}"
 				end
 			end

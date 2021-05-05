@@ -78,7 +78,15 @@ OptParse.new.instance_exec do
 	Kn::Test.executable = $*.shift if $*.length == 1 # allow for trailing program name
 end
 
+# sanity check
+begin
+	Kn::Test.exec "0"
+rescue
+	abort "The given program program is not executable.\nDid you mean: ./#{Kn::Test.executable.join ' '}"
+end
+
 require 'minitest/autorun' # only after we confirmed we don't have a usage error
+
 
 (SECTIONS.empty? ? %w(1 2 3 4) : SECTIONS).each do |section|
 	major, minor, patch = section.to_s.split('.')

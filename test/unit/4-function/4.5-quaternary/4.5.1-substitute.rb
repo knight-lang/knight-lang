@@ -12,7 +12,7 @@ section '4.5.1', 'SUBSTITUTE' do
 			word = alphabet[0, wordlen]
 			replacement = alphabet[0, repllen]
 			(0..wordlen).each do |start|
-				(0..wordlen - start).each do |len|
+				(0...wordlen - start).each do |len|
 					w = word.dup
 					w[start, len] = replacement
 					assert_result w, "SUBSTITUTE #{word.inspect} #{start} #{len} #{replacement.inspect}"

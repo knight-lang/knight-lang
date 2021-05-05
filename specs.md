@@ -197,7 +197,7 @@ That is, the following is the list of allowed characters:
 - Newline (`0x0a`, ie `\n`)
 - Carriage return (`0x0d`, ie `\r`)
 - Space (`0x20`, ie a space---` `)
-- **numeric**: In numeric contexts, all leading whitespace (i.e. tabs (`0x09`), newlines (`0x0a`), carriage returns (`0x0d`), and spaces (`0x20`)) shall be stripped. An optional `-` may then appear to force the number to be negative. (A `+` may appear instead of a `-`, and it should simply be ignored.) Then, as many consecutive digits as possible are read, and then interpreted as if it were a number literal. In regex terms, It would be capture group of `^\s*(-?\d*)`. Note that if no valid digits are found after stripping whitespace and the optional `-`, the number `0` shall be used.
+- **numeric**: In numeric contexts, all leading whitespace (i.e. tabs (`0x09`), newlines (`0x0a`), carriage returns (`0x0d`), and spaces (`0x20`)) shall be stripped. An optional `-` may then appear to force the number to be negative. (A `+` may appear instead of a `-`, and it should simply be ignored.) Then, as many consecutive digits as possible are read, and then interpreted as if it were a number literal. In regex terms, It would be capture group of `^\s*([-+]?\d*)`. Note that if no valid digits are found after stripping whitespace and the optional `-`, the number `0` shall be used. Note that if the resulting number is too large for the implementation to handle, the conversion is undefined.
 - **string**: In string contexts, the string itself is returned.
 - **boolean**: In boolean contexts, nonempty strings shall become `TRUE`, whereas empty strings shall become `FALSE`.
 
@@ -506,13 +506,13 @@ This function is used to get a substring of the first argument. The substring sh
 If either the starting point or the length are negative numbers, this function is undefined.
 If the starting index is larger than the length of the string, the behaviour is undefined.
 If the ending index (ie `start+length`) is larger than the length of the string, the behaviour is undefined.
-To put it more concretely, unless the range `[start, start+length]` is entirely contained within the string, this function's return value is undefined. 
+To put it more concretely, unless the range `[start, start+length)` is entirely contained within the string, this function's return value is undefined. 
 
 For example, `GET "abcd" 1 2` would get the substring `"bc"`, and `GET "abcd" 2 0` would get `""`.
 
 ## 4.5 Quaternary (Arity 4)
 ### 4.5.1 `SUBSTITUTE(string, number, number, string)`
-This function is used to substitute the range `[start, start+length]` (where `start` is the second argument and `length` is the third)  of the first argument with the last. Note that they do not have to be the same length---the string should grow or shrink accordingly. Indexing starts at `0`---that is, `SET "abc" 0 1 "2"` should return the `"2bc"`. Also note that this function should return a new string---the original one should not be modified.
+This function is used to substitute the range `[start, start+length)` (where `start` is the second argument and `length` is the third)  of the first argument with the last. Note that they do not have to be the same length---the string should grow or shrink accordingly. Indexing starts at `0`---that is, `SET "abc" 0 1 "2"` should return the `"2bc"`. Also note that this function should return a new string---the original one should not be modified.
 
 If either the starting point or the length are negative numbers, this function is undefined.
 If the starting index is larger than the length of the string, the behaviour is undefined.

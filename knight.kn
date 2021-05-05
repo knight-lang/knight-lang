@@ -6,7 +6,7 @@
 # UPDATES:
 #    chr: the return value is also assigned to `chr`.
 ; = peek BLOCK
-	: = chr GET stream 0 1
+	: = chr IF stream (GET stream 0 1) ""
 
 ## Discards the first character of the stream.
 # ARGUMENTS:
@@ -14,7 +14,7 @@
 # UPDATES:
 #    stream
 ; = advance BLOCK
-	: = stream SET stream 0 1 ""
+	: = stream IF stream (SET stream 0 1 "") ""
 
 ## Checks to see if the stream is at end of file.
 # ARGUMENTS:
@@ -194,7 +194,7 @@
 
 ; = next_arg BLOCK
 	; = next_arg_ret ""
-	; WHILE ! ? '$' (GET value_data 0 1)
+	; WHILE ! ? '$' (GET value_data 0 1) # under well-defined ipls, this will never `GET ""`
 		; = next_arg_ret + next_arg_ret GET value_data 0 1
 		: = value_data SET value_data 0 1 ""
 	; = value_data SET value_data 0 1 ""

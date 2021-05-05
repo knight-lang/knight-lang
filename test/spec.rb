@@ -4,6 +4,17 @@ require 'minitest/spec'
 module Kn; end
 
 module Kn::Test
+	class BadResult < RuntimeError
+		attr_reader :expr, :result
+
+		def initialize(expr, result)
+			@expr = expr
+			@result = result
+
+			super "\n===[expression]===\n#{@expr}\n===[invalid result]===\n#{@result}\n"
+		end
+	end
+
 	ALL_SANITIZATIONS = [
 		# division by zero, modulo by zero, and 0 to a negative power.
 		:zero_division,
@@ -53,37 +64,10 @@ module Kn::Test
 	def sanitization?(sanitization)
 		sanitizations.include? sanitization
 	end
-end
-
-module Kn::Test::Spec
-	class BadResult < RuntimeError
-		attr_reader :expr, :result
-
-		def initialize(expr, result)
-			@expr = expr
-			@result = result
-
-			super "\n===[expression]===\n#{@expr}\n===[invalid result]===\n#{@result}\n"
-		end
-	end
-
-	def eval(expr, **k)
-		case (result = exec("DUMP #{expr}", **k).chomp)
-		when /\A Null\(\) \Z/x                      then :null
-		when /\A String\( (.*?) \) \Z/mx            then $1
-		when /\A Boolean\( (?i)(true|false) \) \Z/x then $1.downcase == 'true'
-		when /\A Number\( (-?\d+) \) \Z/x           then $1.to_i
-		else                                             raise BadResult.new expr, result
-		end
-	end
 
 	def exec(expr, stdin: :close, stderr: $DEBUG ? $stderr : :close, raise_on_failure: true)
-		unless File.executable? Kn::Test.executable.first
-			abort "executable file #{Kn::Test.executable.first.inspect} is not executable"
-		end
-
 		IO.pipe do |read, write|
-			unless system(*Kn::Test.executable, '-e', expr, out: write, in: stdin, err: stderr)
+			unless system(*executable, '-e', expr, out: write, in: stdin, err: stderr)
 				raise BadResult.new(expr, "#$?") if raise_on_failure
 			end
 
@@ -91,13 +75,29 @@ module Kn::Test::Spec
 			read.read
 		end
 	end
+end
+
+module Kn::Test::Spec
+	def eval(expr, **k)
+		case (result = exec("DUMP #{expr}", **k).chomp)
+		when /\ANull\(\)\Z/i                                 then :null
+		when /\A(?:String|Str|Text)\((.*?)\)\Z/mi            then $1
+		when /\A(?:Boolean|Bool)\((true|false)\)\Z/i         then $1.downcase == 'true'
+		when /\A(?:Number|Num|Integer|Int)\(([-+]?\d+)\)\Z/i then $1.to_i
+		else raise Kn::Test::BadResult.new expr, result
+		end
+	end
+
+	def exec(*a, **k)
+		Kn::Test.exec(*a, **k)
+	end
 
 	def assert_result(expected, expr)
 		assert_equal expected, eval(expr)
 	end
 
 	def refute_runs(*a, **k)
-		assert_raises BadResult do
+		assert_raises Kn::Test::BadResult do
 			if block_given?
 				yield
 			else
