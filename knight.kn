@@ -424,7 +424,7 @@
 	; EVAL ++ '=run_ast_arg2_' run_ast_recur 'Cnext_arg'
 	: IF ? 'I' value_kind
 		; CALL eval_arg0
-		: CALL IF (CALL to_boolean) eval_arg1 eval_arg2
+		: IF (CALL to_boolean) CALL eval_arg1 CALL eval_arg2
 	: IF ? 'G' value_kind
 		; CALL eval_arg0
 		; EVAL ++ '=get_string' run_ast_recur 'Cto_string'
