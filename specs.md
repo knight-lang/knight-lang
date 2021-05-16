@@ -4,7 +4,7 @@ Knight is meant to be easily implementable in virtually every language imaginabl
 ## Notation
 In this document, some notation is used to describe what is required of implementations:
 - The words **required**/**must**/**shall** indicates directions implementations if they want to be valid.
-- The word **undefined** is used to indicate that behaviour is undefined: Programs that contain undefined behaviour are invalid, and the interpreter does not have to provide any guarantees. (However, if possible, implementations should gracefully exit.)
+- The word **undefined** is used to indicate that behaviour is undefined: Programs that contain undefined behaviour are invalid, and the interpreter does not have to provide any guarantees. (Implementations are encouraged to somehow exit, even if it be through an uncaught exception. However this is not required)
 
 # Table of Contents
 
