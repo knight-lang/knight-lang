@@ -11,7 +11,7 @@ The following is the list of all languages that I've written it in. All in-progr
 | Language | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
 | -------- |:---------------------:|:----------:|:-----------------:|:-----:| ----- |
 | [AWK](https://github.com/knight-lang/shell/knight.awk) | X | X | X | X | My AWK interpreter segfaults randomly, but after running each test 100x, they all passed. |
-| [Assembly (x86)](https://github.com/knight-lang/asm) |   |   |   | X | The parser is completed.|
+| [Assembly (x86)](https://github.com/knight-lang/asm) |   |   | X | X | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
 | [C](https://github.com/knight-lang/c) | X | X | X | X | Fully functional, and the fastest. |
 | [C++](https://github.com/knight-lang/cpp) | X | X | X | X | Works with C++17; It could use a facelift though, as I used a bit too much dynamic dispatch. |
 | [C#](https://github.com/knight-lang/csharp) | X | X | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
@@ -40,20 +40,21 @@ The following able describes how fast each implementation (in `user` time) was a
 
 Note that these are simply benchmarks of _my_ implementations of Knight, and not a reflection of the efficiency of the languages themselves.
 
-|  Language  |  Time   | `<implementation>` | Notes |
-| ---------- |--------:|--------------------|-------|
-| C          |   3.31s | `c/ast/knight`     | Compiled using `COMPUTED_GOTOS=1 CFLAGS='-DKN_RECKLESS -DKN_USE_EXTENSIONS' make optimized`; See [https://github.com/knight-lang/c/ast/README.md](c/ast/README.md) for details. |
-| Kotlin     |   5.84s | `kotlin/knight` |  |
-| Java       |   6.99s | `java/knight` | Requires a larger stack to prevent overflow; `java -Xss515m` was used. |
-| C#         |  11.82s | `csharp/bin/Release/netcoreapp2.1/<impl>/Knight` | |
-| C++        |  13.61s | `cpp/knight`       | Copiled using `make optimized` |
-| Rust       |  14.06s | `rust/target/release/knight` | Built with `cargo build --release`. Still being improved. |
-| Go         |  14.17s | `go/knight/knight` | |
-| JavaScript |  30.64s | `node --stack-size=1000000 javasript/bin/knight.js` | Default stack's too small, so we had to bump it up. |
-| PHP        |  64.73s | `php/knight.php`   | |
-| Ruby       | 110.04s | `ruby/knight.rb`   | Default stack's too small, so `RUBY_THREAD_VM_STACK_SIZE=10000000` was needed. |
-| Python     | 236.01s | `python/main.py`   | Default stack's too small, so `setrecursionlimit(100000)` was needed. |
-| Perl       | 436.55s | `perl/bin/knight.pl` | |
+|   Language   |  Time   | `<implementation>` | Notes |
+| ------------ |--------:|--------------------|-------|
+| C            |   3.31s | `c/ast/knight`     | Compiled using `COMPUTED_GOTOS=1 CFLAGS='-DKN_RECKLESS -DKN_USE_EXTENSIONS' make optimized`; See [https://github.com/knight-lang/c/ast/README.md](c/ast/README.md) for details. |
+| Kotlin       |   5.84s | `kotlin/knight` |  |
+| Java         |   6.99s | `java/knight` | Requires a larger stack to prevent overflow; `java -Xss515m` was used. |
+| x86 Assembly |   8.29s | `asm/knight` | Currently does not have caching. (The C impl without caching runs 10.22s) |
+| C#           |  11.82s | `csharp/bin/Release/netcoreapp2.1/<impl>/Knight` | |
+| C++          |  13.61s | `cpp/knight`       | Copiled using `make optimized` |
+| Rust         |  14.06s | `rust/target/release/knight` | Built with `cargo build --release`. Still being improved. |
+| Go           |  14.17s | `go/knight/knight` | |
+| JavaScript   |  30.64s | `node --stack-size=1000000 javasript/bin/knight.js` | Default stack's too small, so we had to bump it up. |
+| PHP          |  64.73s | `php/knight.php`   | |
+| Ruby         | 110.04s | `ruby/knight.rb`   | Default stack's too small, so `RUBY_THREAD_VM_STACK_SIZE=10000000` was needed. |
+| Python       | 236.01s | `python/main.py`   | Default stack's too small, so `setrecursionlimit(100000)` was needed. |
+| Perl         | 436.55s | `perl/bin/knight.pl` | |
 
 
 
