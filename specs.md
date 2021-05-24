@@ -28,7 +28,7 @@ In this document, some notation is used to describe what is required of implemen
 	4.1.4 [`PROMPT`](#414-prompt)  
 	4.1.5 [`RANDOM`](#415-random)  
 
-	4.2.1 [`:`](#411-unchanged)  
+	4.2.1 [`:`](#421-unchanged)  
 	4.2.2 [`EVAL`](#422-evalstring)  
 	4.2.3 [`BLOCK`](#423-blockunevaluated)  
 	4.2.4 [`CALL`](#424-callspecial)  
@@ -87,7 +87,7 @@ There are no multiline or embedded comments in Knight.
 ## 1.3 Number
 Number literals are simply a sequence of ASCII digits (ie `0` (`0x30`) through `9` (`0x39`)). Leading `0`s do not indicate octal numbers (eg, `011` is the number eleven, not nine). No other bases are supported, and only integral numbers are allowed.
 
-Note that there are no negative number literals in Knight---they're constructed via the [`-`]((#432--unchanged-number) function: `- 0 5`.
+Note that there are no negative number literals in Knight---they're constructed via the [`-`](#432--unchanged-number) function: `- 0 5`.
 
 ## 1.4 String
 String literals in Knight begin with with either a single quote (`'`) or a double quote (`"`). All characters are taken literally until the opening close is encountered again. This means that there are no escape sequences within string literals; if you want a newline character, you will have to do:
