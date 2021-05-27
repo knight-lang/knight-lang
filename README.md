@@ -44,11 +44,11 @@ Note that these are simply benchmarks of _my_ implementations of Knight, and not
 | ------------ |--------:|--------------------|-------|
 | C            |   3.31s | `c/ast/knight`     | Compiled using `COMPUTED_GOTOS=1 CFLAGS='-DKN_RECKLESS -DKN_USE_EXTENSIONS' make optimized`; See [https://github.com/knight-lang/c/ast/README.md](c/ast/README.md) for details. |
 | Kotlin       |   5.84s | `kotlin/knight` |  |
+| x86 Assembly |   6.29s | `asm/knight` | Currently only has AST caching. (The C impl without caching runs 10.22s) |
 | Java         |   6.99s | `java/knight` | Requires a larger stack to prevent overflow; `java -Xss515m` was used. |
-| x86 Assembly |   8.29s | `asm/knight` | Currently does not have caching. (The C impl without caching runs 10.22s) |
+| Rust         |  10.06s | `rust/target/release/knight` | Built with `cargo build --release --no-default-features --features=unsafe-optimized`. Still being improved. 
 | C#           |  11.82s | `csharp/bin/Release/netcoreapp2.1/<impl>/Knight` | |
 | C++          |  13.61s | `cpp/knight`       | Copiled using `make optimized` |
-| Rust         |  14.06s | `rust/target/release/knight` | Built with `cargo build --release`. Still being improved. |
 | Go           |  14.17s | `go/knight/knight` | |
 | JavaScript   |  30.64s | `node --stack-size=1000000 javasript/bin/knight.js` | Default stack's too small, so we had to bump it up. |
 | PHP          |  64.73s | `php/knight.php`   | |
