@@ -26,7 +26,7 @@ The following is the list of all languages that I've written it in. All in-progr
 | [POSIX-Compliant SH](https://github.com/knight-lang/shell/knight.sh) |   |   | X | X | Mostly works, but has some bug fixes that need to be done. It could definitely use some TL&C, though. |
 | [Prolog](https://github.com/knight-lang/prolog) |   |   |   | X | The very beginnings of a Prolog implementation. |
 | [Python](https://github.com/knight-lang/python) | X | X | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
-| [Quest](https://github.com/knight-lang/quest) |   |    |   | X | An implementation in [my other programming language](https://github.com/sampersand/quest). |
+| [Quest](https://github.com/knight-lang/quest) |   |    | X | X | An implementation in [my other programming language](https://github.com/sampersand/quest). Mostly functional, but a few tweaks left. |
 | [Raku](https://github.com/knight-lang/raku) | X | X | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
 | [Ruby](https://github.com/knight-lang/ruby) | X |   | X | X | A hacky version currently exists; a more sophisticated one is being worked on. |
 | [Rust](https://github.com/knight-lang/rust) | X |   | X | X | Simple implementation without comments. It intentionally captures all UB, but eventually will have an efficient implementation. |
