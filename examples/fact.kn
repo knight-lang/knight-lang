@@ -1,8 +1,0 @@
-;=fB*iI>1=i-i 1 1Cf;=i 10O Cf
-;=fB*iI<=i-i 1 2iCf;=i 10O Cf
-
-; = f B ; O i * i (I<=i-i 2 i 1Cf) ; = i 10 : O C f
-
-
-; = f B : * i (I<=i-i 2 i 1Cf) ; = i 10 : O C f
-zsh: segmentation fault  ./main -e '; = f B : * i (I<=i-i 2 i 1Cf) ; = i 10 : O C f'

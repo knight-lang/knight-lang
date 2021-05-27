@@ -1,0 +1,16 @@
+# golfed. I forgot `SET` existed lol
+;;;=s"'"=d'"'
+E=a1'O+++++";;;=s"d+s;=iFd"=d"s+d s'
+E=a2'W>3=i+1iO+++"E=a"i+sE+"a"i s'
+
+# ungolfed
+;;;;
+= one "'"
+= two '"'
+= i 0
+EVAL = a1'OUTPUT +++++++++";;;;
+= one "two one two"
+= two "one two one"
+= i "0"'
+EVAL = a2'WHILE > 3 (= i + i 1)
+	OUTPUT +++ "EVAL = a" i (+ one EVAL (+" a" i one))'

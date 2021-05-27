@@ -1,0 +1,17 @@
+; = primes_upto BLOCK
+	; = nums (* "P" max)
+	; = i 1
+	; WHILE < i max
+		; = i + i 1
+		; = j * 2 i
+		: WHILE < j max
+			; = nums SET nums j 1 "n"
+			: = j + j i
+	; = i 1
+	: WHILE < i max
+		; = i + i 1
+		: & (? 'P' (GET nums i 1))
+			: OUTPUT ++ "" i " \"
+
+; = max 100
+: CALL primes_upto
