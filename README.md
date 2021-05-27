@@ -1,12 +1,12 @@
 # Knight
 An extremely simple programming language that I've designed to be easy to implement in a variety of languages. It's not actually meant to be used, though it is a fully-functional language.
 
-Unofficial Tag-line: "Knight: Runs everywhere. Not because it's cross-platform, but because it has a implementation in virtually all major languages."
+Unofficial Tag-line: "Knight: Runs everywhere. Not because it's cross-platform, but because it works in any almost any language you have."
 
 Checkout the [community](COMMUNITY.md), and join us on discord: https://discord.gg/SE3TjsewDk.
 
 # Implementations
-The following is the list of all languages that I've written it in. All in-progress implementations are in separate branches.
+The following is the list of all languages that I've written it in.
 
 | Language | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
 | -------- |:---------------------:|:----------:|:-----------------:|:-----:| ----- |
@@ -24,16 +24,23 @@ The following is the list of all languages that I've written it in. All in-progr
 | [Perl](https://github.com/knight-lang/perl) | X | X | X | X | Fully Functional on at least v5.18. |
 | [PHP](https://github.com/knight-lang/php) | X | X | X | X | Fully Functional, with type annotations. |
 | [POSIX-Compliant SH](https://github.com/knight-lang/shell/knight.sh) |   |   | X | X | Mostly works, but has some bug fixes that need to be done. It could definitely use some TL&C, though. |
-| [Prolog](https://github.com/knight-lang/prolog) |   |   |   | X | The very beginnings of a Prolog implementation. |
 | [Python](https://github.com/knight-lang/python) | X | X | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
 | [Quest](https://github.com/knight-lang/quest) |   |    | X | X | An implementation in [my other programming language](https://github.com/sampersand/quest). Mostly functional, but a few tweaks left. |
 | [Raku](https://github.com/knight-lang/raku) | X | X | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
 | [Ruby](https://github.com/knight-lang/ruby) | X |   | X | X | A hacky version currently exists; a more sophisticated one is being worked on. |
 | [Rust](https://github.com/knight-lang/rust) | X |   | X | X | Simple implementation without comments. It intentionally captures all UB, but eventually will have an efficient implementation. |
-| SML |   |   |   |   | Planned. I used this in college, and enjoyed it. |
-| Racket |   |   |   |   | Planned. I used this in college, and enjoyed it. |
-| LaTeX |   |   |   |   | Eventually; Because why not? I did a lot of LaTeX in college. |
-| Scratch |   |   |   |   | My first language! Might be fun to implement it in this |
+
+## Future
+In addition, the following is a list of languages which I want to wirte an implementation in at some point.
+| Language | Notes |
+| Elixir | Probably the next one I'll do. |
+| Lua | Planned for somepoint soon. |
+| SML | Eventually. I used this in college, and enjoyed it. |
+| Racket | Eventually. I used this in college, and enjoyed it. |
+| LaTeX | Eventually. Because why not? I did a lot of LaTeX in college. |
+| Scratch | My first language! Might be fun to implement it in this |
+| [Prolog](https://github.com/knight-lang/prolog) | The very beginnings of a Prolog implementation. |
+| Fortran | This might be fun to try, but there's not a lot of documentations about it. |
 
 ## Time Comparisons
 The following able describes how fast each implementation (in `user` time) was at running `examples/fizzbuzz.kn` in `knight.kn` in `knight.kn` in their implementation, on my machine. You can test it yourself via the [timeit](timeit) script provided.
