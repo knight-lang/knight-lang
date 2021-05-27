@@ -47,7 +47,7 @@ Note that these are simply benchmarks of _my_ implementations of Knight, and not
 | Java       |   6.99s | `java/knight` | Requires a larger stack to prevent overflow; `java -Xss515m` was used. |
 | Rust       |  10.06s | `rust/target/release/knight` | Built with `cargo build --release --no-default-features --features=unsafe-optimized`. Still being improved. 
 | C#         |  11.82s | `csharp/bin/Release/netcoreapp2.1/<impl>/Knight` | |
-| C++        |  13.61s | `cpp/knight`       | Copiled using `make optimized` |
+| C++        |  13.61s | `cpp/knight`       | Compiled using `make optimized` |
 | Go         |  14.17s | `go/knight/knight` | |
 | JavaScript |  30.64s | `node --stack-size=1000000 javasript/bin/knight.js` | Default stack's too small, so we had to bump it up. |
 | PHP        |  64.73s | `php/knight.php`   | |
