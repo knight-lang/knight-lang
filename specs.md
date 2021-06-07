@@ -1,4 +1,4 @@
-# Overview
+# Knight (v1.1)
 Knight is meant to be easily implementable in virtually every language imaginable. As such, the language itself is not very complicated, and the specs may leave some things up to the implementation. This allows each language to implement it in the most idiomatic way possible.
 
 ## Notation
