@@ -38,6 +38,7 @@ In this document, some notation is used to describe what is required of implemen
 	4.2.8 [`LENGTH`](#428-lengthstring)  
 	4.2.9 [`DUMP`](#429-dumpunchanged)  
 	4.2.10 [`OUTPUT`](#4210-outputstring)  
+	4.2.11 [`ASCII`](#4211-asciiunchanged)  
 
 	4.3.1 [`+`](#431-unchanged-coerce)  
 	4.3.2 [`-`](#432--unchanged-number)  
@@ -113,7 +114,7 @@ Each function has a predetermined arity---no variable argument functions are all
 The list of required functions are as follows. Implementations may define additional symbolic or keyword-based functions as desired. (For details on what individual functions mean, see `# Semantics`.)
 
 - Arity `0`: `TRUE`, `FALSE`, `NULL`, `PROMPT`, `RANDOM`
-- Arity `1`: `:`, `EVAL`, `BLOCK`, `CALL`, `` ` ``,`QUIT`,  `!`, `LENGTH`, `DUMP`, `OUTPUT`, 
+- Arity `1`: `:`, `EVAL`, `BLOCK`, `CALL`, `` ` ``,`QUIT`, `!`, `LENGTH`, `DUMP`, `OUTPUT`, `ASCII`
 - Arity `2`: `+`, `-`, `*`, `/`, `%`, `^`, `<`, `>`, `?`, `&`, `|`, `;`, `=`, `WHILE`
 - Arity `3`: `IF`, `GET`
 - Arity `4`: `SUBSTITUTE`
@@ -394,6 +395,27 @@ foo
 bar
 ```
 
+### 4.2.11 `ASCII(unchanged)`
+If the first argument is a number, interprets it as an ASCII byte and returns a new string. If the first argument is a string, the first byte is converted to its ASCII numerical equivalent.
+
+If the first argument is not a number or a string, the return value of this function is undefined.
+If the first argument is a number, but doesn't represent a valid Knight byte (that is, if it's not `9`, `10`, `13`, or `32-126` (inclusive on both sides)), this function's return value is undefined.
+note that implementations are free to accept numbers outside of this range, such as UTF-8 codepoints---however, this is not required.
+If the first argument is a string, and it is empty, the return value of this function is undefined.
+
+For example:
+
+```
+; OUTPUT ASCII 38 # => &
+; OUTPUT ASCII 50 # => ;
+; OUTPUT ASCII 10 # => <newline>
+
+; OUTPUT ASCII "H" # => 72
+; OUTPUT ASCII "HELLO" # => 72
+; OUTPUT ASCII "
+" # => 10)
+```
+
 ## 4.3 Binary (Arity 2)
 ### 4.3.1 `+(unchanged, coerce)`
 The return value of this function depends on its first argument's type:
@@ -435,9 +457,10 @@ If the second argument is not a positive number, the return value is undefined.
 For example, `% 7 3` will return `1`, and `% (- 0 7) 5` will return `-2`.
 
 ### 4.3.6 `^(unchanged, number)`
-If the first argument is a number, the second will be coerced to a number and the resulting exponentiation will be returned. Note that for an exponent of `0`, the return value should always be `1`.
+If the first argument is a number, the second will be coerced to a number and the resulting exponentiation will be returned. Note that for an exponent of `0`, the return value should always be `1` for nonnegative numbers.
 
 If the first argument is not a number, the return value of this function is undefined.
+If the first argument is zero and the second argument is negative, the return value of this function is undefined.
 
 ### 4.3.7 `<(unchanged, coerce)`
 The return value of this function depends on its first argument's type:
