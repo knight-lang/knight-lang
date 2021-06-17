@@ -32,7 +32,9 @@ The following is the list of all languages that I've written it in.
 
 ## Future
 In addition, the following is a list of languages which I want to wirte an implementation in at some point.
+
 | Language | Notes |
+| :------- | ----- |
 | Elixir | Probably the next one I'll do. |
 | Lua | Planned for somepoint soon. |
 | SML | Eventually. I used this in college, and enjoyed it. |
