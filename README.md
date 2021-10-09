@@ -31,7 +31,7 @@ The following is the list of all languages that I've written it in.
 | [Rust](https://github.com/knight-lang/rust) | X |   | X | X | Simple implementation without comments. It intentionally captures all UB, but eventually will have an efficient implementation. |
 
 ## Future
-In addition, the following is a list of languages which I want to wirte an implementation in at some point.
+In addition, the following is a list of languages which I want to write an implementation in at some point.
 
 | Language | Notes |
 | :------- | ----- |
