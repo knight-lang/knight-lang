@@ -127,23 +127,23 @@ Implementations may define their own functions, as long as they start with an up
 ## Example
 here's an example of a simple guessing game and how it should parse:
 ```text
-; = secret random
-; = guess + 0 prompt
-OUTPUT if (? secret guess) "correct!" "wrong!"
+; = secret RANDOM
+; = guess + 0 PROMPT
+OUTPUT IF (? secret guess) "correct!" "wrong!"
 ```
 ```text
 [;]
  ├──[=]
  │   ├──[secret]
- │   └──[random]
+ │   └──[RANDOM]
  └──[;]
      ├──[=]
      │   ├──[guess]
      │   └──[+]
      │       ├──[0]
-     │       └──[prompt]
+     │       └──[PROMPT]
      └──[OUTPUT]
-         └──[if]
+         └──[IF]
              ├──[?]
              │   ├──[secret]
              │   └──[guess]
