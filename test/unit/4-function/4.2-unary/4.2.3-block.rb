@@ -20,7 +20,7 @@ section '4.2.3', 'BLOCK' do
 
 	it 'should be usable as the sole argument of CALL' do
 		assert_result 12, %|CALL BLOCK 12|
-		assert_result 7, %|; = bar BLOCK + 4 foo ; = foo 3 : CALL bar'|
+		assert_result 7, %|; = bar BLOCK + 4 foo ; = foo 3 : CALL bar|
 	end
 
 	it 'requires exactly one argument', when_testing: :argument_count do
