@@ -353,7 +353,7 @@ Implementations must accept exit codes between 0 to 127, although they can permi
 	It is undefined behaviour if the given status code is not supported by the implementation.
 
 ### 4.2.7 `!(boolean)`
-Returns the logical negation of its argument---truthy values become `FALSE`, and falsey values beocme `TRUE`.
+Returns the logical negation of its argument---truthy values become `FALSE`, and falsey values become `TRUE`.
 
 ### 4.2.8 `LENGTH(string)`
 Returns the length of the string, in bytes.
