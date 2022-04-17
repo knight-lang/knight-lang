@@ -35,7 +35,7 @@ OptParse.new.instance_exec do
 		end
 	end
 
-	on '-Z', '--no-sanitize=[ SAN[,...]]', 'Do not test SANS; disables all without args', Array do |san|
+	on '-Z', '--dont-sanitize[=SAN,...]', 'Do not test SANS; disables all without args', Array do |san|
 		if san
 			Kn::Test.sanitizations -= san.map(&:to_sym)
 		else
@@ -64,7 +64,7 @@ OptParse.new.instance_exec do
 	    - argument_count        A function is called with too few arguments. (eg `+ 1`.)
 	    - undefined_variables   Fetching the value of an unassigned variale.
 
-	    Additionally, these sanitizations may be enabled via `--also-sanitize`:
+	    Additionally, these sanitizations may be enabled via `--sanitize`:
 	    - strict_types          The return value of `BLOCK` is passed to a function
 	                            which doesn't have set semantics for it.
 	    - overflow              A function causes an integral number to overflow.
