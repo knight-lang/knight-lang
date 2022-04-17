@@ -10,9 +10,9 @@ The following is the list of all languages that I've written it in.
 
 | Language | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
 | -------- |:---------------------:|:----------:|:-----------------:|:-----:| ----- |
-| [AWK](https://github.com/knight-lang/shell/knight.awk) | X | X | X | X | My AWK interpreter segfaults randomly, but after running each test 100x, they all passed. |
+| [AWK](https://github.com/knight-lang/shell/blob/master/knight.awk) | X | X | X | X | My AWK interpreter segfaults randomly, but after running each test 100x, they all passed. |
 | [Assembly (x86)](https://github.com/knight-lang/asm) |   |   | X | X | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
-| [C](https://github.com/knight-lang/c) | X | X | X | X | Fully functional, and the fastest. |
+| [C](https://github.com/knight-lang/c/tree/master/ast) | X | X | X | X | Fully functional, and the fastest. |
 | [C++](https://github.com/knight-lang/cpp) | X | X | X | X | Works with C++17; It could use a facelift though, as I used a bit too much dynamic dispatch. |
 | [C#](https://github.com/knight-lang/csharp) | X | X | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [Go](https://github.com/knight-lang/go) | X |  | X | X | Fully functional, but undocumented. |
@@ -23,12 +23,23 @@ The following is the list of all languages that I've written it in.
 | [Kotlin](https://github.com/knight-lang/kotlin) | X | X | X | X | Fully funcitonal, and barring `` ` ``, can be compiled to native. |
 | [Perl](https://github.com/knight-lang/perl) | X | X | X | X | Fully Functional on at least v5.18. |
 | [PHP](https://github.com/knight-lang/php) | X | X | X | X | Fully Functional, with type annotations. |
-| [POSIX-Compliant SH](https://github.com/knight-lang/shell/knight.sh) |   |   | X | X | Mostly works, but has some bug fixes that need to be done. It could definitely use some TL&C, though. |
+| [POSIX-Compliant SH](https://github.com/knight-lang/shell/blob/master/knight.sh) |   |   | X | X | Mostly works, but has some bug fixes that need to be done. It could definitely use some TL&C, though. |
 | [Python](https://github.com/knight-lang/python) | X | X | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
-| [Quest](https://github.com/knight-lang/quest) |   |    | X | X | An implementation in [my other programming language](https://github.com/sampersand/quest). Mostly functional, but a few tweaks left. |
 | [Raku](https://github.com/knight-lang/raku) | X | X | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
 | [Ruby](https://github.com/knight-lang/ruby) | X |   | X | X | A hacky version currently exists; a more sophisticated one is being worked on. |
 | [Rust](https://github.com/knight-lang/rust) | X |   | X | X | Simple implementation without comments. It intentionally captures all UB, but eventually will have an efficient implementation. |
+
+## Personal Languages
+I love language design, and have written quite a few programming languages. I generally try to get the languages fleshed out enough so that I can write a fully compliant Knight interpreter in it.
+
+| Language | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
+| -------- |:---------------------:|:----------:|:-----------------:|:-----:| ----- |
+| [Brick](https://github.com/sampersand/Brick/tree/master/examples) | X |   | X | X |  |
+| Squire | | | | | |
+| Quest | | | | | |
+| Stick | | | | | |
+| Lance | | | | | |
+| Mercenary | | | | | |
 
 ## Future
 In addition, the following is a list of languages which I want to write an implementation in at some point.
