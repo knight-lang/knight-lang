@@ -3,12 +3,12 @@ section '4.3.2', '-' do
 		assert_result 0, %|- 0 0|
 		assert_result -1, %|- 1 2|
 		assert_result -2, %|- 4 6|
-		assert_result 113, %|- 112 (- 0 1)|
+		assert_result 113, %|- 112 ~1|
 
 		assert_result -9, %|- 4 13|
-		assert_result 17, %|- 4 (- 0 13)|
-		assert_result -17, %|- (- 0 4) 13|
-		assert_result 9, %|- (- 0 4) (- 0 13)|
+		assert_result 17, %|- 4 ~13|
+		assert_result -17, %|- ~4 13|
+		assert_result 9, %|- ~4 ~13|
 	end
 
 	it 'converts other values to numbers' do

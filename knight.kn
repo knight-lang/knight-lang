@@ -82,7 +82,7 @@
 	: IF CALL iswhitespace
 		; CALL advance
 		: CALL strip_whitespace_and_comments
-	: IF (? chr '#')
+	: IF (? chr ''#')
 		; CALL advance
 		; WHILE ! | (CALL iseof) (CALL iseol)
 			; CALL advance
@@ -142,6 +142,7 @@
 		     | (? next_function_ret '`')
 		     | (? next_function_ret 'Q')
 		     | (? next_function_ret '!')
+		     | (? next_function_ret '~')
 		     | (? next_function_ret 'L')
 		     | (? next_function_ret 'D')
 		       (? next_function_ret 'O')
@@ -312,6 +313,9 @@
 	: IF ? '!' value_kind
 		; CALL eval_arg0
 		: IF CALL to_boolean 'F$' 'T$'
+	: IF ? '~' value_kind
+		; CALL eval_arg0
+		: + 'n' ~ CALL to_number
 	: IF ? 'L' value_kind
 		; CALL eval_arg0
 		: + 'n' LENGTH CALL to_string

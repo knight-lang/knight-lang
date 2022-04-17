@@ -27,7 +27,7 @@ section '4.2.10', 'OUTPUT' do
 
 	it 'converts values to a string' do
 		assert_output "123\n", %|OUTPUT 123|
-		assert_output "-123\n", %|OUTPUT - 0 123|
+		assert_output "-123\n", %|OUTPUT ~123|
 		assert_output "true\n", %|OUTPUT TRUE|
 		assert_output "false\n", %|OUTPUT FALSE|
 		assert_output "null\n", %|OUTPUT NULL|

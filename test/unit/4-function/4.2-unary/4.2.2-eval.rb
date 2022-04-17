@@ -26,7 +26,7 @@ section '4.2.2', 'EVAL' do
 		refute_runs %|; = a 3 : EVAL "+ BLOCK a 0"| if sanitized? :strict_types
 		refute_runs %|EVAL "+ 1"| if sanitized? :argument_count
 		# TODO: test overflow
-		refute_runs %|EVAL "* "a" (- 0 1)"| if sanitized? :invalid_values
+		refute_runs %|EVAL "* "a" ~1"| if sanitized? :invalid_values
 		refute_runs %|EVAL "a"| if sanitized? :undefined_variables
 	end
 

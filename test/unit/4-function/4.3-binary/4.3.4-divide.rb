@@ -2,21 +2,21 @@ section '4.3.4', '/' do
 	it 'divides nonzero numbers normally' do
 		assert_result 1, %|/ 1 1|
 		assert_result 5, %|/ 10 2|
-		assert_result -5, %|/ (- 0 10) 2|
-		assert_result -10, %|/ 40 (- 0 4)|
-		assert_result 20, %|/ (- 0 80) (- 0 4)|
+		assert_result -5, %|/ ~10 2|
+		assert_result -10, %|/ 40 ~4|
+		assert_result 20, %|/ ~80 ~4|
 
 		assert_result 3, %|/ 13 4|
-		assert_result -3, %|/ 13 (- 0 4)|
-		assert_result -3, %|/ (- 0 13) 4|
-		assert_result 3, %|/ (- 0 13) (- 0 4)|
+		assert_result -3, %|/ 13 ~4|
+		assert_result -3, %|/ ~13 4|
+		assert_result 3, %|/ ~13 ~4|
 	end
 
 	it 'rounds downwards' do
 		assert_result 0, %|/ 4 5|
 		assert_result 2, %|/ 10 4|
-		assert_result -1, %|/ (- 0 5) 3|
-		assert_result -2, %|/ (- 0 7) 3|
+		assert_result -1, %|/ ~5 3|
+		assert_result -2, %|/ ~7 3|
 	end
 
 	it 'evaluates arguments in order' do
@@ -34,7 +34,7 @@ section '4.3.4', '/' do
 	# Note that there's no way to overflow with division, as we only have integers.
 
 	it 'does not divide by zero', when_testing: :zero_division do
-		refute_runs %|/ (- 0 1) 0|
+		refute_runs %|/ ~1 0|
 		refute_runs %|/ 100 0|
 		refute_runs %|/ 1 FALSE|
 		refute_runs %|/ 1 NULL|

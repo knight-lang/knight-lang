@@ -28,9 +28,9 @@ section '4.3.5', '%' do
 
 	# note that, as per the Knight spec, modulo where either number is negative is undefined.
 	it 'does not allow for negative numbers anywhere', when_testing: :invalid_values do
-		refute_runs %|% 1 (- 0 1)|
-		refute_runs %|% (- 0 1) 1|
-		refute_runs %|% (- 0 1) (- 0 1)|
+		refute_runs %|% 1 ~1|
+		refute_runs %|% ~1 1|
+		refute_runs %|% ~1 ~1|
 	end
 
 	it 'only allows a number as the first operand', when_testing: :invalid_types do

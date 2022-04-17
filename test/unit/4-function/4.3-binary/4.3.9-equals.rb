@@ -38,9 +38,9 @@ section '4.3.9', '?' do
 	describe 'when the first arg is a number' do
 		it 'is only equal to itself' do
 			assert_result true, %|? 0 0|
-			assert_result true, %|? (- 0 0) 0|
+			assert_result true, %|? ~0 0|
 			assert_result true, %|? 1 1|
-			assert_result true, %|? (- 0 1) (- 0 1)|
+			assert_result true, %|? ~1 ~1|
 			assert_result true, %|? 912 912|
 			assert_result true, %|? 123 123|
 		end
@@ -49,7 +49,7 @@ section '4.3.9', '?' do
 			assert_result false, %|? 0 1|
 			assert_result false, %|? 1 0|
 			assert_result false, %|? 4 5|
-			assert_result false, %|? (- 0 4) 4|
+			assert_result false, %|? ~4 4|
 
 			assert_result false, %|? 0 FALSE|
 			assert_result false, %|? 0 NULL|

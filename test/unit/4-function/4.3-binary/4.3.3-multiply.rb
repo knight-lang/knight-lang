@@ -20,10 +20,10 @@ section '4.3.3', '*' do
 		end
 
 		it 'only allows for a nonnegative duplication amount', when_testing: :invalid_values do
-			refute_runs %|* "hello" (- 0 1)|
-			refute_runs %|* "hello" (- 0 4)|
-			refute_runs %|* "" (- 0 4)|
-			refute_runs %|* "1" (- 0 4)|
+			refute_runs %|* "hello" ~1|
+			refute_runs %|* "hello" ~4|
+			refute_runs %|* "" ~4|
+			refute_runs %|* "1" ~4|
 		end
 	end
 
@@ -32,12 +32,12 @@ section '4.3.3', '*' do
 			assert_result 0, %|* 0 0|
 			assert_result 2, %|* 1 2|
 			assert_result 24, %|* 4 6|
-			assert_result -36, %|* 12 (- 0 3)|
+			assert_result -36, %|* 12 ~3|
 
 			assert_result 52, %|* 4 13|
-			assert_result -52, %|* 4 (- 0 13)|
-			assert_result -52, %|* (- 0 4) 13|
-			assert_result 52, %|* (- 0 4) (- 0 13)|
+			assert_result -52, %|* 4 ~13|
+			assert_result -52, %|* ~4 13|
+			assert_result 52, %|* ~4 ~13|
 		end
 
 		it 'converts other values to integers' do

@@ -10,7 +10,7 @@
 	; = __list CALL cons
 	; = __data 0
 	; = __list CALL cons
-	; = __data - 0 1
+	; = __data ~1
 ; = list CALL cons
 
 # Print out the original list

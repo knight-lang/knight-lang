@@ -4,7 +4,7 @@
 	: IF ? __arg NULL  : "N"
 	: IF ! ? __arg + "" __arg
 		: IF < __arg 0
-			: + "-0 " - 0 __arg
+			: + "-0 " ~__arg
 			: + "" __arg
 	# it's a string
 	; = __repr_ret '+"'

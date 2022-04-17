@@ -1,5 +1,5 @@
 section '4.2.7', '!' do
-	it 'negates its argument' do
+	it 'inverts its argument' do
 		assert_result true,  %|! FALSE|
 		assert_result false, %|! TRUE|
 	end

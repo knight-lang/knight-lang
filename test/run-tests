@@ -69,7 +69,7 @@ OptParse.new.instance_exec do
 	                            which doesn't have set semantics for it.
 	    - overflow              A function causes an integral number to overflow.
 	    - invalid_values        A function is called with a valid type, but which has an
-	                            invalid value. (e.g. `* "hi" (- 0 1)`)
+	                            invalid value. (e.g. `* "hi" ~1`)
 	    - io_errors             Problems arising during input/output operations.
 	    - strict_compliance     Misc. undefined behaviour that's hard to verify.
 	EOS

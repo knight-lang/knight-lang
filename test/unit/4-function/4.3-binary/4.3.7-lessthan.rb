@@ -4,7 +4,7 @@ section '4.3.7', '<' do
 			assert_result true, %|< FALSE TRUE|
 			assert_result true, %|< FALSE 1|
 			assert_result true, %|< FALSE "1"|
-			assert_result true, %|< FALSE (- 0 1)|
+			assert_result true, %|< FALSE ~1|
 		end
 
 		it 'is false all other times' do
@@ -18,7 +18,7 @@ section '4.3.7', '<' do
 			assert_result false, %|< TRUE 1|
 			assert_result false, %|< TRUE "1"|
 			assert_result false, %|< TRUE 2|
-			assert_result false, %|< TRUE (- 0 2)|
+			assert_result false, %|< TRUE ~2|
 			assert_result false, %|< TRUE 0|
 			assert_result false, %|< TRUE ""|
 			assert_result false, %|< TRUE NULL|
@@ -97,16 +97,16 @@ section '4.3.7', '<' do
 			assert_result false, %|< 491 91|
 
 			assert_result true, %|< 4 13|
-			assert_result false, %|< 4 (- 0 13)|
-			assert_result true, %|< (- 0 4) 13|
-			assert_result false, %|< (- 0 4) (- 0 13)|
+			assert_result false, %|< 4 ~13|
+			assert_result true, %|< ~4 13|
+			assert_result false, %|< ~4 ~13|
 		end
 
 		it 'coerces the RHS to a number' do
 			assert_result true, %|< 0 TRUE|
 			assert_result true, %|< 0 "1"|
 			assert_result true, %|< 0 "49"|
-			assert_result true, %|< (- 0 2) "-1"|
+			assert_result true, %|< ~2 "-1"|
 
 			assert_result false, %|< 0 FALSE|
 			assert_result false, %|< 0 NULL|

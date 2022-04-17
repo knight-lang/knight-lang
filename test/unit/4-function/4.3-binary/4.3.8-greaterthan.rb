@@ -12,7 +12,7 @@ section '4.3.8', '>' do
 			assert_result false, %|> TRUE 1|
 			assert_result false, %|> TRUE "1"|
 
-			assert_result false, %|> FALSE (- 0 1)|
+			assert_result false, %|> FALSE ~1|
 			assert_result false, %|> FALSE TRUE|
 			assert_result false, %|> FALSE FALSE|
 			assert_result false, %|> FALSE 1|
@@ -95,23 +95,23 @@ section '4.3.8', '>' do
 			assert_result true, %|> 491 91|
 
 			assert_result false, %|> 4 13|
-			assert_result true,  %|> 4 (- 0 13)|
-			assert_result false, %|> (- 0 4) 13|
-			assert_result true,  %|> (- 0 4) (- 0 13)|
+			assert_result true,  %|> 4 ~13|
+			assert_result false, %|> ~4 13|
+			assert_result true,  %|> ~4 ~13|
 		end
 
 		it 'coerces the RHS to a number' do
 			assert_result false, %|> 0 TRUE|
 			assert_result false, %|> 0 "1"|
 			assert_result false, %|> 0 "49"|
-			assert_result false, %|> (- 0 2) "-1"|
+			assert_result false, %|> ~2 "-1"|
 
 			assert_result true, %|> 1 FALSE|
 			assert_result true, %|> 1 NULL|
 			assert_result true, %|> 1 "0"|
 			assert_result true, %|> 01 ""|
 			assert_result true, %|> 0 "-1"|
-			assert_result true, %|> (- 0 1) "-2"|
+			assert_result true, %|> ~1 "-2"|
 		end
 	end
 

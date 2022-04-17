@@ -18,7 +18,7 @@ section '4.3.1', '+' do
 			assert_result 'false', %|+ "" FALSE|
 			assert_result 'null', %|+ "" NULL|
 			assert_result '1234', %|+ "" 1234|
-			assert_result '-123', %|+ "" (- 0 123)|
+			assert_result '-123', %|+ "" ~123|
 		end
 
 			# a bug from the c impl
@@ -32,12 +32,12 @@ section '4.3.1', '+' do
 			assert_result 0, %|+ 0 0|
 			assert_result 3, %|+ 1 2|
 			assert_result 10, %|+ 4 6|
-			assert_result 111, %|+ 112 (- 0 1)|
+			assert_result 111, %|+ 112 ~1|
 
 			assert_result 17, %|+ 4 13|
-			assert_result -9, %|+ 4 (- 0 13)|
-			assert_result 9, %|+ (- 0 4) 13|
-			assert_result -17, %|+ (- 0 4) (- 0 13)|
+			assert_result -9, %|+ 4 ~13|
+			assert_result 9, %|+ ~4 13|
+			assert_result -17, %|+ ~4 ~13|
 		end
 
 		it 'converts other values to numbers' do

@@ -20,26 +20,26 @@ section '4.3.6', '^' do
 		assert_result 1, %|^ 100 0|
 		assert_result 1, %|^ 4 0|
 		assert_result 1, %|^ 3 0|
-		assert_result 1, %|^ (- 0 3) 0|
+		assert_result 1, %|^ ~3 0|
 	end
 
 	# Since we only have integral types, anything (normal) raised to a negative number is zero.
 	it 'always returns zero when a > 1 number is raised to a negative power' do
-		assert_result 0, %|^ 2 (- 0 2)|
-		assert_result 0, %|^ 100 (- 0 2)|
-		assert_result 0, %|^ 4 (- 0 2)|
-		assert_result 0, %|^ 3 (- 0 2)|
-		assert_result 0, %|^ (- 0 3) (- 0 2)|
+		assert_result 0, %|^ 2 ~2|
+		assert_result 0, %|^ 100 ~2|
+		assert_result 0, %|^ 4 ~2|
+		assert_result 0, %|^ 3 ~2|
+		assert_result 0, %|^ ~3 ~2|
 	end
 
 	it 'returns a negative number when a negative number is raised ot an odd power' do
-		assert_result -1, %|^ (- 0 1) 1|
-		assert_result -8, %|^ (- 0 2) 3|
-		assert_result 16, %|^ (- 0 2) 4|
-		assert_result -32, %|^ (- 0 2) 5|
-		assert_result 100, %|^ (- 0 10) 2|
-		assert_result -1331, %|^ (- 0 11) 3|
-		assert_result 20736, %|^ (- 0 12) 4|
+		assert_result -1, %|^ ~1 1|
+		assert_result -8, %|^ ~2 3|
+		assert_result 16, %|^ ~2 4|
+		assert_result -32, %|^ ~2 5|
+		assert_result 100, %|^ ~10 2|
+		assert_result -1331, %|^ ~11 3|
+		assert_result 20736, %|^ ~12 4|
 	end
 
 	it 'handles one, zero, and negative one properly' do
@@ -53,17 +53,17 @@ section '4.3.6', '^' do
 		assert_result 1, %|^ 1 2|
 		assert_result 1, %|^ 1 1|
 		assert_result 1, %|^ 1 0|
-		assert_result 1, %|^ 1 (- 0 1)|
-		assert_result 1, %|^ 1 (- 0 2)|
-		assert_result 1, %|^ 1 (- 0 3)|
+		assert_result 1, %|^ 1 ~1|
+		assert_result 1, %|^ 1 ~2|
+		assert_result 1, %|^ 1 ~3|
 
-		assert_result -1, %|^ (- 0 1) 3|
-		assert_result 1, %|^ (- 0 1) 2|
-		assert_result -1, %|^ (- 0 1) 1|
-		assert_result 1, %|^ (- 0 1) 0|
-		assert_result -1, %|^ (- 0 1) (- 0 1)|
-		assert_result 1, %|^ (- 0 1) (- 0 2)|
-		assert_result -1, %|^ (- 0 1) (- 0 3)|
+		assert_result -1, %|^ ~1 3|
+		assert_result 1, %|^ ~1 2|
+		assert_result -1, %|^ ~1 1|
+		assert_result 1, %|^ ~1 0|
+		assert_result -1, %|^ ~1 ~1|
+		assert_result 1, %|^ ~1 ~2|
+		assert_result -1, %|^ ~1 ~3|
 	end
 
 	it 'converts other values to integers' do
@@ -80,9 +80,9 @@ section '4.3.6', '^' do
 	end
 
 	it 'does not allow 0 to be raised to a negative power', when_testing: :zero_division do
-		refute_runs %|^ 0 (- 0 1)|
-		refute_runs %|^ 0 (- 0 2)|
-		refute_runs %|^ 0 (- 0 12)|
+		refute_runs %|^ 0 ~1|
+		refute_runs %|^ 0 ~2|
+		refute_runs %|^ 0 ~12|
 	end
 
 	it 'only allows a number as the first operand', when_testing: :invalid_types do
