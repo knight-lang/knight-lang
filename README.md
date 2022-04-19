@@ -35,7 +35,7 @@ I love language design, and have written quite a few programming languages. I ge
 | Language | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
 | -------- |:---------------------:|:----------:|:-----------------:|:-----:| ----- |
 | [Brick](https://github.com/sampersand/Brick/tree/master/examples) | X |   | X | X |  |
-| Squire | | | | | |
+| [Squire](https://github.com/sampersand/squire/tree/master/examples/knight) | X | | X | X | |
 | Quest | | | | | |
 | Stick | | | | | |
 | Lance | | | | | |
