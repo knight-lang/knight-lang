@@ -36,9 +36,9 @@ I love language design, and have written quite a few programming languages. I ge
 | -------- |:---------------------:|:----------:|:-----------------:|:-----:| ----- |
 | [Brick](https://github.com/sampersand/Brick/tree/master/examples) | X |   | X | X |  |
 | [Squire](https://github.com/sampersand/squire/tree/master/examples/knight) | X | | X | X | |
-| Quest | | | | | |
-| Stick | | | | | |
-| Lance | | | | | |
+| Quest | | | | X | Implemented in quest 1, so not entirely working. |
+| Stick | | | | X | |
+| Lance | | | X | X | Few bugs left to workout |
 | Mercenary | | | | | |
 
 ## Future
