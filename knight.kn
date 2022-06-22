@@ -122,6 +122,15 @@
 		: CALL advance # remove trailing quote, if one exists
 	: next_string_ret
 
+## ARGUMENTS:
+## string: string to check
+## chr: char to check
+## clobbers: string
+; = string_contains BLOCK
+	; WHILE & string (! ? chr (GET string 0 1))
+		: = string SET string 0 1 ''
+	: ? chr (GET string 0 1)
+
 ; = next_function BLOCK
 	; = next_function_ret chr
 	; IF CALL isupper
@@ -130,40 +139,14 @@
 			; CALL advance
 			: CALL peek
 		: N
-	: IF | (? next_function_ret 'T')
-	     | (? next_function_ret 'F')
-	     | (? next_function_ret 'N')
-	     | (? next_function_ret 'P')
-	       (? next_function_ret 'R')
+	; = chr next_function_ret
+	: IF (; = string 'TFNPR' : CALL string_contains)
 		: + next_function_ret '$'
-		: IF | (? next_function_ret 'B')
-		     | (? next_function_ret 'E')
-		     | (? next_function_ret 'C')
-		     | (? next_function_ret '`')
-		     | (? next_function_ret 'Q')
-		     | (? next_function_ret '!')
-		     | (? next_function_ret '~')
-		     | (? next_function_ret 'L')
-		     | (? next_function_ret 'D')
-		       (? next_function_ret 'O')
+		: IF (; = string 'BEC`Q!~LDO' : CALL string_contains)
 			: ++ next_function_ret (CALL next_ast) '$'
-			: IF | (? next_function_ret '+')
-			     | (? next_function_ret '-')
-			     | (? next_function_ret '*')
-			     | (? next_function_ret '/')
-			     | (? next_function_ret '%')
-			     | (? next_function_ret '^')
-			     | (? next_function_ret '?')
-			     | (? next_function_ret '<')
-			     | (? next_function_ret '>')
-			     | (? next_function_ret ';')
-			     | (? next_function_ret '=')
-			     | (? next_function_ret 'W')
-			     | (? next_function_ret '&')
-			       (? next_function_ret '|')
+			: IF (; = string '+-*/%^?<>;=W&|' : CALL string_contains)
 				: ++++ next_function_ret (CALL next_ast) '$' (CALL next_ast) '$'
-				: IF | (? next_function_ret 'I')
-				       (? next_function_ret 'G')
+				: IF (; = string 'IG' : CALL string_contains)
 					: ++++++ next_function_ret (CALL next_ast) '$' (CALL next_ast) '$' (CALL next_ast) '$'
 					: IF (? next_function_ret 'S')
 						: ++++++++ next_function_ret (CALL next_ast) '$'
