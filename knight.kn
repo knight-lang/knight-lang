@@ -82,7 +82,7 @@
 	: IF CALL iswhitespace
 		; CALL advance
 		: CALL strip_whitespace_and_comments
-	: IF (? chr ''#')
+	: IF (? chr '#')
 		; CALL advance
 		; WHILE ! | (CALL iseof) (CALL iseol)
 			; CALL advance
