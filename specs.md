@@ -20,7 +20,7 @@ In this document, some notation is used to describe what is required of implemen
 	2.2 [String](#22-string)  
 	2.3 [Boolean](#23-boolean)  
 	2.4 [Null](#24-null)  
-3. [Variable](#3-variable)  
+3. [Variables](#3-variables)  
 4. [Function](#4-function)  
 	4.1.1 [`TRUE`](#411-true)  
 	4.1.2 [`FALSE`](#412-false)  
@@ -226,7 +226,7 @@ The `NULL` type is used to indicate the absence of a value within Knight, and is
 - **boolean**: Null must become `FALSE` in boolean contexts.
 
 
-# 3 Variable
+# 3 Variables
 Variables in Knight must be able to hold all the builtin types, including other variable names and functions (both of which are returned by the `BLOCK` function).
 
 All variables in Knight are global and last for the duration of the program. (There are no function-local variables, and all `EVAL`s are done at the global scope too.). That is, once a value is assigned to a variable name, that variable name will then never be "deallocated"—value associated with it may change, but the variable will never become undefined. 
