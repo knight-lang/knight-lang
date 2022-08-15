@@ -479,7 +479,7 @@ If the first argument is zero and the second argument is negative, the return va
 The return value of this function depends on its first argument's type:
 - `Number`: Whether or not the first argument is numerically smaller than the second, which is coerced to a number, is returned.
 - `String`: Whether or not the first argument is lexicographically smaller than the second, which is coerced to a string, is returned. See below for more details.
-- `Boolean`: Whether the first argument is false and the second argument is, when coerced to a boolean, is true is returned.
+- `Boolean`: Whether the first argument is false and the second argument is, when coerced to a boolean, true is returned.
 - All other types: The return value is undefined.
 
 Lexicographical comparisons should find the first non-equivalent character in each string and compare them based on their ASCII value (eg in `abcd` and `abde`, `c` and `d` would be compared), returning `TRUE` if the first argument's character is smaller. If both strings have equivalent characters, then this function shall return `TRUE` only if the first string has a smaller size than the second.
