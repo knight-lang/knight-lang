@@ -504,7 +504,7 @@ Unlike nearly every other function in Knight, this one does not automatically co
 This function is valid for the types `Number`, `String`, `Boolean`, and `Null`. Notably, if either argument is a `BLOCK`'s return value, the return value is undefined.
 
 ### 4.3.10 `&(unchanged, unevaluated)`
-If the first argument, after being coerced to a boolean, is `FALSE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
+If the first argument, after being evaluated and coerced to a boolean, is `FALSE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
 
 This function acts similarly to `&&` in most programming languages, where it only evaluates the second variable if the first is truthy.
 
@@ -512,7 +512,7 @@ For example, `& 0 (QUIT 1)` shall return the value `0`, whilst `& TRUE ""` shall
 
 
 ### 4.3.11 `|(unchanged, unevaluated)`
-If the first argument, after being coerced to a boolean, is `TRUE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
+If the first argument, after being evaluated and coerced to a boolean, is `TRUE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
 
 This function acts similarly to `||` in most programming languages, where it only evaluates the second variable if the first is falsey.
 
