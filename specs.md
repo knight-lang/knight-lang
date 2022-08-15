@@ -445,7 +445,7 @@ If the first argument is not a number, the return value of this function is unde
 
 For example, `- 3 "2a"` will return `1`.
 
-### 4.3.3 `*(unchanged, integer)`
+### 4.3.3 `*(unchanged, number)`
 The return value of this function depends on its first argument's type:
 - `Number`: The second argument is coerced to a number, and multiplied by the first.
 - `String`: The second argument is coerced to a number, and then the first is repeated that many times. If the second argument is negative, the return value is undefined.
