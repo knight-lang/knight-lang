@@ -84,12 +84,13 @@ Here's some examples of the syntax to give you a feel for it:
 ## Guessing Game
 ```
 ; = max 100                                   # max = 100
-; = secret (RAND 1 max)                       # secret = rand(1, max)
+; = secret + 1 (% RAND max)                   # secret = rand(1, max)
 ; = nguess 0                                  # nguess = 0
 ; = guess 0                                   # guess = 0
 ; OUTPUT (+ 'guess 1-' max)                   # print('pick from 1-' + m)
 ; WHILE (| (< guess secret) (> guess secret)) # while guess != s:
-  ; = guess (+ 0 (PROMPT '> '))               #   guess = int(prompt('> '))
+  ; OUTPUT '> \'                              #   print('> ', end='')
+; = guess (+ 0 PROMPT)                      #   guess = int(prompt())
   ; = nguess (+ nguess 1)                     #   nguess += 1
   : OUTPUT (                                  #   print(
      IF (< guess secret) 'too low'            #     if guess < secret: 'too low'
