@@ -244,7 +244,7 @@ In all contexts, variables should be evaluated and the result of evaluating it s
 Expressions such as `+ (BLOCK foo) 34`, `/ 12 (BLOCK FOO)` and even `? (BLOCK foo) (BLOCK foo)` are all considered undefined. 
 
 # 4 Functions
-Every function in Knight has a predetermined arity—there are no varidict functions.
+Every function in Knight has a predetermined arity—there are no variadic functions.
 
 Unless otherwise noted, all functions will _evaluate_ their arguments beforehand. This means that `+ a b` should fetch the value of `a`, the value of `b`, and then add them together, and should _not_ attempt to add a literal identifier to another literal identifier (which is undefined behaviour.)
 
