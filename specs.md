@@ -274,7 +274,7 @@ As discussed in the [Boolean](#Boolean) section, `FALSE` may either be interpret
 As discussed in the [Null](#Null) section, `NULL` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
 ### 4.1.4 `PROMPT()`
-This must read a line from stdin until the `\n` character is encountered, of an EOF occurs, whatever happens first. If the line ended with `\r\n` or `\n`, those character must be stripped out as well, regardless of the operating system. The resulting string (without trailing `\r\n`/`\n`) must be returned.
+This must read a line from stdin until the `\n` character is encountered, or an EOF occurs, whatever happens first. If the line ended with `\r\n` or `\n`, those character must be stripped out as well, regardless of the operating system. The resulting string (without trailing `\r\n`/`\n`) must be returned.
 
 If stdin is closed, this function's behaviour is undefined.
 If the line that's read contains any characters that are not allowed to be in Knight strings (see [String](#String)), this function's behaviour is undefined.
