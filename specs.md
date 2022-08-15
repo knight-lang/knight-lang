@@ -478,7 +478,7 @@ If the first argument is zero and the second argument is negative, the return va
 ### 4.3.7 `<(unchanged, coerce)`
 The return value of this function depends on its first argument's type:
 - `Number`: Whether or not the first argument is numerically smaller than the second, which is coerced to a number, is returned.
-- `String`: Whether or not the first argument is lexicographically smaller than the second, which is coerced to a number, is returned. See below for more details.
+- `String`: Whether or not the first argument is lexicographically smaller than the second, which is coerced to a string, is returned. See below for more details.
 - `Boolean`: Whether the first argument is false and the second argument is, when coerced to a boolean, is true is returned.
 - All other types: The return value is undefined.
 
