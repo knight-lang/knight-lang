@@ -199,7 +199,7 @@ That is, the following is the list of allowed characters:
 - Newline (`0x0a`, ie `\n`)
 - Carriage return (`0x0d`, ie `\r`)
 - Space (`0x20`, ie a space—` `)
-- **numeric**: In numeric contexts, all leading whitespace (i.e. tabs (`0x09`), newlines (`0x0a`), carriage returns (`0x0d`), and spaces (`0x20`)) shall be stripped. An optional `-` may then appear to force the number to be negative. (A `+` may appear instead of a `-`, and it should simply be ignored.) Then, as many consecutive digits as possible are read, and then interpreted as if it were a number literal. In regex terms, It would be capture group of `^\s*([-+]?\d*)`. Note that if no valid digits are found after stripping whitespace and the optional `-`, the number `0` shall be used. Note that if the resulting number is too large for the implementation to handle, the conversion is undefined.
+- **numeric**: In numeric contexts, all leading whitespace (i.e. tabs, newlines, carriage returns, and spaces) shall be stripped. An optional `-` may then appear to force the number to be negative. (A `+` may appear instead of a `-`, and it should simply be ignored.) Then, as many consecutive digits as possible are read, and then interpreted as if it were a number literal. In regex terms, It would be capture group of `^\s*([-+]?\d*)`. Note that if no valid digits are found after stripping whitespace and the optional `-`, the number `0` shall be used. Note that if the resulting number is too large for the implementation to handle, the conversion is undefined.
 - **string**: In string contexts, the string itself is returned.
 - **boolean**: In boolean contexts, nonempty strings shall become `TRUE`, whereas empty strings shall become `FALSE`.
 
