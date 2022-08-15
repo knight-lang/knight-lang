@@ -554,7 +554,7 @@ If either the starting point or the length are negative numbers, this function i
 If the starting index is larger than the length of the string, the behaviour is undefined.
 If the ending index (ie `start+length`) is larger than the length of the string, the behaviour is undefined.
 
-For example, `SET "abcd" 1 2 "3"` would return the string `"a3d"`.
+For example, `SUBSTITUTE "abcd" 1 2 "3"` would return the string `"a3d"`.
 
 # 5. Command Line Arguments
 If at all possible, knight implementations are expected to parse command line arguments.
