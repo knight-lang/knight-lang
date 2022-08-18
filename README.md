@@ -19,7 +19,7 @@ The following is the list of all languages that I've written it in.
 | [Haskell](https://github.com/knight-lang/haskell) |   |  | ish | X | Works for an older spec of Knight, needs to be updated. |
 | [Java](https://github.com/knight-lang/java) | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [JavaScript](https://github.com/knight-lang/knight.js) | X | X | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
-| [Knight](https://github.com/knight-lang/knight/knight.kn) |   |   | X | X | Yes, this is a Knight interpreter, written in Knight; It's yet to be tested for spec compliance, though. |
+| [Knight](https://github.com/knight-lang/knight-lang/blob/master/knight.kn) |   |   | X | X | Yes, this is a Knight interpreter, written in Knight; It's yet to be tested for spec compliance, though. |
 | [Kotlin](https://github.com/knight-lang/kotlin) | X | X | X | X | Fully funcitonal, and barring `` ` ``, can be compiled to native. |
 | [Perl](https://github.com/knight-lang/perl) | X | X | X | X | Fully Functional on at least v5.18. |
 | [PHP](https://github.com/knight-lang/php) | X | X | X | X | Fully Functional, with type annotations. |
