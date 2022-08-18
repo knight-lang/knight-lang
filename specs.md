@@ -540,11 +540,11 @@ This function will evaluate and return the second argument if the first argument
 This function is used to get a substring of the first argument. The substring should start at the second argument and be the length of the third. Indexing starts at `0`—that is, `GET "abc" 0 1` should return the `"a"`.
 
 If either the starting point or the length are negative numbers, this function is undefined.
-If the starting index is larger than the length of the string, the behaviour is undefined.
+If the starting index is larger than or equal to the length of the string, the behaviour is undefined.
 If the ending index (ie `start+length`) is larger than the length of the string, the behaviour is undefined.
 To put it more concretely, unless the range `[start, start+length)` is entirely contained within the string, this function's return value is undefined. 
 
-For example, `GET "abcd" 1 2` would get the substring `"bc"`, and `GET "abcd" 2 0` would get `""`.
+For example, `GET "abcde" 2 2` would get the substring `"cd"`, and `GET "abcd" 2 0` would get `""`.
 
 ## 4.5 Quaternary (Arity 4)
 ### 4.5.1 `SUBSTITUTE(string, number, number, string)`
