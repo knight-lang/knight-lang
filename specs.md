@@ -20,7 +20,7 @@ In this document, some notation is used to describe what is required of implemen
 	2.2 [String](#22-string)  
 	2.3 [Boolean](#23-boolean)  
 	2.4 [Null](#24-null)  
-3. [Variable](#3-variable)  
+3. [Variables](#3-variables)  
 4. [Function](#4-function)  
 	4.1.1 [`TRUE`](#411-true)  
 	4.1.2 [`FALSE`](#412-false)  
@@ -199,7 +199,7 @@ That is, the following is the list of allowed characters:
 - Newline (`0x0a`, ie `\n`)
 - Carriage return (`0x0d`, ie `\r`)
 - Space (`0x20`, ie a space—` `)
-- **numeric**: In numeric contexts, all leading whitespace (i.e. tabs (`0x09`), newlines (`0x0a`), carriage returns (`0x0d`), and spaces (`0x20`)) shall be stripped. An optional `-` may then appear to force the number to be negative. (A `+` may appear instead of a `-`, and it should simply be ignored.) Then, as many consecutive digits as possible are read, and then interpreted as if it were a number literal. In regex terms, It would be capture group of `^\s*([-+]?\d*)`. Note that if no valid digits are found after stripping whitespace and the optional `-`, the number `0` shall be used. Note that if the resulting number is too large for the implementation to handle, the conversion is undefined.
+- **numeric**: In numeric contexts, all leading whitespace (i.e. tabs, newlines, carriage returns, and spaces) shall be stripped. An optional `-` may then appear to force the number to be negative. (A `+` may appear instead of a `-`, and it should simply be ignored.) Then, as many consecutive digits as possible are read, and then interpreted as if it were a number literal. In regex terms, It would be capture group of `^\s*([-+]?\d*)`. Note that if no valid digits are found after stripping whitespace and the optional `-`, the number `0` shall be used. Note that if the resulting number is too large for the implementation to handle, the conversion is undefined.
 - **string**: In string contexts, the string itself is returned.
 - **boolean**: In boolean contexts, nonempty strings shall become `TRUE`, whereas empty strings shall become `FALSE`.
 
@@ -226,7 +226,7 @@ The `NULL` type is used to indicate the absence of a value within Knight, and is
 - **boolean**: Null must become `FALSE` in boolean contexts.
 
 
-# 3 Variable
+# 3 Variables
 Variables in Knight must be able to hold all the builtin types, including other variable names and functions (both of which are returned by the `BLOCK` function).
 
 All variables in Knight are global and last for the duration of the program. (There are no function-local variables, and all `EVAL`s are done at the global scope too.). That is, once a value is assigned to a variable name, that variable name will then never be "deallocated"—value associated with it may change, but the variable will never become undefined. 
@@ -244,7 +244,7 @@ In all contexts, variables should be evaluated and the result of evaluating it s
 Expressions such as `+ (BLOCK foo) 34`, `/ 12 (BLOCK FOO)` and even `? (BLOCK foo) (BLOCK foo)` are all considered undefined. 
 
 # 4 Functions
-Every function in Knight has a predetermined arity—there are no varidict functions.
+Every function in Knight has a predetermined arity—there are no variadic functions.
 
 Unless otherwise noted, all functions will _evaluate_ their arguments beforehand. This means that `+ a b` should fetch the value of `a`, the value of `b`, and then add them together, and should _not_ attempt to add a literal identifier to another literal identifier (which is undefined behaviour.)
 
@@ -274,7 +274,7 @@ As discussed in the [Boolean](#Boolean) section, `FALSE` may either be interpret
 As discussed in the [Null](#Null) section, `NULL` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
 ### 4.1.4 `PROMPT()`
-This must read a line from stdin until the `\n` character is encountered, of an EOF occurs, whatever happens first. If the line ended with `\r\n` or `\n`, those character must be stripped out as well, regardless of the operating system. The resulting string (without trailing `\r\n`/`\n`) must be returned.
+This must read a line from stdin until the `\n` character is encountered, or an EOF occurs, whatever happens first. If the line ended with `\r\n` or `\n`, those character must be stripped out as well, regardless of the operating system. The resulting string (without trailing `\r\n`/`\n`) must be returned.
 
 If stdin is closed, this function's behaviour is undefined.
 If the line that's read contains any characters that are not allowed to be in Knight strings (see [String](#String)), this function's behaviour is undefined.
@@ -445,7 +445,7 @@ If the first argument is not a number, the return value of this function is unde
 
 For example, `- 3 "2a"` will return `1`.
 
-### 4.3.3 `*(unchanged, integer)`
+### 4.3.3 `*(unchanged, number)`
 The return value of this function depends on its first argument's type:
 - `Number`: The second argument is coerced to a number, and multiplied by the first.
 - `String`: The second argument is coerced to a number, and then the first is repeated that many times. If the second argument is negative, the return value is undefined.
@@ -478,8 +478,8 @@ If the first argument is zero and the second argument is negative, the return va
 ### 4.3.7 `<(unchanged, coerce)`
 The return value of this function depends on its first argument's type:
 - `Number`: Whether or not the first argument is numerically smaller than the second, which is coerced to a number, is returned.
-- `String`: Whether or not the first argument is lexicographically smaller than the second, which is coerced to a number, is returned. See below for more details.
-- `Boolean`: Whether the first argument is false and the second argument is, when coerced to a boolean, is true is returned.
+- `String`: Whether or not the first argument is lexicographically smaller than the second, which is coerced to a string, is returned. See below for more details.
+- `Boolean`: Whether the first argument is false and the second argument is, when coerced to a boolean, true is returned.
 - All other types: The return value is undefined.
 
 Lexicographical comparisons should find the first non-equivalent character in each string and compare them based on their ASCII value (eg in `abcd` and `abde`, `c` and `d` would be compared), returning `TRUE` if the first argument's character is smaller. If both strings have equivalent characters, then this function shall return `TRUE` only if the first string has a smaller size than the second.
@@ -504,7 +504,7 @@ Unlike nearly every other function in Knight, this one does not automatically co
 This function is valid for the types `Number`, `String`, `Boolean`, and `Null`. Notably, if either argument is a `BLOCK`'s return value, the return value is undefined.
 
 ### 4.3.10 `&(unchanged, unevaluated)`
-If the first argument, after being coerced to a boolean, is `FALSE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
+If the first argument, after being evaluated and coerced to a boolean, is `FALSE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
 
 This function acts similarly to `&&` in most programming languages, where it only evaluates the second variable if the first is truthy.
 
@@ -512,7 +512,7 @@ For example, `& 0 (QUIT 1)` shall return the value `0`, whilst `& TRUE ""` shall
 
 
 ### 4.3.11 `|(unchanged, unevaluated)`
-If the first argument, after being coerced to a boolean, is `TRUE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
+If the first argument, after being evaluated and coerced to a boolean, is `TRUE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
 
 This function acts similarly to `||` in most programming languages, where it only evaluates the second variable if the first is falsey.
 
@@ -540,11 +540,11 @@ This function will evaluate and return the second argument if the first argument
 This function is used to get a substring of the first argument. The substring should start at the second argument and be the length of the third. Indexing starts at `0`—that is, `GET "abc" 0 1` should return the `"a"`.
 
 If either the starting point or the length are negative numbers, this function is undefined.
-If the starting index is larger than the length of the string, the behaviour is undefined.
+If the starting index is larger than or equal to the length of the string, the behaviour is undefined.
 If the ending index (ie `start+length`) is larger than the length of the string, the behaviour is undefined.
 To put it more concretely, unless the range `[start, start+length)` is entirely contained within the string, this function's return value is undefined. 
 
-For example, `GET "abcd" 1 2` would get the substring `"bc"`, and `GET "abcd" 2 0` would get `""`.
+For example, `GET "abcde" 2 2` would get the substring `"cd"`, and `GET "abcd" 2 0` would get `""`.
 
 ## 4.5 Quaternary (Arity 4)
 ### 4.5.1 `SUBSTITUTE(string, number, number, string)`
@@ -554,7 +554,7 @@ If either the starting point or the length are negative numbers, this function i
 If the starting index is larger than the length of the string, the behaviour is undefined.
 If the ending index (ie `start+length`) is larger than the length of the string, the behaviour is undefined.
 
-For example, `SET "abcd" 1 2 "3"` would return the string `"a3d"`.
+For example, `SUBSTITUTE "abcd" 1 2 "3"` would return the string `"a3d"`.
 
 # 5. Command Line Arguments
 If at all possible, knight implementations are expected to parse command line arguments.
