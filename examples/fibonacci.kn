@@ -1,0 +1,42 @@
+# Recursive naive fibonacci
+
+# Since Knight doesn't have local variables, we have to keep track of previous
+# values in a list stack. As it's much easier to read from the beginning of
+# lists in Knight, we add to the front when pushing and remove from the end
+# when popping.
+; = _fib_recur @
+
+; = fibonacci BLOCK
+	# Base case: If `n` is less than two, then just return n.
+	: IF (< n 2)
+		: n
+	
+	# Otherwise, we have to subtract one from `n`, and then add `n` to the front
+	# of the recursion stack.
+	; = n (- n 1)
+	; = _fib_recur + (,n) _fib_recur 
+
+	# Do the first recursive call to `fibonacci`, using the updated `n`.
+	; = tmp CALL fibonacci
+
+	# Now, get the old value `n` from the top of the stack. Note that if you
+	# pass a length of `0` to `GET` for lists, it'll get the _element_ at
+	# that index, not a list of length zero.
+	; = n GET _fib_recur 0 0
+
+	# Now, pop the element off the front of `_fib_recur` by replacing the 
+	# range `[0, 1)` with an empty list
+	; = _fib_recur (SET _fib_recur 0 1 @)
+
+	# Subtract one from the popped n (to get two less than the original `n`)
+	; = n - n 1
+
+	# Add the result of the first recursive call to `fibonacci` to the result
+	# of the next recursive call. Note that `+ CALL fibonacci tmp` would _not_
+	# yield the same result, because after `CALL fibonacci` returned, `tmp`
+	# most likely would have been overwritten by the previous version of
+	# fibonacci.
+	: + tmp CALL fibonacci
+
+; = n 10
+: OUTPUT CALL fibonacci

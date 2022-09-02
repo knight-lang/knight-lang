@@ -1,17 +1,35 @@
 ; = primes_upto BLOCK
-	; = nums (* "P" max)
-	; = i 1
+	# Make a list of all numbers from 2 to max.
+	# We make use of the fact that the list->int conversion
+	# is the length of the list.
+	; = all @
+	; WHILE > max all
+		: = all + all ,(+ 2 all)
+
+	; = i 2
+	# For each number between 2 to max:
 	; WHILE < i max
-		; = i + i 1
 		; = j * 2 i
-		: WHILE < j max
-			; = nums SET nums j 1 "n"
+		# For every multiple of `i` (but not `i` itself):
+		; WHILE < j max
+			# Replace that duplicate with `0`, ie a falsey value.
+			; = all (SET all j 1 (,0))
 			: = j + j i
-	; = i 1
-	: WHILE < i max
-		; = i + i 1
-		: & (? 'P' (GET nums i 1))
-			: OUTPUT ++ "" i " \"
+		# Finally, increment `i`.
+		: = i + 1 i
+
+	# Create an initially empty list of all primes.
+	; = primes @
+	# While there's still values left in `all`
+	; WHLIE all
+		# If the first value is nonzero,
+		; & (= t GET all 0 0)
+			# add that to the list of primes
+			: = primes + primes ,t
+		# Then delete the first element from `all`
+		: = all (SET all 0 1 @)
+	: primes
 
 ; = max 100
-: CALL primes_upto
+; OUTPUT ++ "the primes from 2-" max " are:"
+: OUTPUT ^ (CALL primes_upto) " "

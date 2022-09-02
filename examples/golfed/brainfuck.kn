@@ -1,0 +1,28 @@
+# A golfed brianfuck perogram
+;=PROMPT "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++."
+;=a*,=p~=q=l@30000;=sP;=i~1;=bB:W<=i+1iLsI?91=cA:
+Gs:iT;=l+,i:l;W:Ga:pF;Cb=iGlF0;=i:e=lSlF1@I?93c;=
+e:i=iLsI?62c=p+1pI?60c=p-pT;=xGa:pF;I?46cO+Ax"\"I
+?44c;=xA=q|qP=qSqF1@I?43c=x+xT&?45c=x-xT=aSa:pT,x
+Cb
+
+
+
+# A more expanded version is below
+;=a*,=p~=q=l@30000
+;=sP
+;=i~1
+;=bB
+	W<=i+1iLs
+		I?91=cA Gs iT;=l+,i l;W Ga pF;Cb=iGlF0;=i e=lSlF1@
+		I?93c;=e i=iLs
+		I?62c=p+1p
+		I?60c=p-pT
+		;=xGa pF
+		;
+			I?46cO+Ax"\"
+			I?44c;=xA=q|qP=qSqF1@
+			I?43c=x+xT
+			&?45c=x-xT
+			=aSa pT,x
+Cb

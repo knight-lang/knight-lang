@@ -1,12 +1,23 @@
+# Fizzbuzz in Knight
+
+# Here we define a block called `fizzbuzz`. Blocks in Knight do
+# not take arguments, as everything's a global variable. Here,
+# `fizzbuzz` expects the variable `max` to be set to the value.
 ; = fizzbuzz BLOCK
+	# First, we set `n` to `0`. Even though fizzbuzz starts at `1`,
+	# we increment `n` as the first thing in the `WHILE` loop.
 	; = n 0
-	; = max (+ 1 max)
-	: WHILE < (= n + 1 n) max
+	: WHILE < n max
+		; = n + n 1
+		# Here, we make use of the fact that every there are no
+		# statements in Knight, only expressions. So, we'll be
+		# printing out the return value of the `IF` chain:
 		: OUTPUT
 			: IF ! (% n 15) "FizzBuzz"
 			: IF ! (% n 5)  "Fizz"
 			: IF ! (% n 3)  "Buzz"
 			                n
+
+# Set `max` to 100, and then execute the block.
 ; = max 100
 : CALL fizzbuzz
-

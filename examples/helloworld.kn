@@ -1,1 +1,3 @@
-: OUTPUT + "Hello," " world!"
+; = greeting "Hello"
+; = where "world"
+: OUTPUT +++ greeting ", " where "!"

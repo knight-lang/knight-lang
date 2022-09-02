@@ -1,0 +1,13 @@
+# Golfed version of fibonacci
+;=r@;=fB I<n 2n;=r+,-=n-nT1r+Cf;=nGrF0;=rSrF1@Cf;=n 10O Cf
+
+# Slightly ungolfed
+;=r@
+;=fB
+	I<n 2n
+	;=r+,-=n-nT1r
+	+Cf
+		;=nGrF0
+		;=rSrF1@Cf
+;=n 10
+O Cf
