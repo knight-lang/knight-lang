@@ -13,7 +13,7 @@ To reiterate, **if at any point during the parsing or execution of a Knight prog
 	1.0 [Encoding](#10-encoding)  
 	1.1 [Whitespace](#11-whitespace)  
 	1.2 [Comment](#12-comment)  
-	1.3 [Integer](#13-number)  
+	1.3 [Integer](#13-integer)  
 	1.4 [String](#14-string)  
 	1.5 [Variable](#15-variable)  
 	1.6 [Function](#16-function)  
@@ -28,12 +28,12 @@ To reiterate, **if at any point during the parsing or execution of a Knight prog
 	1.0 [Encoding](#10-encoding)  
 	1.1 [Whitespace](#11-whitespace)  
 	1.2 [Comment](#12-comment)  
-	1.3 [Integer](#13-number)  
+	1.3 [Integer](#13-integer)  
 	1.4 [String](#14-string)  
 	1.5 [Variable](#15-variable)  
 	1.6 [Function](#16-function)  
 2. [Types](#2-types)  
-	2.1 [Integer](#21-number)  
+	2.1 [Integer](#21-integer)  
 	2.2 [String](#22-string)  
 	2.3 [Boolean](#23-boolean)  
 	2.4 [Null](#24-null)  
@@ -58,14 +58,14 @@ To reiterate, **if at any point during the parsing or execution of a Knight prog
 	4.2.9 [`DUMP`](#429-dumpunchanged)  
 	4.2.10 [`OUTPUT`](#4210-outputstring)  
 	4.2.11 [`ASCII`](#4211-asciiunchanged)  
-	4.2.12 [`~`](#4212-number)  
+	4.2.12 [`~`](#4212-integer)  
 
 	4.3.1 [`+`](#431-unchanged-coerce)  
-	4.3.2 [`-`](#432--unchanged-number)  
+	4.3.2 [`-`](#432--unchanged-integer)  
 	4.3.3 [`*`](#433-unchanged-coerce)  
-	4.3.4 [`/`](#434-unchanged-number)  
-	4.3.5 [`%`](#435-unchanged-number)  
-	4.3.6 [`^`](#436-unchanged-number)  
+	4.3.4 [`/`](#434-unchanged-integer)  
+	4.3.5 [`%`](#435-unchanged-integer)  
+	4.3.6 [`^`](#436-unchanged-integer)  
 	4.3.7 [`<`](#437-unchanged-coerce)  
 	4.3.8 [`>`](#438-unchanged-coerce)  
 	4.3.9 [`?`](#439-unchanged-unchanged)  
@@ -132,7 +132,7 @@ There are no multiline or embedded comments in Knight.
 For those familiar with regex, comments are `/#[^\n]*(\n|$)/`.
 
 ## Integer Parsing
-Integer literals are simply a sequence of ASCII digits (i.e. `0` (`0x30`) through `9` (`0x39`)). Leading `0`s do not indicate octal numbers (e.g. `011` is the number eleven, not nine). No other bases are supported, and only integral numbers are allowed.
+Integer literals are simply a sequence of ASCII digits (i.e. `0` (`0x30`) through `9` (`0x39`)). Leading `0`s do not indicate octal integers (e.g. `011` is the number eleven, not nine). No other bases are supported, and only integral numbers are allowed.
 
 Like some languages, Knight doesn't have negative integer literals. Instead, the [`~`](#negation) (numerical negation) function must be used: `~5`. However, implementations are free to parse this as the number `-5`, as it has the same effect.
 
@@ -255,7 +255,7 @@ All builtin types in Knight (i.e. Integer, String, Boolean, Null, and List) when
 ## Integer Type
 In Knight, only integral numbers exist—all functions which might return non-integral numbers are simply truncated (look at the the functions' respective definitions for details on what exactly truncation means in each case).
 
-All implementations must be able to represent all numbers within the range `-2147483648 .. 2147483647`, inclusive on both sides. (These are the bounds for 32-bit signed integers using 2's complement.) Implementations are free to support larger, and smaller numbers (for example, by using a 64 bit integer), however this is the bare minimum.
+All implementations must be able to represent all integers within the range `-2147483648 .. 2147483647`, inclusive on both sides. (These are the bounds for 32-bit signed integers using 2's complement.) Implementations are free to support larger, and smaller integers (for example, by using a 64 bit integer), however this is the bare minimum.
 
 Note that all mathematical operations in Knight that would cause over/underflow for integers is considered **undefined behaviour**. This allows for implementations to freely use larger integer sizes and not have to worry about wraparounds.
 
@@ -263,8 +263,8 @@ Note that all mathematical operations in Knight that would cause over/underflow 
 (See [here](#contexts) for more details on contexts.)
 
 - **integer**: In integer contexts, the integer itself is simply returned.
-- **string**: In string contexts, numbers are converted to their base-10 representation. Negative numbers should have a `-` prepended to the beginning of the string (and positive numbers shouldn't get `+`). For example, `0 -> "0"`, `123 -> "123"`, and `~12 -> "-12"`.
-- **boolean**: In boolean contexts, zero becomes `false`, and all other numbers (ie nonzero) become `true`.
+- **string**: In string contexts, integers are converted to their base-10 representation. Negative integers should have a `-` prepended to the beginning of the string (and positive integers shouldn't get `+`). For example, `0 -> "0"`, `123 -> "123"`, and `~12 -> "-12"`.
+- **boolean**: In boolean contexts, zero becomes `false`, and all other integers (ie nonzero) become `true`.
 - **list**: In list contexts, the digits of the integer should be returned in ascending order. If the integer is negative, each digit shall become negated as well. For example, `+@123` would return a list of `1`, then `2`, then `3`, whereas `+@~123` would return a list of `-1`, `-2`, and `-3`.
 
 ## String Type
@@ -345,7 +345,7 @@ The Block type does not have any contexts defined. Attempting to coerce a Block 
 Because blocks aren't allowed to be used in any contexts, there's only a handful of places they may be used. Attempting to use them anywhere else is considered **undefined behaviour**
 
 - The sole argument to `:`, `BLOCK` itself (ie `BLOCK BLOCK ...`), `CALL`, and `,`.
-- The second argument to `=`, `&`, `|`, or `WHILE`
+- The second argument to `=`, `&`, or `|`
 - Either argument of `;`
 - Either the second or third argument of `IF`
 
@@ -419,9 +419,9 @@ It is **undefined behaviour** if an implementation is not able to read from stdi
 If the line that's read contains any characters that are not allowed to be in Knight strings (see [String](#string-type)), this function's behaviour is undefined.
 
 ### `RANDOM()`
-This function must return x (pseudo) random number between 0 and, at a minimum, 32767 (`0x7fff`). Implementations are free to return a larger random number if they desire; however, all random numbers must be zero or positive.
+This function must return x (pseudo) random number between 0 and, at a minimum, 32767 (`0x7fff`). Implementations are free to return a larger random number if they desire; however, all random integers must be zero or positive.
 
-Note that `RANDOM` _should_ return different numbers across subsequent calls and program executions (although this isn't strictly enforceable, by virtue of how random numbers work). However, programs should use a somewhat unique seed for every program run (e.g. a simple `srand(time(NULL)))` is sufficient).
+Note that `RANDOM` _should_ return different integers across subsequent calls and program executions (although this isn't strictly enforceable, by virtue of how random integers work). However, programs should use a somewhat unique seed for every program run (e.g. a simple `srand(time(NULL)))` is sufficient).
 
 ## Unary (Arity 1)
 
@@ -446,7 +446,7 @@ See the [Block type](#ty-block) for exact semantics of how to use `BLOCK`'s retu
 ### `CALL(<special>)` {#fn-call}
 Just as [`BLOCK`](#fn-block) delays the execution of its argument, `CALL` should "resume execution" of the argument, evaluating as if the `BLOCK` as defined at the call site.
 
-Example:
+Examples:
 ```knight
 ; = foo BLOCK bar
 ; = bar 3
@@ -462,7 +462,7 @@ Stops the entire Knight program with the given status code.
 
 It is **undefined behaviour** if the given status code is not within 0 to 127. (However, since it is undefined behaviour, implementations are free to accept status codes outside this range.)
 
-Example:
+Examples:
 ```knight
 QUIT 12    # => exit with status 12
 QUIT 0     # => exit with status 0
@@ -475,7 +475,7 @@ Writes the string to stdout, flushes stdout, and then returns `null`.
 
 Normally, a newline should be written after `string` (which should also flush stdout on most systems.) However, if `string` ends with a backslash (`\`), the backslash is _not written to stdout_, and trailing newline is suppressed. 
 
-Example:
+Examples:
 ```knight
 # normal string
 ; OUTPUT "foo"
@@ -521,7 +521,7 @@ Returns the length of the argument when converted to a list.
 
 Note: The length of strings are the same as the length of their list coercion, as the list coercion returns a list of the chars in the list.
 
-Example:
+Examples:
 ```knight
 LENGTH TRUE      # => 1
 LENGTH FALSE     # => 0
@@ -536,7 +536,7 @@ LENGTH (*,0 100) # => 100
 ### `!(boolean)` {#fn-not}
 Returns the logical negation of its argument—truthy values become `false`, and falsey values become `true`.
 
-Example:
+Examples:
 ```knight
 !TRUE # => false
 !1234 # => false
@@ -548,7 +548,7 @@ Example:
 ### `~(number)` {#fn-negate}
 Converts the argument to a number, then negates it. Note that this is numeric negation (i.e. like unary `-` in other languages) and _not_ bitwise negation.
 
-Example:
+Examples:
 ```knight
 ~38      # => -38
 ~0       # => 0
@@ -558,17 +558,16 @@ Example:
 ~,123    # => -1
 ```
 
----
 ### `ASCII(unchanged)` {#fn-ascii}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: Interprets it as an ASCII codepoint, and returns a string containing just that character. It is **undefined behaviour** if the codepoint is not [in the encoding](#required-encoding).
-- **`String`**: Converts and returns the first character's ASCII numerical equivalent. It is **undefined behaviour** if the string is empty.
+- **`String`**: Converts and returns the first character's ASCII numerical equivalent. It is **undefined behaviour** for the string to be empty.
 - **All other types**: **undefined behaviour**
 
 Implementations may feel free to extend `ASCII` to go beyond ascii, and to use support unicode. However, this is not required.
 
-Example:
+Examples:
 ```knight
 ASCII 38 # => &
 ASCII 50 # => ;
@@ -582,6 +581,54 @@ ASCII "
 ASCII "" # undefined (empty isnt valid)
 ```
 
+### `,(unchanged)` {#fn-box}
+This function returns a list containing just its argument. In python terms, `lambda x: [x]`.
+
+Examples:
+```knight
+,1   # => a list of just 1
+,,"" # => a list of just a list of ""
+,,@  # => a list of just an empty list
+```
+
+### `[(unchanged)` {#fn-head}
+The return value of this function depends on its first argument's type:
+
+- **`String`**: Returns the a string of just first character. It is **undefined behaviour** for the string to be empty.
+- **`List`**: Returns the first element of the list. It is **undefined behaviour** for the list to be empty.
+- **All other types**: **undefined behaviour**
+
+Examples:
+```knight
+["h"      # => "h"
+["hello"  # => "h"
+[""       # => undefined, empty string
+
+[,1       # => 1
+[(+@1234) # => 1
+[@        # => undefined, empty list.
+```
+
+### `](unchanged)` {#fn-tail}
+The return value of this function depends on its first argument's type:
+
+- **`String`**: Returns the a string with everything _but_ the first character. It is **undefined behaviour** for the string to be empty.
+- **`List`**: Returns a list with everything _but_ the first element. It is **undefined behaviour** for the list to be empty.
+- **All other types**: **undefined behaviour**
+
+Examples:
+```knight
+]"h"      # => ""
+]"hello"  # => "ello"
+]"aaaaa"  # => "aaaa"
+]""       # => undefined, empty string
+
+],1       # => empty list
+](+@1234) # => a list of 2, 3, and 4
+](+@1111) # => a list of 1, 1, and 1
+]@        # => undefined, empty list.
+```
+
 ## Binary (Arity 2)
 ### `+(unchanged, coerced)` {#fn-add}
 The return value of this function depends on its first argument's type:
@@ -591,7 +638,7 @@ The return value of this function depends on its first argument's type:
 - **`List`**: The second argument is coerced to a list, and then added to the first.
 - **All other types**: **undefined behaviour**.
 
-Example:
+Examples:
 ```knight
 + "2a" 3         # => "2a3"
 + 3 "2a"         # => 5
@@ -606,7 +653,7 @@ The return value of this function depends on its first argument's type:
 - **`Integer`**: The second argument is coerced to a number, and then subtracted from the first.
 - **All other types**: **undefined behaviour**
 
-Example:
+Examples:
 ```knight
 - 3 "2a" #=> 1
 - ~1 4   #=> -5
@@ -620,7 +667,7 @@ The return value of this function depends on its first argument's type:
 - **`List`**: The second argument is coerced to an integer, and then the first is repeated that many times. It is **undefined behaviour** if the second argument is negative.
 - **All other types**: **undefined behaviour**
 
-Example:
+Examples:
 ```knight
 * 3 "2a"  # => 6
 * 3 FALSE # => 0
@@ -636,7 +683,7 @@ The return value of this function depends on its first argument's type:
 - **`Integer`**: The second argument is coerced to a number, and then divided from the first. Non-whole results must be rounded towards zero. It is **undefined behaviour** for the second argument to be zero.
 - **All other types**: **undefined behaviour**
 
-Example:
+Examples:
 ```
 / 7 3    # => 2
 / ~5 2   # => -2
@@ -661,93 +708,229 @@ The return value of this function depends on its first argument's type:
 ### `^(unchanged, coerce)` {#fn-power}
 The return value of this function depends on its first argument's type:
 
-- **`Integer`**: The second argument is coerced to an integer, and then the first integer is raised to the power of the second integer. Note that `^ 0 1` should return `1`.`` It is **undefined behaviour** for the second argument to be negative, or for both arguments to be zero. (Note that, like all integer functions, it is **undefined behaviour** for this function to overflow.)
+- **`Integer`**: The second argument is coerced to an integer, and then the first integer is raised to the power of the second integer. Note that `^ 0 1` should return `1`. It is **undefined behaviour** for the second argument to be negative. (Note that, like all integer functions, it is **undefined behaviour** for this function to overflow.)
 - **`List`**: The second argument is coerced to a string. Then, each element of the list is converted to a string and concatenated together, with the second argument being inserted between adjacent elements. This is known as the **join** operator.
 
 Examples:
+```knight
+^ 0 0   # 0
+^ 0 1   # 1
+^ 2 0   # 1
+^ ~5 9  # -1953125
+^ 10 10 # undefined, too large
+^ 10 ~1 # undefined, negative exponent
+
+^ @ "!"       # "", joining empty list yields nothing
+^ ,12 "!"     # "12", no elements to separate
+^ (+@123) "!" # "1!2!3"
 ```
-^ 0 1 # 1
-^ 0 0 #
-### 4.3.7 `<(unchanged, coerced)`
+
+### `<(unchanged, coerced)` {#op-less-than}
 The return value of this function depends on its first argument's type:
-- `Integer`: Whether or not the first argument is numerically smaller than the second, which is coerced to a number, is returned.
-- `String`: Whether or not the first argument is lexicographically smaller than the second, which is coerced to a string, is returned. See below for more details.
-- `Boolean`: Whether the first argument is false and the second argument is, when coerced to a boolean, true is returned.
-- All other types: The return value is undefined.
 
-Lexicographical comparisons should find the first non-equivalent character in each string and compare them based on their ASCII value (e.g. in `abcd` and `abde`, `c` and `d` would be compared), returning `TRUE` if the first argument's character is smaller. If both strings have equivalent characters, then this function shall return `TRUE` only if the first string has a smaller size than the second.
+- **`Integer`**: Coerces the second argument to an integer, then returns whether the first is smaller than the second.
+- **`String`**: Coerces the second argument to a string, and then returns whether the first is lexicographically smaller than the second. See below for details on Lexicographical comparisons.
+- **`Boolean`**: Coerces the second argument to a boolean, and returns whether the first is false and the second is true.
+- **`List`**: Coerces the second argument to a list, and then compares each element of the two, returning the whether the non-equal comparison is less than. If each element is equal, return whether the first list is smaller. (This is how most languages which define comparisons on lists/arrays do it.)
+- **All other types**: **undefined behaviour**.
 
-The following is a list of valid string characters, where `[tab]` is smaller than everything (other than another tab), and `~` is larger than everything (other than another `~`).
-```text
-	[tab] [newline] [carriage return] [space] 
-	  ! " # $ % & ' ( ) * + , - . /
-	0 1 2 3 4 5 6 7 8 9 : ; < = > ?
-	@ A B C D E F G H I J K L M N O
-	P Q R S T U V W X Y Z [ \ ] ^ _
-	` a b c d e f g h i j k l m n o
-	p q r s t u v w x y z { | } ~
+Lexicographical comparisons should find the first non-equivalent character in each string and compare them based on their ASCII value (e.g. in `abcd` and `abde`, `c` and `d` would be compared), returning `tRUE` if the first argument's character is smaller. If both strings have equivalent characters, then this function shall return `true` only if the first string has a smaller size than the second. 
+
+Examples:
+```knight
+< 1 0      # => true
+< 1 "4"    # => false
+< "A" "a"  # => true, ascii `"a"` is larger.
+< "a" "a0" # => true, `"a"` has smaller length.
+< "A" "a0" # => true, `"A" < "a"` 
+< FALSE 0  # => false
+< FALSE 2  # => true
+< TRUE x   # => always false regardless of `x`
+< @ x      # => always true for non-empty x
+< ,1 ,2    # => true, 1 < 2
+< +@13 ,2  # => false, 1 < 2
 ```
 
-### 4.3.8 `>(unchanged, coerced)`
-This is exactly the same as [4.3.7](#437-unchanged-coerced), except for the operands reversed, i.e. `> a b` should return the same mas `< b a` (barring the fact that `a` should be evaluated before `b`).
+### `>(unchanged, coerced)` {#op-greater-than}
+This is exactly the same as [`<`](#op-less-than), except for operands reversed, i.e. `> a b` should return the same value as `< b a` (barring the fact that `a` should be evaluated before `b`).
 
-### 4.3.9 `?(unchanged, unchanged)`
-Unlike nearly every other function in Knight, this one does not automatically coerced its arguments to any type—Instead, it checks to see if arguments are of the same type _and_ value. For example, `1` is not equivalent to `"1"`, nor is it equivalent to `TRUE`.
+Examples:
+See [`<`](#op-less-than).
 
-This function is valid for the types `Integer`, `String`, `Boolean`, and `Null`. Notably, if either argument is a `BLOCK`'s return value, the return value is undefined.
+### `?(unchanged, unchanged)` {#op-equals}
+Unlike nearly every other function in Knight, this one does not automatically coerced its arguments—instead, it checks to see if arguments are the same type _and_ value. For example, `1` is equivalent to neither `"1"` nor `TRUE`.
 
-### 4.3.10 `&(unchanged, unevaluated)`
-If the first argument, after being evaluated and coerced to a boolean, is `FALSE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
+This function is only valid for the "basic types" (`Integer`, `String`, `Boolean`, `Null`, and `List`). Notably, it is **undefined behaviour** for either argument to be a `Block`.
 
-This function acts similarly to `&&` in most programming languages, where it only evaluates the second variable if the first is truthy.
+Examples:
+```knight
+? 1 2        # => false
+? ~0 0       # => true
+? "1" "1 "   # => false
+? FALSE NULl # => false
+? NULL NULL  # => true
+? ,@ ,,@     # => false
+```
 
-For example, `& 0 (QUIT 1)` shall return the value `0`, whilst `& TRUE ""` shall return `""`.
+### `&(unchanged, unevaluated)` {#op-and}
+This function acts similar to `&&` in some loosely-typed languages: If the first argument (after being evaluated) is falsey, it's returned directly. However, if it's truthy, the second argument is evaluated and returned.
 
+Unlike most functions, `Block`s can be passed as the second argument to `&`.
 
-### 4.3.11 `|(unchanged, unevaluated)`
-If the first argument, after being evaluated and coerced to a boolean, is `TRUE`, then the "uncoerced" first argument is returned. Otherwise, the second argument is evaluated and returned.
+Examples:
+```knight
+& 0 (QUIT 1)   # => 0
+& "hi" "there" # => "there"
+& TRUE ""      # => ""
+& @ 4          # => @
+```
 
-This function acts similarly to `||` in most programming languages, where it only evaluates the second variable if the first is falsey.
+### `|(unchanged, unevaluated)` {#op-or}
+Like [`&`](#op-and) and `&&`, this function acts similar to `||` in some loosely-typed languages: If the first argument (after being evaluated) is truthy, it's returned directly. However, if it's falsey, the second argument is evaluated and returned.
 
-For example, `| "2" (QUIT 1)` shall return the value `"2"`, whilst `| FALSE 4` shall return `4`.
+Unlike most functions, `Block`s can be passed as the second argument to `|`.
 
-### 4.3.12 `;(unchanged, unchanged)`
-This function simply returns its second argument. It's entire purpose is to act as a "sequence" function, where the first argument's value can be safely ignored.
+Examples:
+```knight
+| 2 (QUIT 1)   # => 2
+| "hi" "there" # => "hi"
+| TRUE ""      # => TRUE
+| @ 4          # => 4
+```
 
-### 4.3.13 `=(unevaluated, unchanged)`
-Unless the first argument is a [Variable](#3-variable), this function is undefined.
+This is one of the few functions that `Block`s can be used, albeit in `|` only as the second argument.
 
-This function assigns the variable identified by the first argument (which shall not be evaluated) to the second argument's value, after which it should return the second argument's value. That is, it performs the "assignment" operation for strings.
+### `;(unchanged, unchanged)` {#op-then}
+This function simply returns its second argument (after evaluating them both, as per the `unchanged` context). Its entire purpose is to act as a "sequencing" function, where the first argument's value can be discarded.
 
-### 4.3.14 `WHILE(unevaluated, unevaluated)`
-This function will evaluate its second argument as long as its first evaluates to a truthy value. The return value shall be `NULL`.
+Unlike most functions, `Block`s can be passed as either argument to `;`.
 
-Note that, unlike most programming languages, Knight does not have a builtin way to "`continue`" or "`break`" from a loop.
-(returns null)
+_Note that using `:` as the last function in a chain of `;`s can look visually appealing. See the example below_
 
-## 4.4 Ternary (Arity 3)
-### 4.4.1 `IF(boolean, unevaluated, unevaluated)`
-This function will evaluate and return the second argument if the first argument is truthy. If the first argument is falsey, the third argument is evaluated and returned.
+Examples:
+```knight
+; = x 3 OUTPUT x # prints 3
+OUTPUT ; = x 3 x # also prints 3
 
-### 4.4.2 `GET(string, number, number)`
-This function is used to get a substring of the first argument. The substring should start at the second argument and be the length of the third. Indexing starts at `0`—that is, `GET "abc" 0 1` should return the `"a"`.
+# simple factorial
+; = i 10
+; = prod 1
+; WHILE i
+	; = prod (* prod i)
+	: = i (- i 1)
+: OUTPUT prod #=> prints out 3628800
+```
 
-If either the starting point or the length are negative numbers, this function is undefined.
-If the starting index is larger than or equal to the length of the string, the behaviour is undefined.
-If the ending index (i.e. `start+length`) is larger than the length of the string, the behaviour is undefined.
-To put it more concretely, unless the range `[start, start+length)` is entirely contained within the string, this function's return value is undefined. 
+### `=(unevaluated, unchanged)` {#op-assign}
+It is **undefined behaviour** for the first argument not to be a [Variable](#variable). (However, see the entirely optional [assign to anything](#ext-assign-to-anything) extension.)
 
-For example, `GET "abcde" 2 2` would get the substring `"cd"`, and `GET "abcd" 2 0` would get `""`.
+This function evaluates the second argument, and then both assigns it to the variable in the first argument and returns it. This is the only way to update variables within Knight.
 
-## 4.5 Quaternary (Arity 4)
-### 4.5.1 `SUBSTITUTE(string, number, number, string)`
-This function is used to substitute the range `[start, start+length)` (where `start` is the second argument and `length` is the third)  of the first argument with the last. Note that they do not have to be the same length—the string should grow or shrink accordingly. Indexing starts at `0`—that is, `SET "abc" 0 1 "2"` should return the `"2bc"`. Also note that this function should return a new string—the original one should not be modified.
+Examples:
+```knight
+= a 3       # => 3 (a is 3)
+* (= a 4) a # => 16 (a is 4)
+= a = b 3   # => 3 (a and b are also three, assignments can be chained.)
+= "a" 4     # undefined, `"a"` isnt a variable
+```
 
-If either the starting point or the length are negative numbers, this function is undefined.
-If the starting index is larger than the length of the string, the behaviour is undefined.
-If the ending index (i.e. `start+length`) is larger than the length of the string, the behaviour is undefined.
+### `WHILE(unevaluated, unevaluated)` {#op-while}
+This function should continuously evaluate the second argument as long as the first argument evaluates to a truthy value. The return value of `WHILE` is always `NULL`. 
 
-For example, `SUBSTITUTE "abcd" 1 2 "3"` would return the string `"a3d"`.
+Note that, unlike most programming languages, Knight does not have a builtin way to "`continue`" or "`break`" from a loop; instead, you must change the condition to false. See the second example.
+
+Examples:
+```knight
+# simple factorial
+; = i 10
+; = prod 1
+; WHILE i
+	; = prod (* prod i)
+	: = i (- i 1)
+: OUTPUT prod #=> prints out 3628800
+
+# look through a string for the first digit
+; = string "hello, th3re, world!"
+; = index 0
+; = found FALSE
+; WHILE & !found (< index LENGTH string)
+	; = chr GET string index 1
+	: IF & (< '/' chr) (< chr ':')
+		: = found true      # if true, "break"
+		: = index + index 1 # if false
+: OUTPUT IF found
+	(+ "the first digit occurs at index" index)
+	"no digit was found"
+```
+
+## Ternary (Arity 3)
+### `IF(boolean, unevaluated, unevaluated)` {#op-if}
+If the first argument is `true`, this function will evaluate and return the second argument. If the first argument is `false`, it will evaluate and return the third argument.
+
+Unlike most functions, `Block`s can be passed as either the second or third argument to `IF`.
+
+Examples:
+```knight
+IF @ "nonempty" "empty"    # => "empty"
+IF 1 2 3                   # => 2
+IF FALSE QUIT 1 "!"        # => "!"; it wont quit.
+IF "0" TRUE QUIT 1         # => true
+```
+
+### `GET(unchanged, integer, integer)` {#op-get}
+The return value of this function depends on its first argument's type:
+
+- **`String`**: Returns a substring starting at the second argument with a length of the third argument. Indexing starts at `0`. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the string.
+- **`List`**: Returns a sublist starting at the second argument with a length of the third argument. Indexing starts at `0`. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the list.
+- **All other types**: **undefined behaviour**.
+
+To put it in plainer terms, `GET` is used to get the substring/sublist at the range `[start, start+length)`, with it being **undefined behaviour** for any part of the range to not be fully contained within the original list.
+
+Examples:
+```knight
+GET "" 0 0       # => ""
+GET "abcde" 2 2  # => "cd"
+GET "abcde" 2 0  # => ""
+GET "abcde" 5 1  # => undefined, `5+1 > length("abcde")`
+GET "abcde" 5 0  # => "" (`5 <= length("abcde")`)
+GET "abcde" 4 1  # => "e"
+GET "abcde" ~1 1 # => undefined, negative start
+GET "abcde" 1 ~1 # => undefined, negative length
+
+GET @ 0 0          # => empty list
+GET (+@12345) 2 2  # => list of 3 then 4
+GET (+@12345) 2 0  # => empty list
+GET (+@12345) 5 1  # => undefined, `5+1 > length(+@12345)`
+GET (+@12345) 5 0  # => empty list (`5 <= length(+@12345)`)
+GET (+@12345) 4 1  # => list of just 5
+GET (+@12345) ~1 1 # => undefined, negative start
+GET (+@12345) 1 ~1 # => undefined, negative length
+```
+
+## Quaternary (Arity 4)
+### `SET(unchanged, integer, integer, coerce)` {#op-set}
+The return value of this function depends on its first argument's type:
+
+- **`String`**: Returns a new string where the substring of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a string.. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the string.
+- **`List`**: Returns a new list where the sublist of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a list.. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the list.
+- **All other types**: **undefined behaviour**.
+
+To put it in plainer terms, `SET` is used to replace the substring/sublist at the range `[start, start+length)` with the fourth argument, with it being **undefined behaviour** for any part of the range to not be fully contained within the original list.
+
+Examples:
+```
+SET "" 0 0 "Hello"  # => "Hello"
+SET "abcd" 2 1 "!"  # => "ab!d" (replaces)
+SET "abcd" 2 0 "!"  # => "ab!cd" (inserts before index `2`)
+SET "abcd" 1 2 TRUE # => "atrued" (replaces range)
+SET "abcd" 0 2 @    # => "cd" (deletes range; @ to string is empty)
+
+SET @ 0 0 "Hello"        # => list of "H", "e", "l", "l", and "o"
+SET (+@1234) 2 1 ,9      # => list of 1, 2, 9, and 4 (replaces)
+SET (+@1234) 2 0 "!"     # => list of 1, 2, "!", 3, and 4 (inserts before index `2`)
+SET (+@1234) 1 2 (+@789) # => list of 1, 7, 8, 9, and 4 (replaces range)
+SET (+@1234) 0 2 @       # => list of 3 and 4 (deletes range; "" to list is empty)
+```
 
 # 6 Extensions
 This section describes possible extensions that Knight implementations could add. Because these are extensions, none of them are required to be compliant. They're simply ways to make Knight more ~~enjoyable~~ bearable to write in. 
@@ -758,7 +941,7 @@ Note that the function `X` is explicitly reserved for extensions: Knight will ne
 ## 6.1 `VALUE(string)`: Look up strings as variables
 This function would convert its argument to a string, then look it up as if it were a variable name. That is, it could be a replacement for `EVAL string`, when `string` is just a variable name.
 
-## 6.2 `~(number)`: Unary minus
+## 6.2 `~(integer)`: Unary minus
 This has been incorporated into base knight as of v1.2, so this extension's no longer relevant. 
 
 ## 6.3 Counting Parenthesis

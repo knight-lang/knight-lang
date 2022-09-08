@@ -1079,7 +1079,7 @@ body .markdown-body
     1.0 <a href="#10-encoding">Encoding</a><br />
     1.1 <a href="#11-whitespace">Whitespace</a><br />
     1.2 <a href="#12-comment">Comment</a><br />
-    1.3 <a href="#13-number">Integer</a><br />
+    1.3 <a href="#13-integer">Integer</a><br />
     1.4 <a href="#14-string">String</a><br />
     1.5 <a href="#15-variable">Variable</a><br />
     1.6 <a href="#16-function">Function</a>  </li>
@@ -1092,12 +1092,12 @@ body .markdown-body
     1.0 <a href="#10-encoding">Encoding</a><br />
     1.1 <a href="#11-whitespace">Whitespace</a><br />
     1.2 <a href="#12-comment">Comment</a><br />
-    1.3 <a href="#13-number">Integer</a><br />
+    1.3 <a href="#13-integer">Integer</a><br />
     1.4 <a href="#14-string">String</a><br />
     1.5 <a href="#15-variable">Variable</a><br />
     1.6 <a href="#16-function">Function</a>  </li>
 <li><a href="#2-types">Types</a><br />
-    2.1 <a href="#21-number">Integer</a><br />
+    2.1 <a href="#21-integer">Integer</a><br />
     2.2 <a href="#22-string">String</a><br />
     2.3 <a href="#23-boolean">Boolean</a><br />
     2.4 <a href="#24-null">Null</a><br />
@@ -1122,13 +1122,13 @@ body .markdown-body
 4.2.9 <a href="#429-dumpunchanged"><code>DUMP</code></a><br />
 4.2.10 <a href="#4210-outputstring"><code>OUTPUT</code></a><br />
 4.2.11 <a href="#4211-asciiunchanged"><code>ASCII</code></a><br />
-4.2.12 <a href="#4212-number"><code>~</code></a>  </p>
+4.2.12 <a href="#4212-integer"><code>~</code></a>  </p>
 <p>4.3.1 <a href="#431-unchanged-coerce"><code>+</code></a><br />
-4.3.2 <a href="#432--unchanged-number"><code>-</code></a><br />
+4.3.2 <a href="#432--unchanged-integer"><code>-</code></a><br />
 4.3.3 <a href="#433-unchanged-coerce"><code>*</code></a><br />
-4.3.4 <a href="#434-unchanged-number"><code>/</code></a><br />
-4.3.5 <a href="#435-unchanged-number"><code>%</code></a><br />
-4.3.6 <a href="#436-unchanged-number"><code>^</code></a><br />
+4.3.4 <a href="#434-unchanged-integer"><code>/</code></a><br />
+4.3.5 <a href="#435-unchanged-integer"><code>%</code></a><br />
+4.3.6 <a href="#436-unchanged-integer"><code>^</code></a><br />
 4.3.7 <a href="#437-unchanged-coerce"><code>&lt;</code></a><br />
 4.3.8 <a href="#438-unchanged-coerce"><code>&gt;</code></a><br />
 4.3.9 <a href="#439-unchanged-unchanged"><code>?</code></a><br />
@@ -1181,7 +1181,7 @@ Note that the left and right round parenthesis can also be treated as whitespace
 <p>There are no multiline or embedded comments in Knight.</p>
 <p>For those familiar with regex, comments are <code>/#[^\n]*(\n|$)/</code>.</p>
 <h2 id="integer-parsing">Integer Parsing<a class="headerlink" href="#integer-parsing" title="Permanent link"></a></h2>
-<p>Integer literals are simply a sequence of ASCII digits (i.e. <code>0</code> (<code>0x30</code>) through <code>9</code> (<code>0x39</code>)). Leading <code>0</code>s do not indicate octal numbers (e.g. <code>011</code> is the number eleven, not nine). No other bases are supported, and only integral numbers are allowed.</p>
+<p>Integer literals are simply a sequence of ASCII digits (i.e. <code>0</code> (<code>0x30</code>) through <code>9</code> (<code>0x39</code>)). Leading <code>0</code>s do not indicate octal integers (e.g. <code>011</code> is the number eleven, not nine). No other bases are supported, and only integral numbers are allowed.</p>
 <p>Like some languages, Knight doesn&rsquo;t have negative integer literals. Instead, the <a href="#negation"><code>~</code></a> (numerical negation) function must be used: <code>~5</code>. However, implementations are free to parse this as the number <code>-5</code>, as it has the same effect.</p>
 <p>Integer literals larger than the <a href="#integer-bounds">maximum required size</a> is <strong>undefined behaviour</strong>.</p>
 <p>For those familiar with regex, integers are <code>/[0-9]+/</code>.</p>
@@ -1312,14 +1312,14 @@ OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
 <p>All builtin types in Knight (i.e. Integer, String, Boolean, Null, and List) when evaluated, should return themselves. This is in contrast to variables and functions, which may return different values each time they&rsquo;re evaluated.</p>
 <h2 id="integer-type">Integer Type<a class="headerlink" href="#integer-type" title="Permanent link"></a></h2>
 <p>In Knight, only integral numbers exist—all functions which might return non-integral numbers are simply truncated (look at the the functions&rsquo; respective definitions for details on what exactly truncation means in each case).</p>
-<p>All implementations must be able to represent all numbers within the range <code>-2147483648 .. 2147483647</code>, inclusive on both sides. (These are the bounds for 32-bit signed integers using 2&rsquo;s complement.) Implementations are free to support larger, and smaller numbers (for example, by using a 64 bit integer), however this is the bare minimum.</p>
+<p>All implementations must be able to represent all integers within the range <code>-2147483648 .. 2147483647</code>, inclusive on both sides. (These are the bounds for 32-bit signed integers using 2&rsquo;s complement.) Implementations are free to support larger, and smaller integers (for example, by using a 64 bit integer), however this is the bare minimum.</p>
 <p>Note that all mathematical operations in Knight that would cause over/underflow for integers is considered <strong>undefined behaviour</strong>. This allows for implementations to freely use larger integer sizes and not have to worry about wraparounds.</p>
 <h3 id="integer-contexts">Integer Contexts<a class="headerlink" href="#integer-contexts" title="Permanent link"></a></h3>
 <p>(See <a href="#contexts">here</a> for more details on contexts.)</p>
 <ul>
 <li><strong>integer</strong>: In integer contexts, the integer itself is simply returned.</li>
-<li><strong>string</strong>: In string contexts, numbers are converted to their base-10 representation. Negative numbers should have a <code>-</code> prepended to the beginning of the string (and positive numbers shouldn&rsquo;t get <code>+</code>). For example, <code>0 -&gt; "0"</code>, <code>123 -&gt; "123"</code>, and <code>~12 -&gt; "-12"</code>.</li>
-<li><strong>boolean</strong>: In boolean contexts, zero becomes <code>false</code>, and all other numbers (ie nonzero) become <code>true</code>.</li>
+<li><strong>string</strong>: In string contexts, integers are converted to their base-10 representation. Negative integers should have a <code>-</code> prepended to the beginning of the string (and positive integers shouldn&rsquo;t get <code>+</code>). For example, <code>0 -&gt; "0"</code>, <code>123 -&gt; "123"</code>, and <code>~12 -&gt; "-12"</code>.</li>
+<li><strong>boolean</strong>: In boolean contexts, zero becomes <code>false</code>, and all other integers (ie nonzero) become <code>true</code>.</li>
 <li><strong>list</strong>: In list contexts, the digits of the integer should be returned in ascending order. If the integer is negative, each digit shall become negated as well. For example, <code>+@123</code> would return a list of <code>1</code>, then <code>2</code>, then <code>3</code>, whereas <code>+@~123</code> would return a list of <code>-1</code>, <code>-2</code>, and <code>-3</code>.</li>
 </ul>
 <h2 id="string-type">String Type<a class="headerlink" href="#string-type" title="Permanent link"></a></h2>
@@ -1387,7 +1387,7 @@ OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
 <p>Because blocks aren&rsquo;t allowed to be used in any contexts, there&rsquo;s only a handful of places they may be used. Attempting to use them anywhere else is considered <strong>undefined behaviour</strong></p>
 <ul>
 <li>The sole argument to <code>:</code>, <code>BLOCK</code> itself (ie <code>BLOCK BLOCK ...</code>), <code>CALL</code>, and <code>,</code>.</li>
-<li>The second argument to <code>=</code>, <code>&amp;</code>, <code>|</code>, or <code>WHILE</code></li>
+<li>The second argument to <code>=</code>, <code>&amp;</code>, or <code>|</code></li>
 <li>Either argument of <code>;</code></li>
 <li>Either the second or third argument of <code>IF</code></li>
 </ul>
@@ -1438,8 +1438,8 @@ In all contexts, variables should be evaluated and the result of evaluating it s
 <p>It is <strong>undefined behaviour</strong> if an implementation is not able to read from stdin (e.g. it&rsquo;s closed, permissions issue, etc., but <em>not</em> EOF was reached, see previous line).</p>
 <p>If the line that&rsquo;s read contains any characters that are not allowed to be in Knight strings (see <a href="#string-type">String</a>), this function&rsquo;s behaviour is undefined.</p>
 <h3 id="random"><code>RANDOM()</code><a class="headerlink" href="#random" title="Permanent link"></a></h3>
-<p>This function must return x (pseudo) random number between 0 and, at a minimum, 32767 (<code>0x7fff</code>). Implementations are free to return a larger random number if they desire; however, all random numbers must be zero or positive.</p>
-<p>Note that <code>RANDOM</code> <em>should</em> return different numbers across subsequent calls and program executions (although this isn&rsquo;t strictly enforceable, by virtue of how random numbers work). However, programs should use a somewhat unique seed for every program run (e.g. a simple <code>srand(time(NULL)))</code> is sufficient).</p>
+<p>This function must return x (pseudo) random number between 0 and, at a minimum, 32767 (<code>0x7fff</code>). Implementations are free to return a larger random number if they desire; however, all random integers must be zero or positive.</p>
+<p>Note that <code>RANDOM</code> <em>should</em> return different integers across subsequent calls and program executions (although this isn&rsquo;t strictly enforceable, by virtue of how random integers work). However, programs should use a somewhat unique seed for every program run (e.g. a simple <code>srand(time(NULL)))</code> is sufficient).</p>
 <h2 id="unary-arity-1">Unary (Arity 1)<a class="headerlink" href="#unary-arity-1" title="Permanent link"></a></h2>
 <h3 id="fn-noop"><code>:(unchanged)</code><a class="headerlink" href="#fn-noop" title="Permanent link"></a></h3>
 <p>A no-op: Simply returns its value unchanged (after executing it of course).</p>
@@ -1541,12 +1541,11 @@ LENGTH (*,0 100) # =&gt; 100
 ~TRUE    # =&gt; -1
 ~,123    # =&gt; -1
 </pre></div></p>
-<hr />
 <h3 id="fn-ascii"><code>ASCII(unchanged)</code><a class="headerlink" href="#fn-ascii" title="Permanent link"></a></h3>
 <p>The return value of this function depends on its first argument&rsquo;s type:</p>
 <ul>
 <li><strong><code>Integer</code></strong>: Interprets it as an ASCII codepoint, and returns a string containing just that character. It is <strong>undefined behaviour</strong> if the codepoint is not <a href="#required-encoding">in the encoding</a>.</li>
-<li><strong><code>String</code></strong>: Converts and returns the first character&rsquo;s ASCII numerical equivalent. It is <strong>undefined behaviour</strong> if the string is empty.</li>
+<li><strong><code>String</code></strong>: Converts and returns the first character&rsquo;s ASCII numerical equivalent. It is <strong>undefined behaviour</strong> for the string to be empty.</li>
 <li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
 </ul>
 <p>Implementations may feel free to extend <code>ASCII</code> to go beyond ascii, and to use support unicode. However, this is not required.</p>
@@ -1561,6 +1560,50 @@ ASCII &quot;HELLO&quot; # =&gt; 72
 ASCII &quot;
 &quot; # =&gt; 10
 ASCII &quot;&quot; # undefined (empty isnt valid)
+</pre></div></p>
+<hr />
+<h3 id="fn-box"><code>,(unchanged)</code><a class="headerlink" href="#fn-box" title="Permanent link"></a></h3>
+<p>This function returns a list containing just its argument. In python terms, <code>lambda x: [x]</code>.</p>
+<p>Example:
+<div class="highlight"><pre>,1   # =&gt; a list of just 1
+,,&quot;&quot; # =&gt; a list of just a list of &quot;&quot;
+,,@  # =&gt; a list of just an empty list
+</pre></div></p>
+<hr />
+<h3 id="fn-head"><code>[(unchanged)</code><a class="headerlink" href="#fn-head" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>String</code></strong>: Returns the a string of just first character. It is <strong>undefined behaviour</strong> for the string to be empty.</li>
+<li><strong><code>List</code></strong>: Returns the first element of the list. It is <strong>undefined behaviour</strong> for the list to be empty.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<p>Example:
+<div class="highlight"><pre>[&quot;h&quot;      # =&gt; &quot;h&quot;
+[&quot;hello&quot;  # =&gt; &quot;h&quot;
+[&quot;&quot;       # =&gt; undefined, empty string
+
+[,1       # =&gt; 1
+[(+@1234) # =&gt; 1
+[@        # =&gt; undefined, empty list.
+</pre></div></p>
+<hr />
+<h3 id="fn-tail"><code>](unchanged)</code><a class="headerlink" href="#fn-tail" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>String</code></strong>: Returns the a string with everything <em>but</em> the first character. It is <strong>undefined behaviour</strong> for the string to be empty.</li>
+<li><strong><code>List</code></strong>: Returns a list with everything <em>but</em> the first element. It is <strong>undefined behaviour</strong> for the list to be empty.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<p>Example:
+<div class="highlight"><pre>]&quot;h&quot;      # =&gt; &quot;&quot;
+]&quot;hello&quot;  # =&gt; &quot;ello&quot;
+]&quot;aaaaa&quot;  # =&gt; &quot;aaaa&quot;
+]&quot;&quot;       # =&gt; undefined, empty string
+
+],1       # =&gt; empty list
+](+@1234) # =&gt; a list of 2, 3, and 4
+](+@1111) # =&gt; a list of 1, 1, and 1
+]@        # =&gt; undefined, empty list.
 </pre></div></p>
 <h2 id="binary-arity-2">Binary (Arity 2)<a class="headerlink" href="#binary-arity-2" title="Permanent link"></a></h2>
 <h3 id="fn-add"><code>+(unchanged, coerced)</code><a class="headerlink" href="#fn-add" title="Permanent link"></a></h3>
@@ -1585,7 +1628,8 @@ ASCII &quot;&quot; # undefined (empty isnt valid)
 <li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
 </ul>
 <p>Example:
-<div class="highlight"><pre>For example, `- 3 &quot;2a&quot;` will return `1`.
+<div class="highlight"><pre>- 3 &quot;2a&quot; #=&gt; 1
+- ~1 4   #=&gt; -5
 </pre></div></p>
 <h3 id="fn-multiply"><code>*(unchanged, coerced)</code><a class="headerlink" href="#fn-multiply" title="Permanent link"></a></h3>
 <p>The return value of this function depends on its first argument&rsquo;s type:</p>
@@ -1603,84 +1647,222 @@ ASCII &quot;&quot; # undefined (empty isnt valid)
 * &quot;2a&quot; ~3 # undefined, negative length
 * (,1) ~1 # undefined, negative length
 </pre></div></p>
-<h3 id="fn-divide"><code>/(unchanged, number)</code><a class="headerlink" href="#fn-divide" title="Permanent link"></a></h3>
-<p>The return value of this function depends on its first argument&rsquo;s type:
-- <code>Integer</code>: The second argument is coerced to a number, and then divided from the first. Non-whole results must be rounded towards zero.
-All other types constitute <strong>undefined behaviour</strong>.</p>
-<p>It is <strong>undefined behaviour</strong> for the second argument to be zero.</p>
-<p>For example, <code>/ 7 3</code> will return <code>2</code>, and <code>/ 5 "-3"</code> will return <code>-1</code>.</p>
-<h3 id="fn-modulo"><code>%(unchanged, number)</code><a class="headerlink" href="#fn-modulo" title="Permanent link"></a></h3>
-<p>The return value of this function depends on its first argument&rsquo;s type:
-- <code>Integer</code>: The second argument is coerced to a number, and then the remainder of <code>&lt;arg1&gt; / &lt;arg2&gt;</code> is returned. You should round towards zero. Note that this means that, for all <code>a</code>, <code>a = (a/b)*b + a%b</code>.
-If the second argument is not a positive number, the return value is undefined.
-All other types constitute <strong>undefined behaviour</strong>.</p>
-<p>For example, <code>% 7 3</code> will return <code>1</code>, and <code>% ~7 5</code> will return <code>-2</code>.</p>
-<h3 id="436-unchanged-number">4.3.6 <code>^(unchanged, number)</code><a class="headerlink" href="#436-unchanged-number" title="Permanent link"></a></h3>
-<p>If the first argument is a number, the second will be coerced to a number and the resulting exponentiation will be returned. Note that for an exponent of <code>0</code>, the return value should always be <code>1</code> for nonnegative numbers.</p>
-<p>If the first argument is not a number, the return value of this function is undefined.
-If the first argument is zero and the second argument is negative, the return value of this function is undefined.</p>
-<h3 id="437-unchanged-coerced">4.3.7 <code>&lt;(unchanged, coerced)</code><a class="headerlink" href="#437-unchanged-coerced" title="Permanent link"></a></h3>
-<p>The return value of this function depends on its first argument&rsquo;s type:
-- <code>Integer</code>: Whether or not the first argument is numerically smaller than the second, which is coerced to a number, is returned.
-- <code>String</code>: Whether or not the first argument is lexicographically smaller than the second, which is coerced to a string, is returned. See below for more details.
-- <code>Boolean</code>: Whether the first argument is false and the second argument is, when coerced to a boolean, true is returned.
-- All other types: The return value is undefined.</p>
-<p>Lexicographical comparisons should find the first non-equivalent character in each string and compare them based on their ASCII value (e.g. in <code>abcd</code> and <code>abde</code>, <code>c</code> and <code>d</code> would be compared), returning <code>TRUE</code> if the first argument&rsquo;s character is smaller. If both strings have equivalent characters, then this function shall return <code>TRUE</code> only if the first string has a smaller size than the second.</p>
-<p>The following is a list of valid string characters, where <code>[tab]</code> is smaller than everything (other than another tab), and <code>~</code> is larger than everything (other than another <code>~</code>).
-<div class="highlight"><pre>    [tab] [newline] [carriage return] [space] 
-      ! &quot; # $ % &amp; &#39; ( ) * + , - . /
-    0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ?
-    @ A B C D E F G H I J K L M N O
-    P Q R S T U V W X Y Z [ \ ] ^ _
-    ` a b c d e f g h i j k l m n o
-    p q r s t u v w x y z { | } ~
+<h3 id="fn-divide"><code>/(unchanged, coerced)</code><a class="headerlink" href="#fn-divide" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to a number, and then divided from the first. Non-whole results must be rounded towards zero. It is <strong>undefined behaviour</strong> for the second argument to be zero.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<p>Example:
+<div class="highlight"><pre>/ 7 3    # =&gt; 2
+/ ~5 2   # =&gt; -2
+/ 5 &quot;-3&quot; # =&gt; -1
+/ 1 0    # undefined
 </pre></div></p>
-<h3 id="438-unchanged-coerced">4.3.8 <code>&gt;(unchanged, coerced)</code><a class="headerlink" href="#438-unchanged-coerced" title="Permanent link"></a></h3>
-<p>This is exactly the same as <a href="#437-unchanged-coerced">4.3.7</a>, except for the operands reversed, i.e. <code>&gt; a b</code> should return the same mas <code>&lt; b a</code> (barring the fact that <code>a</code> should be evaluated before <code>b</code>).</p>
-<h3 id="439-unchanged-unchanged">4.3.9 <code>?(unchanged, unchanged)</code><a class="headerlink" href="#439-unchanged-unchanged" title="Permanent link"></a></h3>
-<p>Unlike nearly every other function in Knight, this one does not automatically coerced its arguments to any type—Instead, it checks to see if arguments are of the same type <em>and</em> value. For example, <code>1</code> is not equivalent to <code>"1"</code>, nor is it equivalent to <code>TRUE</code>.</p>
-<p>This function is valid for the types <code>Integer</code>, <code>String</code>, <code>Boolean</code>, and <code>Null</code>. Notably, if either argument is a <code>BLOCK</code>&lsquo;s return value, the return value is undefined.</p>
-<h3 id="4310-unchanged-unevaluated">4.3.10 <code>&amp;(unchanged, unevaluated)</code><a class="headerlink" href="#4310-unchanged-unevaluated" title="Permanent link"></a></h3>
-<p>If the first argument, after being evaluated and coerced to a boolean, is <code>FALSE</code>, then the &ldquo;uncoerced&rdquo; first argument is returned. Otherwise, the second argument is evaluated and returned.</p>
-<p>This function acts similarly to <code>&amp;&amp;</code> in most programming languages, where it only evaluates the second variable if the first is truthy.</p>
-<p>For example, <code>&amp; 0 (QUIT 1)</code> shall return the value <code>0</code>, whilst <code>&amp; TRUE ""</code> shall return <code>""</code>.</p>
-<h3 id="4311-unchanged-unevaluated">4.3.11 <code>|(unchanged, unevaluated)</code><a class="headerlink" href="#4311-unchanged-unevaluated" title="Permanent link"></a></h3>
-<p>If the first argument, after being evaluated and coerced to a boolean, is <code>TRUE</code>, then the &ldquo;uncoerced&rdquo; first argument is returned. Otherwise, the second argument is evaluated and returned.</p>
-<p>This function acts similarly to <code>||</code> in most programming languages, where it only evaluates the second variable if the first is falsey.</p>
-<p>For example, <code>| "2" (QUIT 1)</code> shall return the value <code>"2"</code>, whilst <code>| FALSE 4</code> shall return <code>4</code>.</p>
-<h3 id="4312-unchanged-unchanged">4.3.12 <code>;(unchanged, unchanged)</code><a class="headerlink" href="#4312-unchanged-unchanged" title="Permanent link"></a></h3>
-<p>This function simply returns its second argument. It&rsquo;s entire purpose is to act as a &ldquo;sequence&rdquo; function, where the first argument&rsquo;s value can be safely ignored.</p>
-<h3 id="4313-unevaluated-unchanged">4.3.13 <code>=(unevaluated, unchanged)</code><a class="headerlink" href="#4313-unevaluated-unchanged" title="Permanent link"></a></h3>
-<p>Unless the first argument is a <a href="#3-variable">Variable</a>, this function is undefined.</p>
-<p>This function assigns the variable identified by the first argument (which shall not be evaluated) to the second argument&rsquo;s value, after which it should return the second argument&rsquo;s value. That is, it performs the &ldquo;assignment&rdquo; operation for strings.</p>
-<h3 id="4314-whileunevaluated-unevaluated">4.3.14 <code>WHILE(unevaluated, unevaluated)</code><a class="headerlink" href="#4314-whileunevaluated-unevaluated" title="Permanent link"></a></h3>
-<p>This function will evaluate its second argument as long as its first evaluates to a truthy value. The return value shall be <code>NULL</code>.</p>
-<p>Note that, unlike most programming languages, Knight does not have a builtin way to &ldquo;<code>continue</code>&rdquo; or &ldquo;<code>break</code>&rdquo; from a loop.
-(returns null)</p>
-<h2 id="44-ternary-arity-3">4.4 Ternary (Arity 3)<a class="headerlink" href="#44-ternary-arity-3" title="Permanent link"></a></h2>
-<h3 id="441-ifboolean-unevaluated-unevaluated">4.4.1 <code>IF(boolean, unevaluated, unevaluated)</code><a class="headerlink" href="#441-ifboolean-unevaluated-unevaluated" title="Permanent link"></a></h3>
-<p>This function will evaluate and return the second argument if the first argument is truthy. If the first argument is falsey, the third argument is evaluated and returned.</p>
-<h3 id="442-getstring-number-number">4.4.2 <code>GET(string, number, number)</code><a class="headerlink" href="#442-getstring-number-number" title="Permanent link"></a></h3>
-<p>This function is used to get a substring of the first argument. The substring should start at the second argument and be the length of the third. Indexing starts at <code>0</code>—that is, <code>GET "abc" 0 1</code> should return the <code>"a"</code>.</p>
-<p>If either the starting point or the length are negative numbers, this function is undefined.
-If the starting index is larger than or equal to the length of the string, the behaviour is undefined.
-If the ending index (i.e. <code>start+length</code>) is larger than the length of the string, the behaviour is undefined.
-To put it more concretely, unless the range <code>[start, start+length)</code> is entirely contained within the string, this function&rsquo;s return value is undefined. </p>
-<p>For example, <code>GET "abcde" 2 2</code> would get the substring <code>"cd"</code>, and <code>GET "abcd" 2 0</code> would get <code>""</code>.</p>
-<h2 id="45-quaternary-arity-4">4.5 Quaternary (Arity 4)<a class="headerlink" href="#45-quaternary-arity-4" title="Permanent link"></a></h2>
-<h3 id="451-substitutestring-number-number-string">4.5.1 <code>SUBSTITUTE(string, number, number, string)</code><a class="headerlink" href="#451-substitutestring-number-number-string" title="Permanent link"></a></h3>
-<p>This function is used to substitute the range <code>[start, start+length)</code> (where <code>start</code> is the second argument and <code>length</code> is the third)  of the first argument with the last. Note that they do not have to be the same length—the string should grow or shrink accordingly. Indexing starts at <code>0</code>—that is, <code>SET "abc" 0 1 "2"</code> should return the <code>"2bc"</code>. Also note that this function should return a new string—the original one should not be modified.</p>
-<p>If either the starting point or the length are negative numbers, this function is undefined.
-If the starting index is larger than the length of the string, the behaviour is undefined.
-If the ending index (i.e. <code>start+length</code>) is larger than the length of the string, the behaviour is undefined.</p>
-<p>For example, <code>SUBSTITUTE "abcd" 1 2 "3"</code> would return the string <code>"a3d"</code>.</p>
+<h3 id="fn-remainder"><code>%(unchanged, coerced)</code><a class="headerlink" href="#fn-remainder" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to am integer, and then the remainder of <code>&lt;arg1&gt; / &lt;arg2&gt;</code> is returned. You should round towards zero. Note that this means that, for all <code>a</code>, <code>a = (a/b)*b + a%b</code>. It is <strong>undefined behaviour</strong> for the second argument not to be a strictly positive integer.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<div class="highlight"><pre>% 7 3    # =&gt; 1
+% ~5 2   # =&gt; -1
+% ~7 5   # =&gt; -2
+% 7 0    # undefined
+% 7 ~2   # undefined
+</pre></div>
+
+<h3 id="fn-power"><code>^(unchanged, coerce)</code><a class="headerlink" href="#fn-power" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to an integer, and then the first integer is raised to the power of the second integer. Note that <code>^ 0 1</code> should return <code>1</code>. It is <strong>undefined behaviour</strong> for the second argument to be negative. (Note that, like all integer functions, it is <strong>undefined behaviour</strong> for this function to overflow.)</li>
+<li><strong><code>List</code></strong>: The second argument is coerced to a string. Then, each element of the list is converted to a string and concatenated together, with the second argument being inserted between adjacent elements. This is known as the <strong>join</strong> operator.</li>
+</ul>
+<p>Examples:
+<div class="highlight"><pre>^ 0 0   # 0
+^ 0 1   # 1
+^ 2 0   # 1
+^ ~5 9  # -1953125
+^ 10 10 # undefined, too large
+^ 10 ~1 # undefined, negative exponent
+
+^ @ &quot;!&quot;       # &quot;&quot;, joining empty list yields nothing
+^ ,12 &quot;!&quot;     # &quot;12&quot;, no elements to separate
+^ (+@123) &quot;!&quot; # &quot;1!2!3&quot;
+</pre></div></p>
+<h3 id="op-less-than"><code>&lt;(unchanged, coerced)</code><a class="headerlink" href="#op-less-than" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: Coerces the second argument to an integer, then returns whether the first is smaller than the second.</li>
+<li><strong><code>String</code></strong>: Coerces the second argument to a string, and then returns whether the first is lexicographically smaller than the second. See below for details on Lexicographical comparisons.</li>
+<li><strong><code>Boolean</code></strong>: Coerces the second argument to a boolean, and returns whether the first is false and the second is true.</li>
+<li><strong><code>List</code></strong>: Coerces the second argument to a list, and then compares each element of the two, returning the whether the non-equal comparison is less than. If each element is equal, return whether the first list is smaller. (This is how most languages which define comparisons on lists/arrays do it.)</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong>.</li>
+</ul>
+<p>Lexicographical comparisons should find the first non-equivalent character in each string and compare them based on their ASCII value (e.g. in <code>abcd</code> and <code>abde</code>, <code>c</code> and <code>d</code> would be compared), returning <code>tRUE</code> if the first argument&rsquo;s character is smaller. If both strings have equivalent characters, then this function shall return <code>true</code> only if the first string has a smaller size than the second. </p>
+<p>Examples:
+<div class="highlight"><pre>&lt; 1 0      # =&gt; true
+&lt; 1 &quot;4&quot;    # =&gt; false
+&lt; &quot;A&quot; &quot;a&quot;  # =&gt; true, ascii `&quot;a&quot;` is larger.
+&lt; &quot;a&quot; &quot;a0&quot; # =&gt; true, `&quot;a&quot;` has smaller length.
+&lt; &quot;A&quot; &quot;a0&quot; # =&gt; true, `&quot;A&quot; &lt; &quot;a&quot;` 
+&lt; FALSE 0  # =&gt; false
+&lt; FALSE 2  # =&gt; true
+&lt; TRUE x   # =&gt; always false regardless of `x`
+&lt; @ x      # =&gt; always true for non-empty x
+&lt; ,1 ,2    # =&gt; true, 1 &lt; 2
+&lt; +@13 ,2  # =&gt; false, 1 &lt; 2
+</pre></div></p>
+<h3 id="op-greater-than"><code>&gt;(unchanged, coerced)</code><a class="headerlink" href="#op-greater-than" title="Permanent link"></a></h3>
+<p>This is exactly the same as <a href="#op-less-than"><code>&lt;</code></a>, except for operands reversed, i.e. <code>&gt; a b</code> should return the same value as <code>&lt; b a</code> (barring the fact that <code>a</code> should be evaluated before <code>b</code>).</p>
+<p>Examples:
+See <a href="#op-less-than"><code>&lt;</code></a>.</p>
+<h3 id="op-equals"><code>?(unchanged, unchanged)</code><a class="headerlink" href="#op-equals" title="Permanent link"></a></h3>
+<p>Unlike nearly every other function in Knight, this one does not automatically coerced its arguments—instead, it checks to see if arguments are the same type <em>and</em> value. For example, <code>1</code> is equivalent to neither <code>"1"</code> nor <code>TRUE</code>.</p>
+<p>This function is only valid for the &ldquo;basic types&rdquo; (<code>Integer</code>, <code>String</code>, <code>Boolean</code>, <code>Null</code>, and <code>List</code>). Notably, it is <strong>undefined behaviour</strong> for either argument to be a <code>Block</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>? 1 2        # =&gt; false
+? ~0 0       # =&gt; true
+? &quot;1&quot; &quot;1 &quot;   # =&gt; false
+? FALSE NULl # =&gt; false
+? NULL NULL  # =&gt; true
+? ,@ ,,@     # =&gt; false
+</pre></div></p>
+<h3 id="op-and"><code>&amp;(unchanged, unevaluated)</code><a class="headerlink" href="#op-and" title="Permanent link"></a></h3>
+<p>This function acts similar to <code>&amp;&amp;</code> in some loosely-typed languages: If the first argument (after being evaluated) is falsey, it&rsquo;s returned directly. However, if it&rsquo;s truthy, the second argument is evaluated and returned.</p>
+<p>Unlike most functions, <code>Block</code>s can be passed as the second argument to <code>&amp;</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>&amp; 0 (QUIT 1)   # =&gt; 0
+&amp; &quot;hi&quot; &quot;there&quot; # =&gt; &quot;there&quot;
+&amp; TRUE &quot;&quot;      # =&gt; &quot;&quot;
+&amp; @ 4          # =&gt; @
+</pre></div></p>
+<h3 id="op-or"><code>|(unchanged, unevaluated)</code><a class="headerlink" href="#op-or" title="Permanent link"></a></h3>
+<p>Like <a href="#op-and"><code>&amp;</code></a> and <code>&amp;&amp;</code>, this function acts similar to <code>||</code> in some loosely-typed languages: If the first argument (after being evaluated) is truthy, it&rsquo;s returned directly. However, if it&rsquo;s falsey, the second argument is evaluated and returned.</p>
+<p>Unlike most functions, <code>Block</code>s can be passed as the second argument to <code>|</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>| 2 (QUIT 1)   # =&gt; 2
+| &quot;hi&quot; &quot;there&quot; # =&gt; &quot;hi&quot;
+| TRUE &quot;&quot;      # =&gt; TRUE
+| @ 4          # =&gt; 4
+</pre></div></p>
+<p>This is one of the few functions that <code>Block</code>s can be used, albeit in <code>|</code> only as the second argument.</p>
+<h3 id="op-then"><code>;(unchanged, unchanged)</code><a class="headerlink" href="#op-then" title="Permanent link"></a></h3>
+<p>This function simply returns its second argument (after evaluating them both, as per the <code>unchanged</code> context). Its entire purpose is to act as a &ldquo;sequencing&rdquo; function, where the first argument&rsquo;s value can be discarded.</p>
+<p>Unlike most functions, <code>Block</code>s can be passed as either argument to <code>;</code>.</p>
+<p><em>Note that using <code>:</code> as the last function in a chain of <code>;</code>s can look visually appealing. See the example below</em></p>
+<p>Examples:
+<div class="highlight"><pre>; = x 3 OUTPUT x # prints 3
+OUTPUT ; = x 3 x # also prints 3
+
+# simple factorial
+; = i 10
+; = prod 1
+; WHILE i
+    ; = prod (* prod i)
+    : = i (- i 1)
+: OUTPUT prod #=&gt; prints out 3628800
+</pre></div></p>
+<h3 id="op-assign"><code>=(unevaluated, unchanged)</code><a class="headerlink" href="#op-assign" title="Permanent link"></a></h3>
+<p>It is <strong>undefined behaviour</strong> for the first argument not to be a <a href="#variable">Variable</a>. (However, see the entirely optional <a href="#ext-assign-to-anything">assign to anything</a> extension.)</p>
+<p>This function evaluates the second argument, and then both assigns it to the variable in the first argument and returns it. This is the only way to update variables within Knight.</p>
+<p>Examples:
+<div class="highlight"><pre>= a 3       # =&gt; 3 (a is 3)
+* (= a 4) a # =&gt; 16 (a is 4)
+= a = b 3   # =&gt; 3 (a and b are also three, assignments can be chained.)
+= &quot;a&quot; 4     # undefined, `&quot;a&quot;` isnt a variable
+</pre></div></p>
+<h3 id="op-while"><code>WHILE(unevaluated, unevaluated)</code><a class="headerlink" href="#op-while" title="Permanent link"></a></h3>
+<p>This function should continuously evaluate the second argument as long as the first argument evaluates to a truthy value. The return value of <code>WHILE</code> is always <code>NULL</code>. </p>
+<p>Note that, unlike most programming languages, Knight does not have a builtin way to &ldquo;<code>continue</code>&rdquo; or &ldquo;<code>break</code>&rdquo; from a loop; instead, you must change the condition to false. See the second example.</p>
+<p>Examples:
+<div class="highlight"><pre># simple factorial
+; = i 10
+; = prod 1
+; WHILE i
+    ; = prod (* prod i)
+    : = i (- i 1)
+: OUTPUT prod #=&gt; prints out 3628800
+
+# look through a string for the first digit
+; = string &quot;hello, th3re, world!&quot;
+; = index 0
+; = found FALSE
+; WHILE &amp; !found (&lt; index LENGTH string)
+    ; = chr GET string index 1
+    : IF &amp; (&lt; &#39;/&#39; chr) (&lt; chr &#39;:&#39;)
+        : = found true      # if true, &quot;break&quot;
+        : = index + index 1 # if false
+: OUTPUT IF found
+    (+ &quot;the first digit occurs at index&quot; index)
+    &quot;no digit was found&quot;
+</pre></div></p>
+<h2 id="ternary-arity-3">Ternary (Arity 3)<a class="headerlink" href="#ternary-arity-3" title="Permanent link"></a></h2>
+<h3 id="op-if"><code>IF(boolean, unevaluated, unevaluated)</code><a class="headerlink" href="#op-if" title="Permanent link"></a></h3>
+<p>If the first argument is <code>true</code>, this function will evaluate and return the second argument. If the first argument is <code>false</code>, it will evaluate and return the third argument.</p>
+<p>Unlike most functions, <code>Block</code>s can be passed as either the second or third argument to <code>IF</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>IF @ &quot;nonempty&quot; &quot;empty&quot;    # =&gt; &quot;empty&quot;
+IF 1 2 3                   # =&gt; 2
+IF FALSE QUIT 1 &quot;!&quot;        # =&gt; &quot;!&quot;; it wont quit.
+IF &quot;0&quot; TRUE QUIT 1         # =&gt; true
+</pre></div></p>
+<h3 id="op-get"><code>GET(unchanged, integer, integer)</code><a class="headerlink" href="#op-get" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>String</code></strong>: Returns a substring starting at the second argument with a length of the third argument. Indexing starts at <code>0</code>. It is <strong>undefined behaviour</strong> for either the second or third arguments to be negative, or their sum to be larger than the length of the string.</li>
+<li><strong><code>List</code></strong>: Returns a sublist starting at the second argument with a length of the third argument. Indexing starts at <code>0</code>. It is <strong>undefined behaviour</strong> for either the second or third arguments to be negative, or their sum to be larger than the length of the list.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong>.</li>
+</ul>
+<p>To put it in plainer terms, <code>GET</code> is used to get the substring/sublist at the range <code>[start, start+length)</code>, with it being <strong>undefined behaviour</strong> for any part of the range to not be fully contained within the original list.</p>
+<p>Examples:
+<div class="highlight"><pre>GET &quot;&quot; 0 0       # =&gt; &quot;&quot;
+GET &quot;abcde&quot; 2 2  # =&gt; &quot;cd&quot;
+GET &quot;abcde&quot; 2 0  # =&gt; &quot;&quot;
+GET &quot;abcde&quot; 5 1  # =&gt; undefined, `5+1 &gt; length(&quot;abcde&quot;)`
+GET &quot;abcde&quot; 5 0  # =&gt; &quot;&quot; (`5 &lt;= length(&quot;abcde&quot;)`)
+GET &quot;abcde&quot; 4 1  # =&gt; &quot;e&quot;
+GET &quot;abcde&quot; ~1 1 # =&gt; undefined, negative start
+GET &quot;abcde&quot; 1 ~1 # =&gt; undefined, negative length
+
+GET @ 0 0          # =&gt; empty list
+GET (+@12345) 2 2  # =&gt; list of 3 then 4
+GET (+@12345) 2 0  # =&gt; empty list
+GET (+@12345) 5 1  # =&gt; undefined, `5+1 &gt; length(+@12345)`
+GET (+@12345) 5 0  # =&gt; empty list (`5 &lt;= length(+@12345)`)
+GET (+@12345) 4 1  # =&gt; list of just 5
+GET (+@12345) ~1 1 # =&gt; undefined, negative start
+GET (+@12345) 1 ~1 # =&gt; undefined, negative length
+</pre></div></p>
+<h2 id="quaternary-arity-4">Quaternary (Arity 4)<a class="headerlink" href="#quaternary-arity-4" title="Permanent link"></a></h2>
+<h3 id="op-set"><code>SET(unchanged, integer, integer, coerce)</code><a class="headerlink" href="#op-set" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>String</code></strong>: Returns a new string where the substring of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a string.. It is <strong>undefined behaviour</strong> for either the second or third arguments to be negative, or their sum to be larger than the length of the string.</li>
+<li><strong><code>List</code></strong>: Returns a new list where the sublist of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a list.. It is <strong>undefined behaviour</strong> for either the second or third arguments to be negative, or their sum to be larger than the length of the list.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong>.</li>
+</ul>
+<p>To put it in plainer terms, <code>SET</code> is used to replace the substring/sublist at the range <code>[start, start+length)</code> with the fourth argument, with it being <strong>undefined behaviour</strong> for any part of the range to not be fully contained within the original list.</p>
+<p>Examples:
+<div class="highlight"><pre>SET &quot;&quot; 0 0 &quot;Hello&quot;  # =&gt; &quot;Hello&quot;
+SET &quot;abcd&quot; 2 1 &quot;!&quot;  # =&gt; &quot;ab!d&quot; (replaces)
+SET &quot;abcd&quot; 2 0 &quot;!&quot;  # =&gt; &quot;ab!cd&quot; (inserts before index `2`)
+SET &quot;abcd&quot; 1 2 TRUE # =&gt; &quot;atrued&quot; (replaces range)
+SET &quot;abcd&quot; 0 2 @    # =&gt; &quot;cd&quot; (deletes range; @ to string is empty)
+
+SET @ 0 0 &quot;Hello&quot;        # =&gt; list of &quot;H&quot;, &quot;e&quot;, &quot;l&quot;, &quot;l&quot;, and &quot;o&quot;
+SET (+@1234) 2 1 ,9      # =&gt; list of 1, 2, 9, and 4 (replaces)
+SET (+@1234) 2 0 &quot;!&quot;     # =&gt; list of 1, 2, &quot;!&quot;, 3, and 4 (inserts before index `2`)
+SET (+@1234) 1 2 (+@789) # =&gt; list of 1, 7, 8, 9, and 4 (replaces range)
+SET (+@1234) 0 2 @       # =&gt; list of 3 and 4 (deletes range; &quot;&quot; to list is empty)
+</pre></div></p>
 <h1 id="6-extensions">6 Extensions<a class="headerlink" href="#6-extensions" title="Permanent link"></a></h1>
 <p>This section describes possible extensions that Knight implementations could add. Because these are extensions, none of them are required to be compliant. They&rsquo;re simply ways to make Knight more <del>enjoyable</del> bearable to write in. </p>
 <h3 id="601-the-x-function">6.0.1 The <code>X</code> Function.<a class="headerlink" href="#601-the-x-function" title="Permanent link"></a></h3>
 <p>Note that the function <code>X</code> is explicitly reserved for extensions: Knight will never use <code>X</code> for function names, and implementations are free to use it as they wish. Note that since this is reserved for extensions, they&rsquo;re free to &ldquo;overload&rdquo; it. That is, you can have different functions that all start with <code>X</code>, e.g., <code>X_OPENFILE</code>, <code>X_READFILE</code>, <code>X_CLOSEFILE</code>.</p>
 <h2 id="61-valuestring-look-up-strings-as-variables">6.1 <code>VALUE(string)</code>: Look up strings as variables<a class="headerlink" href="#61-valuestring-look-up-strings-as-variables" title="Permanent link"></a></h2>
 <p>This function would convert its argument to a string, then look it up as if it were a variable name. That is, it could be a replacement for <code>EVAL string</code>, when <code>string</code> is just a variable name.</p>
-<h2 id="62-number-unary-minus">6.2 <code>~(number)</code>: Unary minus<a class="headerlink" href="#62-number-unary-minus" title="Permanent link"></a></h2>
+<h2 id="62-integer-unary-minus">6.2 <code>~(integer)</code>: Unary minus<a class="headerlink" href="#62-integer-unary-minus" title="Permanent link"></a></h2>
 <p>This has been incorporated into base knight as of v1.2, so this extension&rsquo;s no longer relevant. </p>
 <h2 id="63-counting-parenthesis">6.3 Counting Parenthesis<a class="headerlink" href="#63-counting-parenthesis" title="Permanent link"></a></h2>
 <p>Parenthesis in Knight are whitespace, and are used simply as a way to visually group things. However, as Knight programs are quite hard to debug, you could count parenthesis and ensure that parens match</p>
