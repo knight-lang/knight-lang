@@ -2,9 +2,11 @@
 # interpreter uses the native knight integer type, and not
 # the traditional single byte cells.
 
+# Example input: ++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
+
 # Read the sourcecode in from stdin, and initialize the position
 # into it to zero.
-; = source PROMPT
+; = source "[[]]+."#PROMPT
 ; = srcpos 0
 
 # Setup the brainfuck VM. We just need a list of 30,000 zeros and
@@ -12,31 +14,66 @@
 ; = ary * ,0 30000
 ; = idx 0
 
-# Since brainfuck reads from stdin a byte at a time, we need to
-# parse 
+# Since brainfuck reads from stdin a byte at a time, and knight only
+# reads lines at a time, we have to read an entire line in, then
+# use individual bytes.
 ; = inpbuf ""
-; = list_indices @
+
+# A stack of start indices, used for `[` to keep track of previous iterations.
+; = start_indices @
+
+# The brainfuck block itself.
 ; = bf BLOCK
-	: WHILE < srcpos LEN source
-		; = chr GET source srcpos 1
+	# We run the body of `bf` while there's stills something left to be read.
+	: WHILE < srcpos (LENGTH source)
+		# Get the current character we're supposed to be looking at, and increment the index.
+		; = chr (GET source srcpos 1)
 		; = srcpos + srcpos 1
-		: IF (? chr '>') : = idx + idx 1
-		: IF (? chr '<') : = idx - idx 1
-		: IF (? chr '+') : = ary SET ary idx 1 ,(+ (GET ary idx 0) 1)
-		: IF (? chr '-') : = ary SET ary idx 1 ,(- (GET ary idx 0) 1)
-		: IF (? chr '.') : OUTPUT + ASCII (GET ary idx 0) "\"
+
+		# Now we have a massive if-then chain for all the different brainfuck commands.
+
+		# If the character is `>`, then increment the `ary` index by one.
+		: IF (? chr '>')
+			: = idx + idx 1
+
+		# If the character is `<`, then decrement the `ary` index by one.
+		: IF (? chr '<')
+			: = idx - idx 1
+
+		# If the character is `+`, add one to the pointed to value.
+		: IF (? chr '+')
+			; = curr_value [(GET ary idx 1)
+			: = ary SET ary idx 1 ,(+ curr_value 1) # replace the old index with the new one.
+
+		# If the character is `-`, add one to the pointed to value.
+		: IF (? chr '-')
+			; = curr_value [(GET ary idx 1)
+			: = ary SET ary idx 1 ,(- curr_value 1) # replace the old index with the new one.
+
+		# If the character is `.`, then print out the ascii value.
+		: IF (? chr '.')
+			: OUTPUT + ASCII [(GET ary idx 1) "\"
+
+		# If the character is `,`, then we need to read a single character in. Since knight cannot
+		# read single characters at a time, we have to instead read a whole `PROMPT` line in, then
+		# get the first charcater from that.
 		: IF (? chr ',')
 			; = inpbuf | inpbuf PROMPT
-			; = ary SET ary idx 1 (ASCII GET inpbuf 0 0)
-			: = inpbuf SET inpbuf 0 1 ""
-		: IF ? chr '['
-			; = list_indices +,srcpos list_indices
-			; WHILE GET ary idx 0
+			; = ary SET ary idx 1 (ASCII [inpbuf)
+			: = inpbuf ]inpbuf
+
+		# If the character is `[`, we have to start a loop. To do this, we have to keep track of the
+		# current position of `srcpos`, so when we reach the end of the loop, we know what to reset
+		# `srcpos` to. Since knight doesn't have local variables, we do this by prepending them to the
+		# `start_indices` list, and then removing them when we're done.
+		: IF (? chr '[')
+			; = start_indices +,srcpos start_indices
+			; WHILE ([GET ary idx 1)
 				; CALL bf
-				: = srcpos GET list_indices 0 0
-			; = srcpos endpos
-			: = list_indices SET list_indices 0 1 @
-		: IF ? chr ']'
+				: = srcpos [start_indices # reset src pos.
+			; = srcpos endpos # set the next character to the end. FIXME: this doesnt work for loops that never run.
+			: = start_indices ]start_indices
+		: IF (? chr ']')
 			; = endpos srcpos
 			: = srcpos LEN source
 		: NULL

@@ -14,19 +14,16 @@
 	# Otherwise, we have to subtract one from `n`, and then add `n` to the front
 	# of the recursion stack.
 	; = n (- n 1)
-	; = _fib_recur + (,n) _fib_recur 
+	; = _fib_recur + ,n _fib_recur 
 
 	# Do the first recursive call to `fibonacci`, using the updated `n`.
 	; = tmp CALL fibonacci
 
-	# Now, get the old value `n` from the top of the stack. Note that if you
-	# pass a length of `0` to `GET` for lists, it'll get the _element_ at
-	# that index, not a list of length zero.
-	; = n GET _fib_recur 0 0
+	# Now, get the old value `n` from the top of the stack via the head operator.
+	; = n [_fib_recur
 
-	# Now, pop the element off the front of `_fib_recur` by replacing the 
-	# range `[0, 1)` with an empty list
-	; = _fib_recur (SET _fib_recur 0 1 @)
+	# Now, pop the element off the list and get the remainder
+	; = _fib_recur ]_fib_recur
 
 	# Subtract one from the popped n (to get two less than the original `n`)
 	; = n - n 1

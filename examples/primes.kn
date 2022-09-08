@@ -4,7 +4,7 @@
 	# is the length of the list.
 	; = all @
 	; WHILE > max all
-		: = all + all ,(+ 2 all)
+		: = all + all (, LENGTH all)
 
 	; = i 2
 	# For each number between 2 to max:
@@ -20,16 +20,20 @@
 
 	# Create an initially empty list of all primes.
 	; = primes @
+
+	# Remove the first two elements, ie `0` and `1`, as they arent primes.
+	; = all ]]all
 	# While there's still values left in `all`
 	; WHLIE all
 		# If the first value is nonzero,
-		; & (= t GET all 0 0)
+		; & (= t [all)
 			# add that to the list of primes
 			: = primes + primes ,t
 		# Then delete the first element from `all`
-		: = all (SET all 0 1 @)
+		: = all ]all
 	: primes
 
-; = max 100
+; = PROMPT 97
+; = max + 0 PROMPT
 ; OUTPUT ++ "the primes from 2-" max " are:"
 : OUTPUT ^ (CALL primes_upto) " "
