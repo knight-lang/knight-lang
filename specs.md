@@ -124,7 +124,7 @@ For those familiar with regex, comments are `/#[^\n]*(\n|$)/`.
 ## Integer Literals
 [Integer](#integer) literals are simply a sequence of ASCII digits (i.e. `0` (`0x30`) through `9` (`0x39`)). Leading `0`s do not indicate octal integers (e.g. `011` is the number eleven, not nine). No other bases are supported, and only integral numbers are allowed. Note that, unlike most other languages, integers are allowed to be followed by any non-digit character. As such, `+1a` should be parsed as `+` then `1` then `a`.
 
-Like some languages, Knight doesn't have negative integer literals. Instead, the [`~`](#fn-negation) (numerical negation) function must be used: `~5`. However, implementations are free to parse this as the number `-5`, as it has the same effect.
+Like some languages, Knight doesn't have negative integer literals. Instead, the [`~`](#fn-negate) (numerical negation) function must be used: `~5`. However, implementations are free to parse this as the number `-5`, as it has the same effect.
 
 It is **undefined behaviour** for an integer literals to be larger than the [maximum required size](#integer).
 
@@ -150,24 +150,30 @@ Implementations are required to support variable names of at most 127 characters
 For those familiar with regex, variables are `/[a-z_][a-z_0-9]*/`.
 
 ## Functions {#parsing-functions}
-In Knight, there are two different styles of functions: symbolic and word-based functions. In both cases, the function is uniquely identified by its first character; the distinction merely determines how the function name is parsed.
+In Knight, there are two different styles of functions: symbolic and word-based. In both cases, the function is uniquely identified by its first character; the distinction merely determines how the name is parsed.
 
-Word-based functions start with a single uppercase letter, such as `I` for `IF` or `R` for `RANDOM`, and may contain any amount of upper case letters and `_` afterwards. This means that `R`, `RAND`, `RANDOM`, `RAND_INT`, `RAND_OM_NUMBER` `R___`, etc. are all the same function—the `R` function.
+Word-based functions start with a single uppercase letter (ie `A` (`0x41`) through `Z` (`0x5a`)), such as `I` for `IF` or `R` for `RANDOM`, and may contain any amount of upper case letters and `_` (`0x5f`) afterwards. This means that `R`, `RAND`, `RANDOM`, `RAND_INT`, `RAND_OM_NUMBER` `R___`, etc. are all the same function—the `R` function.
 
 In contrast, symbolic functions are functions that are a single symbol, such as `;` or `%`. Unlike word-based functions, they should not consume additional characters following them. The character stream `+++` should be parsed identically to `+ + +`—three separate addition functions.
 
-Every function has a predetermined arity: There are no variadic functions. After parsing a function's name, an amount of expressions corresponding to that function's arity should be parsed: For example, after parsing a `+`, two expressions must be parsed, such as `+ 1 2`. It is **undefined behaviour** for a program to contain fewer expressions than are required for the function. While not necessary, it's recommended to provide some form of error message (if it's easy to implement), such as `missing argument 2 for '+'`, or even `missing an argument`.
+Every function has a predetermined arity: There are no variadic functions. After parsing a function's name, an amount of expressions corresponding to that function's arity should be parsed: For example, after parsing a `+`, two expressions must be parsed, such as `+ 1 2`. It is **undefined behaviour** for a program to contain fewer expressions than are required for the function. While not necessary, it's recommended to provide some form of error message (if easy to implement), such as `line 10: missing argument 2 for '+'`, or even `missing an argument for '+'`.
 
-The list of required functions are as follows. Implementations may define additional symbolic or keyword-based functions as desired. (For details on what individual functions mean, see [`Semantics`](functions).)
+The list of required functions are as follows. Implementations may define additional symbolic or keyword-based functions if desired.
 
-- Arity `0`: `TRUE`, `FALSE`, `NULL`, `@`, `PROMPT`, `RANDOM`
-- Arity `1`: `:`, `BLOCK`, `CALL`, `QUIT`, `DUMP`, `OUTPUT`, `ASCII`, `LENGTH`, `!`, `~`, `,`, `[`, `]`
-- Arity `2`: `+`, `-`, `*`, `/`, `%`, `^`, `<`, `>`, `?`, `&`, `|`, `;`, `=`, `WHILE`
-- Arity `3`: `IF`, `GET`
-- Arity `4`: `SET`
+- Arity `0`: [`TRUE`](#fn-true), [`FALSE`](#fn-false), [`NULL`](#fn-null), [`@`](#fn-empty-list),
+             [`PROMPT`](#fn-prompt), [`RANDOM`](#fn-random)
+- Arity `1`: [`:`](#fn-noop), [`BLOCK`](#fn-block), [`CALL`](#fn-call), [`QUIT`](#fn-quit),
+             [`DUMP`](#fn-dump), [`OUTPUT`](#fn-output), [`LENGTH`](#fn-length), [`!`](#fn-not),
+             [`~`](#fn-negate), [`ASCII`](#fn-ascii), [`,`](#fn-box), [`[`](#fn-head), [`]`](#fn-tail)
+- Arity `2`: [`+`](#fn-add), [`-`](#fn-subtract), [`*`](#fn-multiply), [`/`](#fn-divide),
+             [`%`](#fn-remainder), [`^`](#fn-power), [`<`](#fn-less-than), [`>`](#fn-greater-than),
+             [`?`](#fn-equals), [`&`](#fn-and), [`|`](#fn-or), [`;`](#fn-then), [`=`](#fn-assign),
+             [`WHILE`](#fn-while)
+- Arity `3`: [`IF`](#fn-if), [`GET`](#fn-get)
+- Arity `4`: [`SET`](#fn-set)
 
 ### Boolean/Null/Empty list Literals
-Short note on `TRUE`/`FALSE`/`NULL`/`@`: As they are functions that take no arguments, simply return a value (true, false, null, and an empty list, respectively), they can be instead interpreted as literals. That is, there's no functional difference between parsing `TRUE` as a function, and then executing that function and parsing `TRUE` as a boolean literal.
+Short note on the `TRUE`/`FALSE`/`NULL`/`@` functions: As they are functions that take no arguments and simply return a value (true, false, null, and an empty list, respectively), they can be instead interpreted as literals. That is, there's no functional difference between parsing `TRUE` as a function that returns `true` when executed and parsing `TRUE` simply as the true value.
 
 ### Implementation-Defined Functions
 Implementations may define their own functions, as long as they start with an upper-case letter or a symbol. Note that the `X` function name is explicitly reserved for extensions. See [Extensions](#extensions) for more details.
@@ -175,7 +181,7 @@ Implementations may define their own functions, as long as they start with an up
 ## Parenthesis Groupings
 Because all Knight is a polish-notation language with only fixed-arity functions (see [Functions](#functions)), grouping is not at all required to make valid programs. But writing large Knight programs can get a bit difficult, as a single mistake can lead to the parser misinterpreting everything. So, as an aid, the left and right round parenthesis (`0x28` and `0x29`, i.e. `(` and `)`) can be used to enclose expressions. It is **undefined behaviour** for these parenthesis to not enclose a single expression.
 
-Since these parenthesis do not change the parsing of valid Knight programs, and don't affect the runtime in any way whatsoever, implementations _are free to treat them as whitespace_. These implementations will still run valid Knight programs correctly.
+Since these parenthesis do not change the parsing of valid Knight programs, and don't affect the runtime in any way whatsoever, implementations _are free to ignore them when parsing_. These implementations will still run valid Knight programs correctly.
 
 This requirement for valid Knight programs simply exists so that implementations that wish to do parenthesis checking won't accidentally reject valid programs. Here's some examples of programs:
 ```knight
@@ -219,34 +225,33 @@ Here's an example of a simple guessing game, and how it should be parsed:
 ```
 
 # Types
-Knight itself only has a handful of types—[`Integer`s](#todo), [`String`s](#todo), [`Boolean`s](#todo), [`Null`](#todo), [`List`s](#todo), and [`Block`s](#todo). Knight functions frequently perform coercion, converting their arguments from one type to another. As such, every type but `Block` have `integer`, `string`, `boolean`, and `list` coercions defined.
+Knight itself only has a handful of types—[Integer](#integer)s, [String](#string)s, [Boolean](#boolean)s, [Null](#null), [List](#list)s, and [Block](#block)s. Knight functions frequently perform coercion, converting their arguments from one type to another. As such, every type but Block have the **integer**, **string**, **boolean**, and **list** coercions defined.
 
 All types in Knight are **immutable**, including strings and lists.
 
 ## Coercions Overview
-Many functions in Knight have contexts defined on them: They will automatically coerce their arguments from one type to another. For example, [`OUTPUT`](#operator-output) always coerces its argument into a string.
+Many functions in Knight have contexts defined on them: They will automatically coerce their arguments from one type to another. For example, [`OUTPUT`](#fn-output) always coerces its argument into a string.
 
-The following is a rough overview of all the different conversions. See each type's Coercion section for more details. Note that the `Block` has no conversions defined whatsoever, and using it in any conversion contexts is **undefined behaviour**.
+The following is a rough overview of all the conversions. See each type's "Coercion" section for more details. Note that the `Block` has no conversions defined whatsoever, and using it in any conversion context is **undefined behaviour**.
 
 | Conversion From \ To | [Integer](#integer) | [String](#string) | [Boolean](#boolean) | [List](#list) |
 |----------------------|---------------------|-------------------|---------------------|---------------|
-| [Null](#null)        | `0`                 | empty string      | `false`             | empty list    |
-| [Integer](#integer)  | &lt;itself&gt;      | what you expect   | nonzero?       | digits (negate if negative) |
-| [String](#string)    | like C's `atoi`     | &lt;itself&gt;    | nonempty? | individual chars |
-| [Boolean](#boolean)  | `1` for true, `0` for false | `"true"` or `"false"`| &lt;itself&gt; | empty list for false, <br> boxed `TRUE` for true |
-| [List](#list)        | Length of list      | list [joined](#operator-join) by newline | nonempty? | &lt;itself&gt; |
+| [Null](#null)        | `0`                 | `""`      | `false`             | empty list    |
+| [Integer](#integer)  | _itself_      | what you expect   | nonzero?       | digits (negate digits if negative) |
+| [String](#string)    | &lt;like C's `atoi`&gt;     | _itself_    | nonempty? | individual chars |
+| [Boolean](#boolean) (false/true)  | `0`/`1` | `"false"`/`"true"` | _itself_ | empty list/boxed `TRUE` |
+| [List](#list)        | Length of list      | list [joined](#fn-power) by newline | nonempty? | _itself_ |
 
 ### Evaluation of Types
 All builtin types in Knight (i.e. Integer, String, Boolean, Null, and List) when evaluated, should return themselves. This is in contrast to variables and functions, which may return different values each time they're evaluated.
 
 ## Integer
-In Knight, only integral numbers exist—all functions which might return non-integral numbers are simply truncated (look at the the functions' respective definitions for details on what exactly truncation means in each case).
+In Knight, only integral numbers exist—all functions which might return non-integral numbers are simply truncated (look at each functions' respective definitions for details on what exactly truncation means in each case).
 
 ### Bounds {#integer-bounds}
 All implementations must be able to represent all integers within the range `-2147483648 .. 2147483647`, inclusive on both sides. (These are the bounds for 32-bit signed integers using 2's complement.) Implementations are free to support larger, and smaller integers (for example, by using a 64 bit integer), however this is the bare minimum.
 
 Note that all mathematical operations in Knight that would cause over/underflow for integers is considered **undefined behaviour**. This allows for implementations to freely use larger integer sizes and not have to worry about wraparounds.
-
 
 ### Contexts {#integer-contexts}
 (See [here](#contexts) for more details on contexts.)
@@ -259,7 +264,7 @@ Note that all mathematical operations in Knight that would cause over/underflow 
 ## String
 Strings in Knight are like strings in most other languages, albeit a bit simpler: They're immutable (like all types within Knight), and are _only_ required to be able to represent a [specific subset of ASCII](#required-encoding). Implementations are free to support more characters (e.g. all of ASCII, or Unicode), but this is not required.
 
-Note that, while fairly uncommon in practice, it still is **undefined behaviour** for Knight programs to attempt to create strings with a length larger than [the maximum value for integers](#integer-bounds). (Thus, `LENGTH string` will always have a well-defined result.)
+Note that, while fairly uncommon in practice, it is **undefined behaviour** for Knight programs to attempt to create strings with a length larger than [the maximum value for integers](#integer-bounds). (Thus, `LENGTH string` will always have a well-defined result.)
 
 ### Contexts {#string-contexts}
 (See [here](#contexts) for more details on contexts.)
@@ -297,7 +302,7 @@ The `null` type is used to indicate the absence of a value within Knight, and is
 ## List
 Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists and entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, lists are ordered.
 
-Note that, while fairly uncommon in practice, it still is **undefined behaviour** for Knight programs to attempt to create lists with a length larger than [the maximum value for integers](#integer-bounds). (Thus, `LENGTH list` will always have a well-defined result.)
+Note that, while fairly uncommon in practice, it is **undefined behaviour** for Knight programs to attempt to create lists with a length larger than [the maximum value for integers](#integer-bounds). (Thus, `LENGTH list` will always have a well-defined result.)
 
 ### Contexts {#list-contexts}
 (See [here](#contexts) for more details on contexts.)
@@ -714,7 +719,7 @@ Examples:
 ^ (+@123) "!" # "1!2!3"
 ```
 
-### `<(unchanged, coerced)` {#op-less-than}
+### `<(unchanged, coerced)` {#fn-less-than}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: Coerces the second argument to an integer, then returns whether the first is smaller than the second.
@@ -740,13 +745,13 @@ Examples:
 < +@13 ,2  # => false, 1 < 2
 ```
 
-### `>(unchanged, coerced)` {#op-greater-than}
-This is exactly the same as [`<`](#op-less-than), except for operands reversed, i.e. `> a b` should return the same value as `< b a` (barring the fact that `a` should be evaluated before `b`).
+### `>(unchanged, coerced)` {#fn-greater-than}
+This is exactly the same as [`<`](#fn-less-than), except for operands reversed, i.e. `> a b` should return the same value as `< b a` (barring the fact that `a` should be evaluated before `b`).
 
 Examples:
-See [`<`](#op-less-than).
+See [`<`](#fn-less-than).
 
-### `?(unchanged, unchanged)` {#op-equals}
+### `?(unchanged, unchanged)` {#fn-equals}
 Unlike nearly every other function in Knight, this one does not automatically coerced its arguments—instead, it checks to see if arguments are the same type _and_ value. For example, `1` is equivalent to neither `"1"` nor `TRUE`.
 
 This function is only valid for the "basic types" (`Integer`, `String`, `Boolean`, `Null`, and `List`). Notably, it is **undefined behaviour** for either argument to be a `Block`.
@@ -761,7 +766,7 @@ Examples:
 ? ,@ ,,@     # => false
 ```
 
-### `&(unchanged, unevaluated)` {#op-and}
+### `&(unchanged, unevaluated)` {#fn-and}
 This function acts similar to `&&` in some loosely-typed languages: If the first argument (after being evaluated) is falsey, it's returned directly. However, if it's truthy, the second argument is evaluated and returned.
 
 Unlike most functions, `Block`s can be passed as the second argument to `&`.
@@ -774,8 +779,8 @@ Examples:
 & @ 4          # => @
 ```
 
-### `|(unchanged, unevaluated)` {#op-or}
-Like [`&`](#op-and) and `&&`, this function acts similar to `||` in some loosely-typed languages: If the first argument (after being evaluated) is truthy, it's returned directly. However, if it's falsey, the second argument is evaluated and returned.
+### `|(unchanged, unevaluated)` {#fn-or}
+Like [`&`](#fn-and) and `&&`, this function acts similar to `||` in some loosely-typed languages: If the first argument (after being evaluated) is truthy, it's returned directly. However, if it's falsey, the second argument is evaluated and returned.
 
 Unlike most functions, `Block`s can be passed as the second argument to `|`.
 
@@ -789,7 +794,7 @@ Examples:
 
 This is one of the few functions that `Block`s can be used, albeit in `|` only as the second argument.
 
-### `;(unchanged, unchanged)` {#op-then}
+### `;(unchanged, unchanged)` {#fn-then}
 This function simply returns its second argument (after evaluating them both, as per the `unchanged` context). Its entire purpose is to act as a "sequencing" function, where the first argument's value can be discarded.
 
 Unlike most functions, `Block`s can be passed as either argument to `;`.
@@ -810,7 +815,7 @@ OUTPUT ; = x 3 x # also prints 3
 : OUTPUT prod #=> prints out 3628800
 ```
 
-### `=(unevaluated, unchanged)` {#op-assign}
+### `=(unevaluated, unchanged)` {#fn-assign}
 It is **undefined behaviour** for the first argument not to be a [Variable](#variable). (However, see the entirely optional [assign to anything](#ext-assign-to-anything) extension.)
 
 This function evaluates the second argument, and then both assigns it to the variable in the first argument and returns it. This is the only way to update variables within Knight.
@@ -823,7 +828,7 @@ Examples:
 = "a" 4     # undefined, `"a"` isnt a variable
 ```
 
-### `WHILE(unevaluated, unevaluated)` {#op-while}
+### `WHILE(unevaluated, unevaluated)` {#fn-while}
 This function should continuously evaluate the second argument as long as the first argument evaluates to a truthy value. The return value of `WHILE` is always `NULL`. 
 
 Note that, unlike most programming languages, Knight does not have a builtin way to "`continue`" or "`break`" from a loop; instead, you must change the condition to false. See the second example.
@@ -853,7 +858,7 @@ Examples:
 ```
 
 ## Ternary (Arity 3)
-### `IF(boolean, unevaluated, unevaluated)` {#op-if}
+### `IF(boolean, unevaluated, unevaluated)` {#fn-if}
 If the first argument is `true`, this function will evaluate and return the second argument. If the first argument is `false`, it will evaluate and return the third argument.
 
 Unlike most functions, `Block`s can be passed as either the second or third argument to `IF`.
@@ -866,7 +871,7 @@ IF FALSE QUIT 1 "!"        # => "!"; it wont quit.
 IF "0" TRUE QUIT 1         # => true
 ```
 
-### `GET(unchanged, integer, integer)` {#op-get}
+### `GET(unchanged, integer, integer)` {#fn-get}
 The return value of this function depends on its first argument's type:
 
 - **`String`**: Returns a substring starting at the second argument with a length of the third argument. Indexing starts at `0`. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the string.
@@ -897,7 +902,7 @@ GET (+@12345) 1 ~1 # => undefined, negative length
 ```
 
 ## Quaternary (Arity 4)
-### `SET(unchanged, integer, integer, coerce)` {#op-set}
+### `SET(unchanged, integer, integer, coerce)` {#fn-set}
 The return value of this function depends on its first argument's type:
 
 - **`String`**: Returns a new string where the substring of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a string.. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the string.
