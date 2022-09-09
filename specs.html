@@ -1,0 +1,2050 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>body {
+  max-width: 980px;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 45px;
+}
+
+@font-face {
+  font-family: fontawesome-mini;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+.markdown-body {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body mark {
+  background: #ff0;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-body sup {
+  top: -0.5em;
+}
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body .codehilitetable,
+.markdown-body .highlighttable {
+  border: 0;
+  border-spacing: 0;
+}
+
+.markdown-body .codehilitetable tr,
+.markdown-body .highlighttable {
+  border: 0;
+}
+
+.markdown-body .codehilitetable pre,
+.markdown-body .codehilitetable div.codehilite,
+.markdown-body .highlighttable pre,
+.markdown-body .highlighttable div.highlight {
+  margin: 0;
+}
+
+.markdown-body .linenos,
+.markdown-body .code,
+.markdown-body .codehilitetable td,
+.markdown-body .highlighttable td {
+  border: 0;
+  padding: 0;
+}
+
+.markdown-body td:not(.linenos) .linenodiv {
+  padding: 0 !important;
+}
+
+.markdown-body .code {
+  width: 100%;
+}
+
+.markdown-body .linenos div pre,
+.markdown-body .linenodiv pre,
+.markdown-body .linenodiv {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.markdown-body .code div pre,
+.markdown-body .code div {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before,
+.markdown-body hr:after {
+  display: table;
+  content: " ";
+}
+
+.markdown-body hr:after {
+  clear: both;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .headerlink {
+  font: normal 400 16px fontawesome-mini;
+  vertical-align: middle;
+  margin-left: -16px;
+  float: left;
+  display: inline-block;
+  text-decoration: none;
+  opacity: 0;
+  color: #333;
+}
+
+.markdown-body .headerlink:focus {
+  outline: none;
+}
+
+.markdown-body h1 .headerlink {
+  margin-top: 0.8rem;
+}
+
+.markdown-body h2 .headerlink,
+.markdown-body h3 .headerlink {
+  margin-top: 0.6rem;
+}
+
+.markdown-body h4 .headerlink {
+  margin-top: 0.2rem;
+}
+
+.markdown-body h5 .headerlink,
+.markdown-body h6 .headerlink {
+  margin-top: 0;
+}
+
+.markdown-body .headerlink:hover,
+.markdown-body h1:hover .headerlink,
+.markdown-body h2:hover .headerlink,
+.markdown-body h3:hover .headerlink,
+.markdown-body h4:hover .headerlink,
+.markdown-body h5:hover .headerlink,
+.markdown-body h6:hover .headerlink {
+  opacity: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body .admonition {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code,
+.markdown-body samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .codehilite,
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body .highlight pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+/* Admonition */
+.markdown-body .admonition {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #333;
+  padding: 10px 10px 10px 30px;
+}
+
+.markdown-body .admonition table {
+  color: #333;
+}
+
+.markdown-body .admonition p {
+  padding: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.markdown-body .admonition>.admonition-title {
+  color: #333;
+}
+
+.markdown-body .attention>.admonition-title {
+  color: #a6d796;
+}
+
+.markdown-body .caution>.admonition-title {
+  color: #d7a796;
+}
+
+.markdown-body .hint>.admonition-title {
+  color: #96c6d7;
+}
+
+.markdown-body .danger>.admonition-title {
+  color: #c25f77;
+}
+
+.markdown-body .question>.admonition-title {
+  color: #96a6d7;
+}
+
+.markdown-body .note>.admonition-title {
+  color: #d7c896;
+}
+
+.markdown-body .admonition:before,
+.markdown-body .attention:before,
+.markdown-body .caution:before,
+.markdown-body .hint:before,
+.markdown-body .danger:before,
+.markdown-body .question:before,
+.markdown-body .note:before {
+  font: normal normal 16px fontawesome-mini;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 1.5;
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.markdown-body .admonition:before {
+  content: "\f056\00a0";
+  color: 333;
+}
+
+.markdown-body .attention:before {
+  content: "\f058\00a0";
+  color: #a6d796;
+}
+
+.markdown-body .caution:before {
+  content: "\f06a\00a0";
+  color: #d7a796;
+}
+
+.markdown-body .hint:before {
+  content: "\f05a\00a0";
+  color: #96c6d7;
+}
+
+.markdown-body .danger:before {
+  content: "\f057\00a0";
+  color: #c25f77;
+}
+
+.markdown-body .question:before {
+  content: "\f059\00a0";
+  color: #96a6d7;
+}
+
+.markdown-body .note:before {
+  content: "\f040\00a0";
+  color: #d7c896;
+}
+
+.markdown-body .admonition::after {
+  content: normal;
+}
+
+.markdown-body .attention {
+  border-left: 6px solid #a6d796;
+}
+
+.markdown-body .caution {
+  border-left: 6px solid #d7a796;
+}
+
+.markdown-body .hint {
+  border-left: 6px solid #96c6d7;
+}
+
+.markdown-body .danger {
+  border-left: 6px solid #c25f77;
+}
+
+.markdown-body .question {
+  border-left: 6px solid #96a6d7;
+}
+
+.markdown-body .note {
+  border-left: 6px solid #d7c896;
+}
+
+.markdown-body .admonition>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body .admonition>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* progress bar*/
+.markdown-body .progress {
+  display: block;
+  width: 300px;
+  margin: 10px 0;
+  height: 24px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #ededed;
+  position: relative;
+  box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+.markdown-body .progress-label {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  width: 100%; margin: 0;
+  line-height: 24px;
+  color: #333;
+  text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+  -webkit-font-smoothing: antialiased !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.markdown-body .progress-bar {
+  height: 24px;
+  float: left;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #96c6d7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  background-size: 30px 30px;
+  background-image: -webkit-linear-gradient(
+    135deg, rgba(255, 255, 255, .4) 27%,
+    transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%,
+    transparent 77%, transparent
+  );
+  background-image: -moz-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -ms-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+}
+
+.markdown-body .progress-100plus .progress-bar {
+  background-color: #a6d796;
+}
+
+.markdown-body .progress-80plus .progress-bar {
+  background-color: #c6d796;
+}
+
+.markdown-body .progress-60plus .progress-bar {
+  background-color: #d7c896;
+}
+
+.markdown-body .progress-40plus .progress-bar {
+  background-color: #d7a796;
+}
+
+.markdown-body .progress-20plus .progress-bar {
+  background-color: #d796a6;
+}
+
+.markdown-body .progress-0plus .progress-bar {
+  background-color: #c25f77;
+}
+
+.markdown-body .candystripe-animate .progress-bar{
+  -webkit-animation: animate-stripes 3s linear infinite;
+  -moz-animation: animate-stripes 3s linear infinite;
+  animation: animate-stripes 3s linear infinite;
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@-moz-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05);
+}
+
+/* MultiMarkdown Critic Blocks */
+.markdown-body .critic_mark {
+  background: #ff0;
+}
+
+.markdown-body .critic_delete {
+  color: #c82829;
+  text-decoration: line-through;
+}
+
+.markdown-body .critic_insert {
+  color: #718c00 ;
+  text-decoration: underline;
+}
+
+.markdown-body .critic_comment {
+  color: #8e908c;
+  font-style: italic;
+}
+
+.markdown-body .headeranchor {
+  font: normal normal 16px fontawesome-mini;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.headeranchor:before {
+  content: '\e157';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 4px 0.25em -20px;
+  vertical-align: middle;
+}
+
+.markdown-body diagram-div, .markdown-body div.uml-sequence-diagram, .markdown-body, div.uml-flowchart {
+  overflow: auto;
+}
+
+/* Media */
+@media only screen and (min-width: 480px) {
+  .markdown-body {
+    font-size:14px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .markdown-body {
+    font-size:16px;
+  }
+}
+
+@media print {
+  .markdown-body * {
+    background: transparent !important;
+    color: black !important;
+    filter:none !important;
+    -ms-filter: none !important;
+  }
+
+  .markdown-body {
+    font-size:12pt;
+    max-width:100%;
+    outline:none;
+    border: 0;
+  }
+
+  .markdown-body a,
+  .markdown-body a:visited {
+    text-decoration: underline;
+  }
+
+  .markdown-body .headeranchor-link {
+    display: none;
+  }
+
+  .markdown-body a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  .markdown-body abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  .markdown-body .ir a:after,
+  .markdown-body a[href^="javascript:"]:after,
+  .markdown-body a[href^="#"]:after {
+    content: "";
+  }
+
+  .markdown-body pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .markdown-body pre,
+  .markdown-body blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
+  }
+
+  .markdown-body .progress,
+  .markdown-body .progress-bar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .markdown-body .progress {
+    border: 1px solid #ddd;
+  }
+
+  .markdown-body .progress-bar {
+    height: 22px;
+    border-right: 1px solid #ddd;
+  }
+
+  .markdown-body tr,
+  .markdown-body img {
+    page-break-inside: avoid;
+  }
+
+  .markdown-body img {
+    max-width: 100% !important;
+  }
+
+  .markdown-body p,
+  .markdown-body h2,
+  .markdown-body h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .markdown-body h2,
+  .markdown-body h3 {
+    page-break-after: avoid;
+  }
+}
+</style><style>/*GitHub*/
+.highlight {background-color:#fff;color:#333333;}
+.highlight .hll {background-color:#ffffcc;}
+.highlight .c{color:#999988;font-style:italic}
+.highlight .err{color:#a61717;background-color:#e3d2d2}
+.highlight .k{font-weight:bold}
+.highlight .o{font-weight:bold}
+.highlight .cm{color:#999988;font-style:italic}
+.highlight .cp{color:#999999;font-weight:bold}
+.highlight .c1{color:#999988;font-style:italic}
+.highlight .cs{color:#999999;font-weight:bold;font-style:italic}
+.highlight .gd{color:#000000;background-color:#ffdddd}
+.highlight .ge{font-style:italic}
+.highlight .gr{color:#aa0000}
+.highlight .gh{color:#999999}
+.highlight .gi{color:#000000;background-color:#ddffdd}
+.highlight .go{color:#888888}
+.highlight .gp{color:#555555}
+.highlight .gs{font-weight:bold}
+.highlight .gu{color:#800080;font-weight:bold}
+.highlight .gt{color:#aa0000}
+.highlight .kc{font-weight:bold}
+.highlight .kd{font-weight:bold}
+.highlight .kn{font-weight:bold}
+.highlight .kp{font-weight:bold}
+.highlight .kr{font-weight:bold}
+.highlight .kt{color:#445588;font-weight:bold}
+.highlight .m{color:#009999}
+.highlight .s{color:#dd1144}
+.highlight .n{color:#333333}
+.highlight .na{color:teal}
+.highlight .nb{color:#0086b3}
+.highlight .nc{color:#445588;font-weight:bold}
+.highlight .no{color:teal}
+.highlight .ni{color:purple}
+.highlight .ne{color:#990000;font-weight:bold}
+.highlight .nf{color:#990000;font-weight:bold}
+.highlight .nn{color:#555555}
+.highlight .nt{color:navy}
+.highlight .nv{color:teal}
+.highlight .ow{font-weight:bold}
+.highlight .w{color:#bbbbbb}
+.highlight .mf{color:#009999}
+.highlight .mh{color:#009999}
+.highlight .mi{color:#009999}
+.highlight .mo{color:#009999}
+.highlight .sb{color:#dd1144}
+.highlight .sc{color:#dd1144}
+.highlight .sd{color:#dd1144}
+.highlight .s2{color:#dd1144}
+.highlight .se{color:#dd1144}
+.highlight .sh{color:#dd1144}
+.highlight .si{color:#dd1144}
+.highlight .sx{color:#dd1144}
+.highlight .sr{color:#009926}
+.highlight .s1{color:#dd1144}
+.highlight .ss{color:#990073}
+.highlight .bp{color:#999999}
+.highlight .vc{color:teal}
+.highlight .vg{color:teal}
+.highlight .vi{color:teal}
+.highlight .il{color:#009999}
+.highlight .gc{color:#999;background-color:#EAF2F5}
+</style><title>specs</title></head><body><article class="markdown-body"><h1 id="official-knight-specifications-v20">Official Knight Specifications (v2.0)<a class="headerlink" href="#official-knight-specifications-v20" title="Permanent link"></a></h1>
+<h2 id="table-of-contents">Table of Contents<a class="headerlink" href="#table-of-contents" title="Permanent link"></a></h2>
+<ul>
+<li><a href="#overview">Overview</a><ul>
+<li><a href="#undefined-behaviour">Undefined Behaviour</a></li>
+</ul>
+</li>
+<li><a href="#syntax">Syntax</a><ul>
+<li><a href="#required-encoding">Required Encoding</a></li>
+<li><a href="#whitespace">Whitespace</a></li>
+<li><a href="#comments">Comments</a></li>
+<li><a href="#integer-literals">Integer Literals</a></li>
+<li><a href="#string-literals">String Literals</a></li>
+<li><a href="#parsing-variables">Variables</a></li>
+<li><a href="#parsing-functions">Functions</a></li>
+<li><a href="#parenthesis-groupings">Parenthesis Groupings</a></li>
+<li><a href="#parsing-example">Parsing Example</a></li>
+</ul>
+</li>
+<li><a href="#types">Types</a><ul>
+<li><a href="#coercions-overview">Context Overview</a></li>
+<li><a href="#integer">Integer</a></li>
+<li><a href="#string">String</a></li>
+<li><a href="#boolean">Boolean</a></li>
+<li><a href="#null">Null</a></li>
+<li><a href="#list">List</a></li>
+<li><a href="#block">Block</a></li>
+</ul>
+</li>
+<li><a href="#variables">Variables</a><ul>
+<li><a href="#variable-evaluation">Variable Evaluation</a></li>
+</ul>
+</li>
+<li><a href="#functions">Functions</a><ul>
+<li><a href="#evaluation-contexts">Evaluation Contexts</a></li>
+<li><a href="#nullary-fns">Nullary (Arity 0)</a></li>
+<li><a href="#unary-fns">Unary (Arity 1)</a></li>
+<li><a href="#binary-fns">Binary (Arity 2)</a></li>
+<li><a href="#ternary-fns">Ternary (Arity 3)</a></li>
+<li><a href="#quaternary-fns">Quaternary (Arity 4)</a></li>
+</ul>
+</li>
+<li><a href="#extensions">Extensions</a><ul>
+<li><a href="#ext-command-line-arguments">Command Line Arguments</a></li>
+<li><a href="#ext-handling-undefined-behaviour">Handling Undefined Behaviour</a></li>
+<li><a href="#ext-functions">Functions</a></li>
+<li><a href="#ext-syntactic-sugar">Syntactic Sugar</a></li>
+<li><a href="#ext-additional-types">Additional Types</a></li>
+<li><a href="#ext-changing-functionality">Changing Functionality</a></li>
+<li><a href="#ext-extensibility">Extensibility</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link"></a></h1>
+<p>Knight is a simple programing language, designed with the goal of being easily implementable in nearly any language. Since each language has a slightly different way of doing things, the Knight specs may leave some things up to the implementation. This allows each language to implement Knight in the most idiomatic way possible.</p>
+<h2 id="undefined-behaviour">Undefined Behaviour<a class="headerlink" href="#undefined-behaviour" title="Permanent link"></a></h2>
+<p>Throughout this document, there will be places where something is described as <strong>undefined behaviour</strong>. If undefined behaviour is ever encountered during the parsing or execution of a Knight program, then the entire program is invalid; implementations may do whatever they want (including ignoring the error, segfaulting, custom extension behaviour, etc.).</p>
+<p>Some forms of undefined behaviour may be easier to check than others depending on the implementation language. For example, most implementations should be able to detect a division-by-zero error (e.g. by an exception being thrown). However, it may be more impossible to detect standard out being closed (such as in brainf*ck). Implementations are encouraged, but not required, to handle easily-checked undefined behaviour.</p>
+<p>To reiterate, <strong>if undefined behaviour is encountered at any point during the parsing or execution of a Knight program, the entire program is ill-defined, and implementations may do whatever they want.</strong></p>
+<h1 id="syntax">Syntax<a class="headerlink" href="#syntax" title="Permanent link"></a></h1>
+<p>Knight is a Polish-Notation (PN) language: Instead of the traditional &ldquo;infix notation&rdquo; (e.g. <code>output(1 + 2 * 4)</code>), functions come <em>before</em> their arguments (e.g. <code>OUTPUT + 1 * 2 4</code>).</p>
+<p>Knight also does not have a distinction between statements and expressions. Every function in Knight returns a value, which is then usable in other functions. So, instead of the c-style syntax of
+<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">output</span><span class="p">(</span><span class="s">&quot;hi&quot;</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">output</span><span class="p">(</span><span class="s">&quot;bye&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+Knight allows you to utilize the return value of <code>IF</code>:
+<div class="highlight"><pre>OUTPUT IF &lt; x 3 &quot;hi&quot; &quot;bye&quot;
+</pre></div></p>
+<p>Each Knight program is a single expression expression—such as <code>OUTPUT 3</code>, <code>; (= a 4) (OUTPUT (+ "a=" a))</code>, etc. Any additional tokens after this first expression (i.e. anything other than <a href="#whitespace">whitespace</a> and <a href="#comments">comments</a>) is <strong>undefined behaviour</strong>. </p>
+<h2 id="required-encoding">Required Encoding<a class="headerlink" href="#required-encoding" title="Permanent link"></a></h2>
+<p>To make Knight implementable in most languages, only the following subset of ASCII characters is required to be supported. Implementations may support a superset of this (for example, all of ASCII or Unicode), but this is not required.
+<div class="highlight"><pre>    [tab] [newline] [carriage return] [space] 
+      ! &quot; # $ % &amp; &#39; ( ) * + , - . /
+    0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ?
+    @ A B C D E F G H I J K L M N O
+    P Q R S T U V W X Y Z [ \ ] ^ _
+    ` a b c d e f g h i j k l m n o
+    p q r s t u v w x y z { | } ~
+</pre></div>
+It is <strong>undefined behaviour</strong> for any character not in this list to appear anywhere within Knight source code (including within <a href="#comments">comments</a>) and <a href="#string">string</a>s (including those returned from <a href="#fn-prompt"><code>PROMPT</code></a>). Again, implementations are free to support more than this, but this is the bare minimum.</p>
+<h2 id="whitespace">Whitespace<a class="headerlink" href="#whitespace" title="Permanent link"></a></h2>
+<p>Due to the nature of Knight&rsquo;s syntax, whitespace isn&rsquo;t always necessary. For example, <code>OUTPUT1</code> should be parsed as two tokens, <code>OUTPUT</code> and <code>1</code>. However, there are some times that whitespace is needed in order to distinguish different tokens (such as between two identifiers).</p>
+<p>Implementations are required to recognize a minimum of the following characters as whitespace:</p>
+<ul>
+<li>Tab (<code>0x09</code>, i.e. <code>\t</code>)</li>
+<li>Newline (<code>0x0a</code>, i.e. <code>\n</code>)</li>
+<li>Carriage return (<code>0x0d</code>, i.e. <code>\r</code>)</li>
+<li>Space (<code>0x20</code>, i.e. a space—<code></code>)</li>
+</ul>
+<h3 id="other-whitespace">Interpreting <code>(</code>, <code>)</code>, and <code>:</code> as whitespace<a class="headerlink" href="#other-whitespace" title="Permanent link"></a></h3>
+<p>While not defined as whitespace, implementations are free to ignore <code>(</code>, <code>)</code>, and <code>:</code> in source files. This is because for valid knight programs, <code>(</code> and <code>)</code> do nothing (see <a href="#parenthesis-groupings">Parenthesis Groupings</a>), whereas <a href="#fn-noop"><code>:</code></a> is a function that simply returns its argument, and so could always be omitted.</p>
+<h2 id="comments">Comments<a class="headerlink" href="#comments" title="Permanent link"></a></h2>
+<p>Comments in Knight start with pound sign (<code>0x23</code>, i.e. <code>#</code>) and go until either a newline character (<code>0x0a</code>, i.e. <code>\n</code>) or end of file is encountered. Everything after the <code>#</code> should be ignored by the parser. There are no multiline or embedded comments in Knight.</p>
+<p>As mentioned in the <a href="#required-encoding">the required encoding section</a>, it&rsquo;s <strong>undefined behaviour</strong> for comments to contain illegal characters. However, like all other undefined behaviour in Knight, implementations are free to define their own behaviour when it is encountered (and thus may allow non-knight-encoding characters in comments).</p>
+<p>For those familiar with regex, comments are <code>/#[^\n]*(\n|$)/</code>.</p>
+<h2 id="integer-literals">Integer Literals<a class="headerlink" href="#integer-literals" title="Permanent link"></a></h2>
+<p><a href="#integer">Integer</a> literals are simply a sequence of ASCII digits (i.e. <code>0</code> (<code>0x30</code>) through <code>9</code> (<code>0x39</code>)). Leading <code>0</code>s do not indicate octal integers (e.g. <code>011</code> is the number eleven, not nine). No other bases are supported, and only integral numbers are allowed. Note that, unlike most other languages, integers are allowed to be followed by any non-digit character. As such, <code>+1a</code> should be parsed as <code>+</code> then <code>1</code> then <code>a</code>.</p>
+<p>Like some languages, Knight doesn&rsquo;t have negative integer literals. Instead, the <a href="#fn-negate"><code>~</code></a> (numerical negation) function must be used: <code>~5</code>. However, implementations are free to parse this as the integer <code>-5</code>, as it has the same effect.</p>
+<p>It is <strong>undefined behaviour</strong> for an integer literals to be larger than the <a href="#integer-bounds">maximum required size</a>.</p>
+<p>For those familiar with regex, integers are <code>/[0-9]+/</code>.</p>
+<h2 id="string-literals">String Literals<a class="headerlink" href="#string-literals" title="Permanent link"></a></h2>
+<p><a href="#string">String</a> literals in Knight begin with with either a single quote (<code>0x27</code>, i.e. <code>'</code>) or a double quote (<code>0x22</code>, i.e. <code>"</code>). All characters are taken literally until the opening quote is encountered again. This means that there are no escape sequences within string literals; if you want a newline character, you will have to do:
+<div class="highlight"><pre>OUTPUT &quot;this is a newline:
+cool, right?&quot;
+</pre></div>
+Due to the lack of escape sequences, each string may only contain one of the two types of quotes (as the same quote again denotes the end of a string). There is no difference between single quoted or double quoted strings (asides from the fact that double quotes can appear in single-quoted strings and vice versa).</p>
+<p>It is <strong>undefined behaviour</strong> for string literals to not have a closing quote. While highly unlikely to be encountered in an actual program, it is also <strong>undefined behaviour</strong> for a string literal&rsquo;s length to exceed the <a href="#integer-bounds">maximum integer size</a>.</p>
+<p>For those familiar with regex, strings are <code>/'[^']*'|"[^"]*"/</code>.</p>
+<h2 id="parsing-variables">Variables<a class="headerlink" href="#parsing-variables" title="Permanent link"></a></h2>
+<p>In Knight, all <a href="#variables">variable</a>s are lower case (upper case letters are reserved for builtin functions). Variable names must start with an ASCII lower case letter (i.e. <code>a</code> (<code>0x61</code>) through <code>z</code> (<code>0x7a</code>)) or an underscore (<code>_</code> (<code>0x5f</code>)). After the initial letter, variable names may optionally include lower case letters, underscores, or ASCII digits (i.e. <code>0</code> (<code>0x30</code>) through <code>9</code> (<code>0x39</code>)). Note that since upper case letters are not a part of variable names, they&rsquo;re allowed to immediately follow variables. <code>+aRANDOM</code> should be parsed as <code>+</code>, <code>a</code>, and <code>RANDOM</code>.</p>
+<p>Implementations are required to support variable names of at most 127 characters, although they may choose to allow longer variable names.</p>
+<p>For those familiar with regex, variables are <code>/[a-z_][a-z_0-9]*/</code>.</p>
+<h2 id="parsing-functions">Functions<a class="headerlink" href="#parsing-functions" title="Permanent link"></a></h2>
+<p>In Knight, there are two different styles of functions: symbolic and word-based. In both cases, the function is uniquely identified by its first character; the distinction merely determines how the name is parsed.</p>
+<p>Word-based functions start with a single uppercase letter (ie <code>A</code> (<code>0x41</code>) through <code>Z</code> (<code>0x5a</code>)), such as <code>I</code> for <code>IF</code> or <code>R</code> for <code>RANDOM</code>, and may contain any amount of upper case letters and <code>_</code> (<code>0x5f</code>) afterwards. This means that <code>R</code>, <code>RAND</code>, <code>RANDOM</code>, <code>RAND_INT</code>, <code>RAND_OM_NUMBER</code> <code>R___</code>, etc. are all the same function—the <code>R</code> function.</p>
+<p>In contrast, symbolic functions are functions that are a single symbol, such as <code>;</code> or <code>%</code>. Unlike word-based functions, they should not consume additional characters following them. The character stream <code>+++</code> should be parsed identically to <code>+ + +</code>—three separate addition functions.</p>
+<p>Every function has a predetermined arity: There are no variadic functions. After parsing a function&rsquo;s name, an amount of expressions corresponding to that function&rsquo;s arity should be parsed: For example, after parsing a <code>+</code>, two expressions must be parsed, such as <code>+ 1 2</code>. It is <strong>undefined behaviour</strong> for a program to contain fewer expressions than are required for the function. While not necessary, it&rsquo;s recommended to provide some form of error message (if easy to implement), such as <code>line 10: missing argument 2 for '+'</code>, or even <code>missing an argument for '+'</code>.</p>
+<p>The list of required functions are as follows. Implementations may define additional symbolic or keyword-based functions if desired.</p>
+<ul>
+<li>Arity <code>0</code>: <a href="#fn-true"><code>TRUE</code></a>, <a href="#fn-false"><code>FALSE</code></a>, <a href="#fn-null"><code>NULL</code></a>, <a href="#fn-empty-list"><code>@</code></a>,
+             <a href="#fn-prompt"><code>PROMPT</code></a>, <a href="#fn-random"><code>RANDOM</code></a></li>
+<li>Arity <code>1</code>: <a href="#fn-noop"><code>:</code></a>, <a href="#fn-block"><code>BLOCK</code></a>, <a href="#fn-call"><code>CALL</code></a>, <a href="#fn-quit"><code>QUIT</code></a>,
+             <a href="#fn-dump"><code>DUMP</code></a>, <a href="#fn-output"><code>OUTPUT</code></a>, <a href="#fn-length"><code>LENGTH</code></a>, <a href="#fn-not"><code>!</code></a>,
+             <a href="#fn-negate"><code>~</code></a>, <a href="#fn-ascii"><code>ASCII</code></a>, <a href="#fn-box"><code>,</code></a>, <a href="#fn-head"><code>[</code></a>, <a href="#fn-tail"><code>]</code></a></li>
+<li>Arity <code>2</code>: <a href="#fn-add"><code>+</code></a>, <a href="#fn-subtract"><code>-</code></a>, <a href="#fn-multiply"><code>*</code></a>, <a href="#fn-divide"><code>/</code></a>,
+             <a href="#fn-remainder"><code>%</code></a>, <a href="#fn-power"><code>^</code></a>, <a href="#fn-less-than"><code>&lt;</code></a>, <a href="#fn-greater-than"><code>&gt;</code></a>,
+             <a href="#fn-equals"><code>?</code></a>, <a href="#fn-and"><code>&amp;</code></a>, <a href="#fn-or"><code>|</code></a>, <a href="#fn-then"><code>;</code></a>, <a href="#fn-assign"><code>=</code></a>,
+             <a href="#fn-while"><code>WHILE</code></a></li>
+<li>Arity <code>3</code>: <a href="#fn-if"><code>IF</code></a>, <a href="#fn-get"><code>GET</code></a></li>
+<li>Arity <code>4</code>: <a href="#fn-set"><code>SET</code></a></li>
+</ul>
+<h3 id="literal-functions">Literal Functions<a class="headerlink" href="#literal-functions" title="Permanent link"></a></h3>
+<p>Short note on the <code>TRUE</code>/<code>FALSE</code>/<code>NULL</code>/<code>@</code> functions: As they are functions that take no arguments and simply return a value (true, false, null, and an empty list, respectively), they can be instead interpreted as literals. That is, there&rsquo;s no functional difference between parsing <code>TRUE</code> as a function that returns <code>true</code> when executed and parsing <code>TRUE</code> simply as the true value.</p>
+<h3 id="implementation-defined-functions">Implementation-Defined Functions<a class="headerlink" href="#implementation-defined-functions" title="Permanent link"></a></h3>
+<p>Implementations may define their own functions, as long as they start with an upper-case letter or a symbol. Note that the <code>X</code> function name is explicitly reserved for extensions. See <a href="#extensions">Extensions</a> for more details.</p>
+<h2 id="parenthesis-groupings">Parenthesis Groupings<a class="headerlink" href="#parenthesis-groupings" title="Permanent link"></a></h2>
+<p>Because all Knight is a polish-notation language with only fixed-arity functions (see <a href="#functions">Functions</a>), grouping is not at all required to make valid programs. But writing large Knight programs can get a bit difficult, as a single mistake can lead to the parser misinterpreting everything. So, as an aid, the left and right round parenthesis (<code>0x28</code> and <code>0x29</code>, i.e. <code>(</code> and <code>)</code>) can be used to enclose expressions. It is <strong>undefined behaviour</strong> for these parenthesis to not enclose a single expression.</p>
+<p>Since these parenthesis do not change the parsing of valid Knight programs, and don&rsquo;t affect the runtime in any way whatsoever, implementations <em>are free to ignore them when parsing</em>. These implementations will still run valid Knight programs correctly.</p>
+<p>This requirement for valid Knight programs simply exists so that implementations that wish to do parenthesis checking won&rsquo;t accidentally reject valid programs. Here&rsquo;s some examples of programs:
+<div class="highlight"><pre>OUTPUT * a 2         # legal, no parens
+(OUTPUT * a 2)       # legal, parens are valid
+(OUTPUT (* (a) (2))) # legal, parens are valid
+OUTPUT * ((((a)))) 2 # legal, parens can nest.
+= (a) 4              # legal, identifiers here are no different
+
+OUTPUT (* a 2  # illegal, mismatched parens
+OUTPUT (*) a 2 # illegal, not enclosing a single expression
+OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
+</pre></div></p>
+<h2 id="parsing-example">Parsing Example<a class="headerlink" href="#parsing-example" title="Permanent link"></a></h2>
+<p>Here&rsquo;s an example of a simple guessing game, and how it should be parsed:
+<div class="highlight"><pre># Simple guessing game
+; = secret RANDOM
+; = guess + 0 PROMPT
+  OUTPUT IF (? secret guess) &quot;correct!&quot; &quot;wrong!&quot;
+</pre></div>
+<div class="highlight"><pre>[;]
+ ├──[=]
+ │   ├──[secret]
+ │   └──[RANDOM]
+ └──[;]
+     ├──[=]
+     │   ├──[guess]
+     │   └──[+]
+     │       ├──[0]
+     │       └──[PROMPT]
+     └──[OUTPUT]
+         └──[IF]
+             ├──[?]
+             │   ├──[secret]
+             │   └──[guess]
+             ├──[&quot;correct!&quot;]
+             └──[&quot;wrong!&quot;]
+</pre></div></p>
+<h1 id="types">Types<a class="headerlink" href="#types" title="Permanent link"></a></h1>
+<p>Knight itself only has a handful of types—<a href="#integer">Integer</a>s, <a href="#string">String</a>s, <a href="#boolean">Boolean</a>s, <a href="#null">Null</a>, <a href="#list">List</a>s, and <a href="#block">Block</a>s. Knight functions frequently perform coercion, converting their arguments from one type to another. As such, every type but Block have the <strong>integer</strong>, <strong>string</strong>, <strong>boolean</strong>, and <strong>list</strong> coercions defined.</p>
+<p>All types in Knight are <strong>immutable</strong>, including strings and lists.</p>
+<h2 id="context-overview">Context Overview<a class="headerlink" href="#context-overview" title="Permanent link"></a></h2>
+<p>Many functions in Knight have contexts defined on them: They will automatically coerce their arguments from one type to another. For example, <a href="#fn-output"><code>OUTPUT</code></a> always coerces its argument into a string.</p>
+<p>The following is a rough overview of all the conversions. See each type&rsquo;s &ldquo;Coercion&rdquo; section for more details. Note that the <code>Block</code> has no conversions defined whatsoever, and using it in any conversion context is <strong>undefined behaviour</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Conversion From \ To</th>
+<th><a href="#integer">Integer</a></th>
+<th><a href="#string">String</a></th>
+<th><a href="#boolean">Boolean</a></th>
+<th><a href="#list">List</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#null">Null</a></td>
+<td><code>0</code></td>
+<td><code>""</code></td>
+<td><code>false</code></td>
+<td>empty list</td>
+</tr>
+<tr>
+<td><a href="#integer">Integer</a></td>
+<td><em>itself</em></td>
+<td>what you expect</td>
+<td>nonzero?</td>
+<td>digits (negate digits if negative)</td>
+</tr>
+<tr>
+<td><a href="#string">String</a></td>
+<td>&lt;like C&rsquo;s <code>atoi</code>&gt;</td>
+<td><em>itself</em></td>
+<td>nonempty?</td>
+<td>individual chars</td>
+</tr>
+<tr>
+<td><a href="#boolean">Boolean</a> (false/true)</td>
+<td><code>0</code>/<code>1</code></td>
+<td><code>"false"</code>/<code>"true"</code></td>
+<td><em>itself</em></td>
+<td>empty list/boxed <code>TRUE</code></td>
+</tr>
+<tr>
+<td><a href="#list">List</a></td>
+<td>Length of list</td>
+<td>list <a href="#fn-power">joined</a> by newline</td>
+<td>nonempty?</td>
+<td><em>itself</em></td>
+</tr>
+</tbody>
+</table>
+<h2 id="evaluation-of-types">Evaluation of Types<a class="headerlink" href="#evaluation-of-types" title="Permanent link"></a></h2>
+<p>All builtin types in Knight (i.e. Integer, String, Boolean, Null, and List) when evaluated, should return themselves. This is in contrast to variables and functions, which may return different values each time they&rsquo;re evaluated.</p>
+<h2 id="integer">Integer<a class="headerlink" href="#integer" title="Permanent link"></a></h2>
+<p>In Knight, only integral numbers exist—all functions which might return non-integral numbers are simply truncated (look at each functions&rsquo; respective definitions for details on what exactly truncation means in each case).</p>
+<h3 id="integer-bounds">Minimum Required Bounds<a class="headerlink" href="#integer-bounds" title="Permanent link"></a></h3>
+<p>All implementations must be able to represent all integers within the range <code>-2147483648 .. 2147483647</code>, inclusive on both sides. (These are the bounds for 32-bit signed integers using 2&rsquo;s complement.) Implementations are free to support larger, and smaller integers (for example, by using a 64 bit integer), however this is the bare minimum.</p>
+<p>Note that all mathematical operations in Knight that would cause over/underflow for integers is considered <strong>undefined behaviour</strong>. This allows for implementations to freely use larger integer sizes and not have to worry about wraparounds.</p>
+<h3 id="integer-contexts">Contexts<a class="headerlink" href="#integer-contexts" title="Permanent link"></a></h3>
+<p>(See <a href="#evaluation-contexts">here</a> for more details on contexts.)</p>
+<ul>
+<li><strong>integer</strong>: In integer contexts, the integer itself is simply returned.</li>
+<li><strong>string</strong>: In string contexts, integers are converted to their base-10 representation. Negative integers should have a <code>-</code> prepended to the beginning of the string (positive integers shouldn&rsquo;t get <code>+</code>). For example, <code>0 -&gt; "0"</code>, <code>123 -&gt; "123"</code>, and <code>~12 -&gt; "-12"</code>.</li>
+<li><strong>boolean</strong>: In boolean contexts, zero becomes <code>false</code>, and all other integers (ie nonzero) become <code>true</code>.</li>
+<li><strong>list</strong>: In list contexts, the digits of the integer should be returned in ascending order. If the integer is negative, each digit should become negated as well. For example, <code>+@123</code> would return a list of <code>1</code>, then <code>2</code>, then <code>3</code>, whereas <code>+@~123</code> would return a list of <code>-1</code>, <code>-2</code>, and <code>-3</code>.</li>
+</ul>
+<h2 id="string">String<a class="headerlink" href="#string" title="Permanent link"></a></h2>
+<p>Strings in Knight are like strings in most other languages, albeit a bit simpler: They&rsquo;re immutable (like all types within Knight), and are <em>only</em> required to be able to represent a <a href="#required-encoding">specific subset of ASCII</a>. Implementations are free to support more characters (e.g. all of ASCII, or Unicode), but this is not required.</p>
+<p>While rare in practice, it is <strong>undefined behaviour</strong> for Knight programs to attempt to create strings with a length larger than <a href="#integer-bounds">the maximum value for integers</a>. (Thus, <code>LENGTH string</code> will always have a well-defined result.)</p>
+<h3 id="string-contexts">Contexts<a class="headerlink" href="#string-contexts" title="Permanent link"></a></h3>
+<p>(See <a href="#evaluation-contexts">here</a> for more details on contexts.)</p>
+<ul>
+<li><strong>integer</strong>: (This is roughly equivalent to C&rsquo;s <code>atoi</code>). To convert a string to an integer, the following is done: (1) strip all leading <a href="#whitespace">whitespace</a>, (2) an optional <code>+</code> or <code>-</code> may occur (3) take as many ascii digits as possible, stopping at the first non-digit or end of string. Interpret those digits as a string literal, negating it if <code>-</code> occurred. If no digits are found, return zero. In regex terms, this is <code>/^\s*([-+?\d*)/</code>. Note that if the resulting integer is out of bounds for what the integer type can handle, it is <strong>undefined behaviour</strong>.</li>
+<li><strong>string</strong>: In string contexts, the string itself is returned.</li>
+<li><strong>boolean</strong>: In boolean contexts, only empty strings are <code>false</code>. All other strings (ie nonempty) are <code>true</code>, including things like <code>"0"</code>.</li>
+<li><strong>list</strong>: In list contexts, the characters of the string should be returned, with each element of the list being a string containing just that character. (For example, <code>+@"abc"</code> would return a list of <code>"a"</code> followed by <code>"b"</code> followed by <code>"c"</code>).</li>
+</ul>
+<h2 id="boolean">Boolean<a class="headerlink" href="#boolean" title="Permanent link"></a></h2>
+<p>The boolean type in Knight has two variants: <code>false</code> and <code>true</code>. These two values are used to indicate truthiness within Knight, and is the type that&rsquo;s converted to within boolean contexts.</p>
+<h3 id="boolean-contexts">Contexts<a class="headerlink" href="#boolean-contexts" title="Permanent link"></a></h3>
+<p>(See <a href="#evaluation-contexts">here</a> for more details on contexts.)</p>
+<ul>
+<li><strong>integer</strong>: In integer contexts, <code>false</code> becomes <code>0</code> and <code>true</code> becomes <code>1</code>.</li>
+<li><strong>string</strong>: In string contexts, <code>false</code> becomes <code>"false"</code> and <code>true</code> becomes <code>"true"</code>.</li>
+<li><strong>boolean</strong>: In boolean contexts, the boolean itself is simply returned.</li>
+<li><strong>list</strong>: In list contexts, <code>false</code> becomes an empty list and <code>true</code> becomes a list just containing <code>TRUE</code>. (i.e. <code>+@FALSE</code> is equivalent to <code>@</code>, whereas <code>+@TRUE</code> is equivalent to <code>,TRUE</code>).</li>
+</ul>
+<h2 id="null">Null<a class="headerlink" href="#null" title="Permanent link"></a></h2>
+<p>The <code>null</code> type is used to indicate the absence of a value within Knight, and is the return value of some function (such as <code>OUTPUT</code> and <code>WHILE</code>). While it does have conversions defined for all contexts, no conversions <em>into</em> <code>null</code> exist.</p>
+<h3 id="null-contexts">Contexts<a class="headerlink" href="#null-contexts" title="Permanent link"></a></h3>
+<p>(See <a href="#evaluation-contexts">here</a> for more details on contexts.)</p>
+<ul>
+<li><strong>integer</strong>: In integer contexts, null becomes <code>0</code>.</li>
+<li><strong>string</strong>: In string contexts, null becomes an <strong>empty string</strong> (notably, not <code>"null"</code>, as some languages do).</li>
+<li><strong>boolean</strong>: In boolean contexts, null becomes <code>false</code>.</li>
+<li><strong>list</strong>: In list contexts, null becomes an empty list.</li>
+</ul>
+<h2 id="list">List<a class="headerlink" href="#list" title="Permanent link"></a></h2>
+<p>Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists and entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, lists are ordered (e.g. <code>[list</code> should always give you the same element for nonempty lists).</p>
+<p>While rare in practice, it is <strong>undefined behaviour</strong> for Knight programs to attempt to create lists with a length larger than <a href="#integer-bounds">the maximum value for integers</a>. (Thus, <code>LENGTH list</code> will always have a well-defined result.)</p>
+<h3 id="list-contexts">Contexts<a class="headerlink" href="#list-contexts" title="Permanent link"></a></h3>
+<p>(See <a href="#evaluation-contexts">here</a> for more details on contexts.)</p>
+<ul>
+<li><strong>integer</strong>: In integer contexts, lists return their length.</li>
+<li><strong>string</strong>: In string contexts, lists should have their elements converted to a string, with a newline inserted between each element. (This is the same as calling the <a href="#fn-power"><code>^</code> operator</a> with a newline as the second argument). Because of this, an empty list becomes an empty string, and a list of just one element becomes just that element&rsquo;s string value.</li>
+<li><strong>boolean</strong>: In boolean contexts, empty lists return <code>false</code>, and all other (i.e. nonempty) lists return true.</li>
+<li><strong>list</strong>: In list contexts, the list itself is simply returned.</li>
+</ul>
+<h3 id="list-literals">List Literals<a class="headerlink" href="#list-literals" title="Permanent link"></a></h3>
+<p>Due to Knight&rsquo;s fixed-arity syntax, it&rsquo;s impossible to have list literals (although you could definitely add them as an extension if you wanted). There&rsquo;s generally three ways to create lists in Knight:
+<div class="highlight"><pre># Way 1, automatic coercion by adding something to `@`
++@123   # =&gt; a list of `1`, `2`, and `3`.
++@&quot;abc&quot; # =&gt; a list of `&quot;a&quot;`, `&quot;b&quot;`, and `&quot;c&quot;`.
+
+# Way 2, adding &quot;boxed&quot; elements together:
++ (+ ,1 ,2) ,3 # =&gt; also a list of `1`, `2`, and `3`.
++ ,TRUE ,FALSE # =&gt; a list of `true` and `false`
+
+# Way 3 (a variant of 2), doing some form of iteration:
+; = list @
+; WHILE &gt; 100 list # until the list is 100 elements long
+    : = list + list ,LENGTH list # add the length of the list to it.
+</pre></div></p>
+<h2 id="block">Block<a class="headerlink" href="#block" title="Permanent link"></a></h2>
+<p>The black sheep of Knight&rsquo;s types, the Block type is created in exactly one way: The return value of the <code>BLOCK</code> function. Blocks are used to used to delay execution of a piece of code until later, which acts as sort of a poor-man&rsquo;s function. The only way to execute a block&rsquo;s body is through the <code>CALL</code> function, which accepts only a single argument: the block to execute. Blocks do not take arguments, as all arguments are global variables.</p>
+<h3 id="block-contexts">Contexts<a class="headerlink" href="#block-contexts" title="Permanent link"></a></h3>
+<p>The Block type does not have any contexts defined. Attempting to coerce a Block into anything results in <strong>undefined behaviour</strong>.</p>
+<h3 id="valid-functions-for-blocks">Valid functions for Blocks<a class="headerlink" href="#valid-functions-for-blocks" title="Permanent link"></a></h3>
+<p>Because blocks aren&rsquo;t allowed to be used in any contexts, there&rsquo;s only a handful of places they may be used. Attempting to use them anywhere else is considered <strong>undefined behaviour</strong></p>
+<ul>
+<li>The sole argument to <a href="#fn-noop"><code>:</code></a>, <a href="#fn-block"><code>BLOCK</code></a> itself (ie <code>BLOCK BLOCK ...</code>), <a href="#fn-call"><code>CALL</code></a>, and <a href="#fn-box"><code>,</code></a>.</li>
+<li>The second argument to <a href="#fn-while"><code>=</code></a>, <a href="#fn-and"><code>&amp;</code></a>, or <a href="#fn-or"><code>|</code></a></li>
+<li>Either argument of <a href="#fn-then"><code>;</code></a></li>
+<li>Either the second or third argument of <a href="#fn-if"><code>IF</code></a></li>
+</ul>
+<p>Notably, functions like <a href="#fn-equals"><code>?</code></a> and <a href="#fn-dump"><code>DUMP</code></a> do not require you to handle blocks at all.</p>
+<h1 id="variables">Variables<a class="headerlink" href="#variables" title="Permanent link"></a></h1>
+<p>All variables in Knight are global and last for the duration of the program; there are no function-local variables. This means that once a variable is assigned a value, the variable should be accessible at any point for the duration of the program. Also, like most runtime languages, variables are not typed—you can assign a string to a variable that previously held a block.</p>
+<p>Implementations are only required to support variables between 1 and 127 characters long, however they may choose to support longer. As is described in the <a href="#parsing-variables">variable parsing</a> section, names must conform to the regex <code>/[a-z_][a-z0-9_]*/</code>.</p>
+<h3 id="possible-optimizations-for-variables">Possible optimizations for Variables<a class="headerlink" href="#possible-optimizations-for-variables" title="Permanent link"></a></h3>
+<p>Note that while technically you&rsquo;re required to both have every variable accessible at all times <em>and</em> able to be assigned every type, Knight supports no form of introspection or runtime evaluation (without optional extensions such as <code>EVAL</code> or <code>VALUE</code>). That is, there&rsquo;s no way at runtime to dynamically assign/lookup a variable. So, if you can prove that a variable is unused after a certain point, or is only assigned a specific type, you should feel free to perform optimizations.</p>
+<h2 id="variable-evaluation">Variable Evaluation<a class="headerlink" href="#variable-evaluation" title="Permanent link"></a></h2>
+<p>When evaluated, the variable must return the value previously assigned to it, unevaluated. That is, if you say had <code>= foo BLOCK (QUIT 1)</code> beforehand and later on evaluated <code>foo</code>, it should return the block, and <em>not</em> quit the program. Note that it&rsquo;s possible for multiple variables to be associated with the same object within Knight (e.g. <code>= foo (= bar ...)</code>).</p>
+<p>It&rsquo;s considered <strong>undefined behaviour</strong> to attempt to evaluate a variable when it hasn&rsquo;t been assigned a value yet. </p>
+<h1 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link"></a></h1>
+<p>Every function in Knight has a predetermined arity—there are no variadic functions.</p>
+<p>Unless otherwise noted, all functions will <em>evaluate</em> their arguments beforehand. This means that <code>+ a b</code> should fetch the value of <code>a</code>, the value of <code>b</code>, and then add them together, and should <em>not</em> attempt to add a literal identifier to another literal identifier (which doesn&rsquo;t even make sense).</p>
+<p>All arguments <em>must</em> be evaluated in order (from the first argument to the last)—functions such as <code>;</code> rely on this.</p>
+<p>As mentioned before, any operators which would return an integer outside of the implementation-supported integer range, the return value is undefined. (i.e. integer overflow is an undefined operation.)</p>
+<h2 id="evaluation-contexts">Evaluation Contexts<a class="headerlink" href="#evaluation-contexts" title="Permanent link"></a></h2>
+<p>Certain functions impose certain contexts on their arguments, coercing other types to the required type. (See each type&rsquo;s coercion contexts for their exact semantics.) The following are the contexts used within this document:</p>
+<ul>
+<li><code>string</code>: The argument must be evaluated, and then converted to a <a href="#string">String</a>.</li>
+<li><code>boolean</code>: The argument must be evaluated, and then converted to a <a href="#boolean">Boolean</a>.</li>
+<li><code>integer</code>: The argument must be evaluated, and then converted to an <a href="#integer">Integer</a>.</li>
+<li><code>list</code>: The argument must be evaluated, and then converted to a <a href="#list">List</a>.</li>
+<li><code>coerced</code>: The argument must be evaluated, and will then be coerced within the function itself.</li>
+<li><code>unchanged</code>: The argument must be evaluated, and is passed unchanged.</li>
+<li><code>unevaluated</code>: The argument must not be evaluated at all before being passed.</li>
+</ul>
+<h2 id="nullary-fns">Nullary (Arity 0)<a class="headerlink" href="#nullary-fns" title="Permanent link"></a></h2>
+<h3 id="fn-true"><code>TRUE()</code><a class="headerlink" href="#fn-true" title="Permanent link"></a></h3>
+<p>The function <code>TRUE</code> simply returns the true boolean value.</p>
+<p>As discussed in the <a href="#literal-functions">Literals Functions</a> section, <code>TRUE</code> may either be interpreted as a function of arity 0, or a literal value—they&rsquo;re equivalent. See the section for more details.</p>
+<h3 id="fn-false"><code>FALSE()</code><a class="headerlink" href="#fn-false" title="Permanent link"></a></h3>
+<p>The function <code>FALSE</code> simply returns the false boolean value.</p>
+<p>As discussed in the <a href="#literal-functions">Literals Functions</a> section, <code>FALSE</code> may either be interpreted as a function of arity 0, or a literal value—they&rsquo;re equivalent. See the section for more details.</p>
+<h3 id="fn-null"><code>NULL()</code><a class="headerlink" href="#fn-null" title="Permanent link"></a></h3>
+<p>The function <code>NULL</code> simply returns the null value.</p>
+<p>As discussed in the <a href="#literal-functions">Literals Functions</a> section, <code>NULL</code> may either be interpreted as a function of arity 0, or a literal value—they&rsquo;re equivalent. See the section for more details.</p>
+<h3 id="fn-empty-list"><code>@()</code><a class="headerlink" href="#fn-empty-list" title="Permanent link"></a></h3>
+<p>The function <code>@</code> simply returns the an empty list. This function exists because there&rsquo;s no easy way to get an empty list (other than <code>GET ,1 0 0</code>, which is terrible.)</p>
+<p>As discussed in the <a href="#literal-functions">Literals Functions</a> section, <code>@</code> may either be interpreted as a function of arity 0, or a literal value—they&rsquo;re equivalent. See the section for more details.</p>
+<h3 id="fn-prompt"><code>PROMPT()</code><a class="headerlink" href="#fn-prompt" title="Permanent link"></a></h3>
+<p>The prompt function reads a line (terminated either by <code>\n</code> or end of file being reached, whichever is first) from standard in. Before returning the line, if either a trailing <code>\r\n</code> or <code>\n</code> is present, strip it (regardless of the operating system). If there&rsquo;s nothing left in standard in (i.e. end of file was reached before reading anything), <code>null</code> should be returned instead.</p>
+<p>If there&rsquo;s a problem reading from stdin (e.g, it&rsquo;s closed, permission issues, etc., but <em>not</em> if EOF was reached—see previous line), it is considered <strong>undefined behaviour</strong>.</p>
+<p>If the line that&rsquo;s read contains any characters that <a href="#required-encoding">are not supported in Knight</a>, it is considered <strong>undefined behaviour</strong>.</p>
+<h3 id="fn-random"><code>RANDOM()</code><a class="headerlink" href="#fn-random" title="Permanent link"></a></h3>
+<p>This function must return a (pseudo-) random integer between 0 and—at a minimum—32767 (<code>0x7fff</code>). Implementations are free to return a larger random integer if they desire; however, all random integers must be zero or positive.</p>
+<p>Note that <code>RANDOM</code> <em>should</em> return different integers between subsequent calls and program executions, although this isn&rsquo;t strictly verifiable by virtue of how random integers work. Regardless, programs should use a somewhat unique seed for every program run (e.g. a simple <code>srand(time(NULL)))</code> is sufficient).</p>
+<h2 id="unary-fns">Unary (Arity 1)<a class="headerlink" href="#unary-fns" title="Permanent link"></a></h2>
+<h3 id="fn-noop"><code>:(unchanged)</code><a class="headerlink" href="#fn-noop" title="Permanent link"></a></h3>
+<p>A no-op: Simply returns its value unchanged (after executing it of course).</p>
+<p>As discussed in the <a href="#other-whitespace">Other Whitespace</a> section, <code>:</code> may either be interpreted as a function of arity 1 or whitespace. </p>
+<h3 id="fn-block"><code>BLOCK(unevaluated)</code><a class="headerlink" href="#fn-block" title="Permanent link"></a></h3>
+<p>Unlike nearly every other function in Knight, the <code>BLOCK</code> function does <em>not</em> execute its argument—instead, it returns the argument, unevaluated. This is the only way for Knight programs to get unevaluated blocks of code, which can be used for delayed execution.</p>
+<p>The <code>BLOCK</code> function is intended to be used to create user-defined &ldquo;functions&rdquo;, which can be run via <a href="#fn-call"><code>CALL</code></a>. However, as it simply returns its argument, there&rsquo;s no way to provide arguments to user-defined functions: you must simply use global variables:
+<div class="highlight"><pre>; = max BLOCK
+   : IF (&lt; a b) a b
+; = a 3
+; = b 4
+: OUTPUT + &quot;maximum of a and b is: &quot; (CALL max)
+</pre></div>
+See the <a href="#block">Block type</a> for exact semantics of how to use <code>BLOCK</code>&lsquo;s return value.</p>
+<h3 id="fn-call"><code>CALL(&lt;special&gt;)</code><a class="headerlink" href="#fn-call" title="Permanent link"></a></h3>
+<p>Just as <a href="#fn-block"><code>BLOCK</code></a> delays the execution of its argument, <code>CALL</code> should &ldquo;resume execution&rdquo; of the argument, evaluating as if the <code>BLOCK</code> as defined at the call site.</p>
+<p>Examples:
+<div class="highlight"><pre>; = foo BLOCK bar
+; = bar 3
+; OUTPUT CALL foo # =&gt; 3
+; = bar 4
+: OUTPUT CALL foo # =&gt; 4
+</pre></div></p>
+<p>Calling this function with anything other than <a href="#fn-block"><code>BLOCK</code></a>&lsquo;s return value is considered <strong>undefined behaviour</strong>.</p>
+<h3 id="fn-quit"><code>QUIT(integer)</code><a class="headerlink" href="#fn-quit" title="Permanent link"></a></h3>
+<p>Stops the entire Knight program with the given status code.</p>
+<p>It is <strong>undefined behaviour</strong> if the given status code is not within 0 to 127, inclusive. (However, since it is undefined behaviour, implementations are free to accept status codes outside this range.)</p>
+<p>Examples:
+<div class="highlight"><pre>QUIT 12    # =&gt; exit with status 12
+QUIT 0     # =&gt; exit with status 0
+QUIT &quot;127&quot; # =&gt; exit with status 127
+QUIT ~1    # undefined behaviour
+QUIT 128   # undefined behaviour
+</pre></div></p>
+<h3 id="fn-output"><code>OUTPUT(string)</code><a class="headerlink" href="#fn-output" title="Permanent link"></a></h3>
+<p>Writes its argument (converted to a string) to standard out, flushes standard out, and then returns <code>null</code>.</p>
+<p>Normally, a newline should be written after <code>string</code> (which should also flush stdout on most systems). However, if the string ends with a backslash (<code>\</code>), the backslash is <em>not written to stdout</em>, and trailing newline is suppressed. </p>
+<p>It is considered <strong>undefined behaviour</strong> if any problems arise when writing to or flushing stdout (e.g. it&rsquo;s closed, permission issues, etc.).</p>
+<p>Examples:
+<div class="highlight"><pre># normal string
+; OUTPUT &quot;foo&quot;
+; OUTPUT &quot;&quot; # empty string also writes newline
+; OUTPUT &quot;bar&quot;
+foo
+
+bar
+# no trailing newline
+; OUTPUT &quot;foo\&quot;
+; OUTPUT &quot;bar&quot;
+foobar
+# With a string ending in `\n`
+; OUTPUT &quot;foo
+&quot;
+; OUTPUT &quot;bar&quot;
+foo
+
+bar
+</pre></div></p>
+<h3 id="fn-dump"><code>DUMP(unchanged)</code><a class="headerlink" href="#fn-dump" title="Permanent link"></a></h3>
+<p>Dumps a debugging representation of its argument to stdout, and then returns it.</p>
+<p>This function is really meant to be used for debugging purposes (and unit testing), not in finished Knight programs. As such, there is no strict requirement for the debugging representation is.</p>
+<p>It is <strong>undefined behaviour</strong> to pass a <code>Block</code> to this function (the unit tester doesn&rsquo;t check for blocks). However, as it&rsquo;s undefined behaviour, implementations may dump a debug representation of <code>Block</code>s if they want.</p>
+<p>However, if you want to use the Knight unit tests, then the output of this must conform to the following regexes, or the tester will get confused. <em>(<strong>TODO</strong>: update these when the unit tester becomes updated.)</em></p>
+<ul>
+<li><code>Null()</code>,</li>
+<li><code>Integer(&lt;integer&gt;)</code> - <code>&lt;integer&gt;</code> should be base-10, with a leading <code>-</code> if negative.</li>
+<li><code>Boolean(&lt;bool&gt;)</code> - <code>&lt;bool&gt;</code> must be either <code>true</code> or <code>false</code>.</li>
+<li><code>String(&lt;string&gt;)</code> - The literal contents of the string—no escaping whatsoever should be performed. (e.g. <code>DUMP "foo'b)ar\"</code> should write <code>String(foo'b)ar\)</code>).</li>
+<li><code>List(&lt;element1&gt;, &lt;element2&gt;, ..., &lt;element n&gt;)</code>, no newlines. or <code>[...]</code></li>
+</ul>
+<p>Like <a href="#fn-output"><code>OUTPUT</code></a>, it&rsquo;s <strong>undefined behaviour</strong> if there&rsquo;s any issues writing to stdout.</p>
+<h3 id="fn-length"><code>LENGTH(list)</code><a class="headerlink" href="#fn-length" title="Permanent link"></a></h3>
+<p>Returns the length of the argument when converted to a list.</p>
+<p>Note: The length of strings are the same as the length of their list coercion, as the list coercion returns a list of the chars in the list.</p>
+<p>Examples:
+<div class="highlight"><pre>LENGTH TRUE      # =&gt; 1
+LENGTH FALSE     # =&gt; 0
+LENGTH NULL      # =&gt; 0
+LENGTH 1234      # =&gt; 4
+LENGTH ~1234     # =&gt; 4
+LENGTH &quot;hello!&quot;  # =&gt; 6
+LENGTH @         # =&gt; 0
+LENGTH (*,0 100) # =&gt; 100
+</pre></div></p>
+<h3 id="fn-not"><code>!(boolean)</code><a class="headerlink" href="#fn-not" title="Permanent link"></a></h3>
+<p>Returns the logical negation of its argument: truthy values become <code>false</code>, and falsey values become <code>true</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>!TRUE # =&gt; false
+!1234 # =&gt; false
+!&quot;&quot;   # =&gt; true
+!,0   # =&gt; true
+</pre></div></p>
+<h3 id="fn-negate"><code>~(integer)</code><a class="headerlink" href="#fn-negate" title="Permanent link"></a></h3>
+<p>Converts the argument to an integer, then negates it. Note that this is numeric negation (i.e. like unary <code>-</code> in other languages) and <em>not</em> bitwise negation.</p>
+<p>Examples:
+<div class="highlight"><pre>~38         # =&gt; -38
+~0          # =&gt; 0
+~(- 1 2)    # =&gt; 1
+~~5         # =&gt; 5
+~TRUE       # =&gt; -1
+~,123       # =&gt; -1
+~2147483648 #=&gt; undefined (max integer is 2147483647)
+</pre></div></p>
+<h3 id="fn-ascii"><code>ASCII(unchanged)</code><a class="headerlink" href="#fn-ascii" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: Interprets it as an ASCII codepoint, and returns a string containing just that character. It is <strong>undefined behaviour</strong> if the codepoint is not <a href="#required-encoding">in the encoding</a>.</li>
+<li><strong><code>String</code></strong>: Converts and returns the first character&rsquo;s ASCII numerical equivalent. It is <strong>undefined behaviour</strong> for the string to be empty.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<p>Implementations may feel free to extend <code>ASCII</code> to go beyond ascii, and to use support unicode. However, this is not required.</p>
+<p>Examples:
+<div class="highlight"><pre>ASCII 38 # =&gt; &amp;
+ASCII 50 # =&gt; ;
+ASCII 10 # =&gt; &lt;newline&gt;
+ASCII 19 # undefined (19 isnt valid)
+
+ASCII &quot;H&quot;     # =&gt; 72
+ASCII &quot;HELLO&quot; # =&gt; 72
+ASCII &quot;
+&quot; # =&gt; 10
+ASCII &quot;&quot; # undefined (empty isnt valid)
+</pre></div></p>
+<h3 id="fn-box"><code>,(unchanged)</code><a class="headerlink" href="#fn-box" title="Permanent link"></a></h3>
+<p>This function returns a list containing just its argument. In Python terms, <code>lambda x: [x]</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>,1   # =&gt; a list of just 1
+,,&quot;&quot; # =&gt; a list of just a list of &quot;&quot;
+,,@  # =&gt; a list of just an empty list
+</pre></div></p>
+<h3 id="fn-head"><code>[(unchanged)</code><a class="headerlink" href="#fn-head" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>String</code></strong>: Returns the a string of just first character. It is <strong>undefined behaviour</strong> for the string to be empty.</li>
+<li><strong><code>List</code></strong>: Returns the first element of the list. It is <strong>undefined behaviour</strong> for the list to be empty.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<p>Examples:
+<div class="highlight"><pre>[&quot;h&quot;      # =&gt; &quot;h&quot;
+[&quot;hello&quot;  # =&gt; &quot;h&quot;
+[&quot;&quot;       # =&gt; undefined, empty string
+
+[,1       # =&gt; 1
+[(+@1234) # =&gt; 1
+[@        # =&gt; undefined, empty list.
+</pre></div></p>
+<h3 id="fn-tail"><code>](unchanged)</code><a class="headerlink" href="#fn-tail" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>String</code></strong>: Returns the a string with everything <em>but</em> the first character. It is <strong>undefined behaviour</strong> for the string to be empty.</li>
+<li><strong><code>List</code></strong>: Returns a list with everything <em>but</em> the first element. It is <strong>undefined behaviour</strong> for the list to be empty.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<p>Examples:
+<div class="highlight"><pre>]&quot;h&quot;      # =&gt; &quot;&quot;
+]&quot;hello&quot;  # =&gt; &quot;ello&quot;
+]&quot;aaaaa&quot;  # =&gt; &quot;aaaa&quot;
+]&quot;&quot;       # =&gt; undefined, empty string
+
+],1       # =&gt; empty list
+](+@1234) # =&gt; a list of 2, 3, and 4
+](+@1111) # =&gt; a list of 1, 1, and 1
+]@        # =&gt; undefined, empty list.
+</pre></div></p>
+<h2 id="binary-fns">Binary (Arity 2)<a class="headerlink" href="#binary-fns" title="Permanent link"></a></h2>
+<h3 id="fn-add"><code>+(unchanged, coerced)</code><a class="headerlink" href="#fn-add" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to an integer, and added to the first.</li>
+<li><strong><code>String</code></strong>: The second argument is coerced to a string, and concatenated with the first.</li>
+<li><strong><code>List</code></strong>: The second argument is coerced to a list, and concatenated with the first.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong>.</li>
+</ul>
+<p>Examples:
+<div class="highlight"><pre>+ &quot;2a&quot; 3         # =&gt; &quot;2a3&quot;
++ 3 &quot;2a&quot;         # =&gt; 5
++ @ &quot;abc&quot;        # =&gt; a list of &quot;a&quot;, &quot;b&quot;, and &quot;c&quot;
++ (+@12)  (+@34) # =&gt; a list of 1, 2, 3, and 4
++ (+@12) ,(+@34) # =&gt; a list of 1, 2, and a list of 3 and 4
+</pre></div></p>
+<h3 id="fn-subtract"><code>-(unchanged, coerced)</code><a class="headerlink" href="#fn-subtract" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to an integer, and then subtracted from the first.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<p>Examples:
+<div class="highlight"><pre>- 3 &quot;2a&quot; #=&gt; 1
+- ~1 4   #=&gt; -5
+</pre></div></p>
+<h3 id="fn-multiply"><code>*(unchanged, coerced)</code><a class="headerlink" href="#fn-multiply" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to an integer, and multiplied with the first.</li>
+<li><strong><code>String</code></strong>: The second argument is coerced to an integer, and then the first is repeated that many times. It is <strong>undefined behaviour</strong> if the second argument is negative.</li>
+<li><strong><code>List</code></strong>: The second argument is coerced to an integer, and then the first is repeated that many times. It is <strong>undefined behaviour</strong> if the second argument is negative.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<p>Examples:
+<div class="highlight"><pre>* 3 &quot;2a&quot;  # =&gt; 6
+* 3 FALSE # =&gt; 0
+* &quot;2a&quot; 3  # =&gt; &quot;2a2a2a&quot;
+* (,1) 5  # =&gt; a list of 5 1s
+* (,1) 0  # =&gt; empty list
+* &quot;2a&quot; ~3 # undefined, negative length
+* (,1) ~1 # undefined, negative length
+</pre></div></p>
+<h3 id="fn-divide"><code>/(unchanged, coerced)</code><a class="headerlink" href="#fn-divide" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to an integer, and then divided from the first. Non-whole results must be rounded towards zero. It is <strong>undefined behaviour</strong> for the second argument to be zero.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<p>Examples:
+<div class="highlight"><pre>/ 7 3    # =&gt; 2
+/ ~5 2   # =&gt; -2
+/ 5 &quot;-3&quot; # =&gt; -1
+/ 1 0    # undefined
+</pre></div></p>
+<h3 id="fn-remainder"><code>%(unchanged, coerced)</code><a class="headerlink" href="#fn-remainder" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to an integer, and then the remainder of <code>&lt;arg1&gt; / &lt;arg2&gt;</code> (rounding towards zero) is returned. Note that this means that, for all <code>a</code>, <code>a = (a/b)*b + a%b</code>. It is <strong>undefined behaviour</strong> for the second argument not to be a strictly positive integer.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
+</ul>
+<div class="highlight"><pre>% 7 3    # =&gt; 1
+% ~5 2   # =&gt; -1
+% ~7 5   # =&gt; -2
+% 7 0    # undefined, 0 is not positive
+% 7 ~2   # undefined, -2 is not positive
+</pre></div>
+
+<h3 id="fn-power"><code>^(unchanged, coerce)</code><a class="headerlink" href="#fn-power" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to an integer, and then the first integer is raised to the power of the second integer. Note that <code>^ 0 1</code> should return <code>1</code>. It is <strong>undefined behaviour</strong> for the second argument to be negative.</li>
+<li><strong><code>List</code></strong>: The second argument is coerced to a string. Then, each element of the list is converted to a string and concatenated together, with the second argument being inserted between adjacent elements. This is known as the &ldquo;join&rdquo; operator in other languages.</li>
+</ul>
+<p>Examples:
+<div class="highlight"><pre>^ 0 0   # 0
+^ 0 1   # 1
+^ 2 0   # 1
+^ ~5 9  # -1953125
+^ 10 10 # undefined, too large
+^ 10 ~1 # undefined, negative exponent
+
+^ @ &quot;!&quot;       # &quot;&quot;, joining empty list yields nothing
+^ ,12 &quot;!&quot;     # &quot;12&quot;, no elements to separate
+^ (+@123) &quot;!&quot; # &quot;1!2!3&quot;
+</pre></div></p>
+<h3 id="fn-less-than"><code>&lt;(unchanged, coerced)</code><a class="headerlink" href="#fn-less-than" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>Integer</code></strong>: Coerces the second argument to an integer, then returns whether the first is smaller than the second.</li>
+<li><strong><code>String</code></strong>: Coerces the second argument to a string, and then returns whether the first is lexicographically smaller than the second. See below for details on Lexicographical comparisons.</li>
+<li><strong><code>Boolean</code></strong>: Coerces the second argument to a boolean, and returns whether the first is false and the second is true.</li>
+<li><strong><code>List</code></strong>: Coerces the second argument to a list, and then compares each element of the two, returning the whether the non-equal comparison is less than. If each element is equal, return whether the first list is smaller. (This is how most languages which define comparisons on lists/arrays do it.)</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong>.</li>
+</ul>
+<p>Lexicographical comparisons should find the first non-equivalent character in each string and compare them based on their ASCII value (e.g. in <code>abcd</code> and <code>abde</code>, <code>c</code> and <code>d</code> would be compared), returning <code>true</code> if the first argument&rsquo;s character is smaller. If both strings have equivalent characters, then this function should whether the first string has a smaller size than the second.</p>
+<p>Examples:
+<div class="highlight"><pre>&lt; 1 0      # =&gt; true
+&lt; 1 &quot;4&quot;    # =&gt; false
+&lt; &quot;A&quot; &quot;a&quot;  # =&gt; true, ascii `&quot;a&quot;` is larger.
+&lt; &quot;a&quot; &quot;a0&quot; # =&gt; true, `&quot;a&quot;` has smaller length.
+&lt; &quot;A&quot; &quot;a0&quot; # =&gt; true, `&quot;A&quot; &lt; &quot;a&quot;` 
+&lt; FALSE 0  # =&gt; false
+&lt; FALSE 2  # =&gt; true
+&lt; TRUE x   # =&gt; always false regardless of `x`
+&lt; @ x      # =&gt; always true for non-empty x
+&lt; ,1 ,2    # =&gt; true, 1 &lt; 2
+&lt; +@13 ,2  # =&gt; false, 1 &lt; 2
+</pre></div></p>
+<h3 id="fn-greater-than"><code>&gt;(unchanged, coerced)</code><a class="headerlink" href="#fn-greater-than" title="Permanent link"></a></h3>
+<p>This is exactly the same as <a href="#fn-less-than"><code>&lt;</code></a>, except for operands reversed, i.e. <code>&gt; a b</code> should return the same value as <code>&lt; b a</code> (barring the fact that <code>a</code> should be evaluated before <code>b</code>).</p>
+<p>Examples:
+See <a href="#fn-less-than"><code>&lt;</code></a>.</p>
+<h3 id="fn-equals"><code>?(unchanged, unchanged)</code><a class="headerlink" href="#fn-equals" title="Permanent link"></a></h3>
+<p>Unlike nearly every other function in Knight, this one does not automatically coerced its arguments—instead, it checks to see if arguments are the same type <em>and</em> value. For example, <code>1</code> is equivalent to neither <code>"1"</code> nor <code>TRUE</code>.</p>
+<p>This function is only valid for the &ldquo;basic types&rdquo; (<code>Integer</code>, <code>String</code>, <code>Boolean</code>, <code>Null</code>, and <code>List</code>). Notably, it is <strong>undefined behaviour</strong> for either argument to be a <code>Block</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>? 1 2        # =&gt; false
+? ~0 0       # =&gt; true
+? &quot;1&quot; &quot;1 &quot;   # =&gt; false
+? FALSE NULl # =&gt; false
+? NULL NULL  # =&gt; true
+? ,@ ,,@     # =&gt; false
+</pre></div></p>
+<h3 id="fn-and"><code>&amp;(unchanged, unevaluated)</code><a class="headerlink" href="#fn-and" title="Permanent link"></a></h3>
+<p>This function acts similar to <code>&amp;&amp;</code> in some loosely-typed languages: If the first argument (after being evaluated) is falsey, it is returned directly. However, if it is truthy, the second argument is evaluated and returned.</p>
+<p>Unlike most functions, <code>Block</code>s can be passed as the second argument to <code>&amp;</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>&amp; 0 (QUIT 1)   # =&gt; 0
+&amp; &quot;hi&quot; &quot;there&quot; # =&gt; &quot;there&quot;
+&amp; TRUE &quot;&quot;      # =&gt; &quot;&quot;
+&amp; @ 4          # =&gt; @
+</pre></div></p>
+<h3 id="fn-or"><code>|(unchanged, unevaluated)</code><a class="headerlink" href="#fn-or" title="Permanent link"></a></h3>
+<p>This function acts similar to <code>||</code> in some loosely-typed languages: If the first argument (after being evaluated) is truthy, it is returned directly. However, if it is falsey, the second argument is evaluated and returned.</p>
+<p>Unlike most functions, <code>Block</code>s can be passed as the second argument to <code>|</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>| 2 (QUIT 1)   # =&gt; 2
+| &quot;hi&quot; &quot;there&quot; # =&gt; &quot;hi&quot;
+| TRUE &quot;&quot;      # =&gt; TRUE
+| @ 4          # =&gt; 4
+</pre></div></p>
+<p>This is one of the few functions that <code>Block</code>s can be used, albeit in <code>|</code> only as the second argument.</p>
+<h3 id="fn-then"><code>;(unchanged, unchanged)</code><a class="headerlink" href="#fn-then" title="Permanent link"></a></h3>
+<p>This function simply returns its second argument (after evaluating them both because of the <code>unchanged</code> context). Its entire purpose is to act as a &ldquo;sequencing&rdquo; function, where the first argument&rsquo;s value can be discarded.</p>
+<p>Unlike most functions, <code>Block</code>s can be passed as either argument to <code>;</code>.</p>
+<p><em>Note that using <code>:</code> as the last function in a chain of <code>;</code>s can look visually appealing. See the example below</em></p>
+<p>Examples:
+<div class="highlight"><pre>; = x 3 OUTPUT x # prints 3
+OUTPUT ; = x 3 x # also prints 3
+
+# simple factorial
+; = i 10
+; = prod 1
+; WHILE i
+    ; = prod (* prod i)
+    : = i (- i 1)
+: OUTPUT prod #=&gt; prints out 3628800
+</pre></div></p>
+<h3 id="fn-assign"><code>=(&lt;special&gt;, unchanged)</code><a class="headerlink" href="#fn-assign" title="Permanent link"></a></h3>
+<p>If the first argument is not a <a href="#variables">variable</a>, it is considered <strong>undefined behaviour</strong>. (However, see the entirely optional <a href="#ext-assign-to-strings">assign to strings</a> extension.)</p>
+<p>This function evaluates the second argument, and then both assigns it to the variable in the first argument and returns it. This is the only way to update variables within Knight.</p>
+<p>Unlike most functions, <code>Block</code>s can be passed as the second argument to <code>=</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>= a 3       # =&gt; 3 (a is 3)
+* (= a 4) a # =&gt; 16 (a is 4)
+= a = b 3   # =&gt; 3 (a and b are both three; assignments can be chained)
+= &quot;a&quot; 4     # undefined, `&quot;a&quot;` isnt a variable
+</pre></div></p>
+<h3 id="fn-while"><code>WHILE(unevaluated, unevaluated)</code><a class="headerlink" href="#fn-while" title="Permanent link"></a></h3>
+<p>This function should evaluate the second argument as long as the first argument evaluates to a truthy value. After the first argument becomes falsey, <code>null</code> should be returned.</p>
+<p>Note that, unlike most programming languages, Knight does not have a builtin way to &ldquo;<code>continue</code>&rdquo; or &ldquo;<code>break</code>&rdquo; from a loop. The only way a <code>WHILE</code> stops is once its condition becomes false. (However, see the highly optional <a href="/Users/sampersand/code/knight/knight-lang/ext-control-flow">Control flow</a> extension if you want to attempt adding them in.)</p>
+<p>Examples:
+<div class="highlight"><pre># simple factorial
+; = i 10
+; = prod 1
+; WHILE i
+    ; = prod (* prod i)
+    : = i (- i 1)
+: OUTPUT prod #=&gt; prints out 3628800
+
+# look through a string for the first digit
+; = string &quot;hello, th3re, world!&quot;
+; = index 0
+; = found FALSE
+; WHILE &amp; !found (&lt; index LENGTH string)
+    ; = chr GET string index 1
+    : IF &amp; (&lt; &#39;/&#39; chr) (&lt; chr &#39;:&#39;)
+        : = found true      # if true, &quot;break&quot;
+        : = index + index 1 # if false
+: OUTPUT IF found
+    (+ &quot;the first digit occurs at index&quot; index)
+    &quot;no digit was found&quot;
+</pre></div></p>
+<h2 id="ternary-fns">Ternary (Arity 3)<a class="headerlink" href="#ternary-fns" title="Permanent link"></a></h2>
+<h3 id="fn-if"><code>IF(boolean, unevaluated, unevaluated)</code><a class="headerlink" href="#fn-if" title="Permanent link"></a></h3>
+<p>If the first argument is truthy, this function will evaluate and return the second argument. However, if it&rsquo;s falsey, it will evaluate and return the third argument.</p>
+<p>Unlike most functions, <code>Block</code>s can be passed as either the second or third argument to <code>IF</code>.</p>
+<p>Examples:
+<div class="highlight"><pre>IF @ &quot;nonempty&quot; &quot;empty&quot;    # =&gt; &quot;empty&quot;
+IF 1 2 3                   # =&gt; 2
+IF FALSE QUIT 1 &quot;!&quot;        # =&gt; &quot;!&quot;; it wont quit.
+IF &quot;0&quot; TRUE QUIT 1         # =&gt; true
+</pre></div></p>
+<h3 id="fn-get"><code>GET(unchanged, integer, integer)</code><a class="headerlink" href="#fn-get" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>String</code></strong>: Returns a substring starting at the second argument with a length of the third argument. Indexing starts at <code>0</code>. It is <strong>undefined behaviour</strong> for either the second or third arguments to be negative, or their sum to be larger than the length of the string.</li>
+<li><strong><code>List</code></strong>: Returns a sublist starting at the second argument with a length of the third argument. Indexing starts at <code>0</code>. It is <strong>undefined behaviour</strong> for either the second or third arguments to be negative, or their sum to be larger than the length of the list.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong>.</li>
+</ul>
+<p>To put it in plainer terms, <code>GET</code> is used to get the substring/sublist at the range <code>[start, start+length)</code>, with it being <strong>undefined behaviour</strong> for any part of the range to not be fully contained within the original list.</p>
+<p>Examples:
+<div class="highlight"><pre>GET &quot;&quot; 0 0       # =&gt; &quot;&quot;
+GET &quot;abcde&quot; 2 2  # =&gt; &quot;cd&quot;
+GET &quot;abcde&quot; 2 0  # =&gt; &quot;&quot;
+GET &quot;abcde&quot; 5 1  # =&gt; undefined, `5+1 &gt; length(&quot;abcde&quot;)`
+GET &quot;abcde&quot; 5 0  # =&gt; &quot;&quot; (`5 &lt;= length(&quot;abcde&quot;)`)
+GET &quot;abcde&quot; 4 1  # =&gt; &quot;e&quot;
+GET &quot;abcde&quot; ~1 1 # =&gt; undefined, negative start
+GET &quot;abcde&quot; 1 ~1 # =&gt; undefined, negative length
+
+GET @ 0 0          # =&gt; empty list
+GET (+@12345) 2 2  # =&gt; list of 3 then 4
+GET (+@12345) 2 0  # =&gt; empty list
+GET (+@12345) 5 1  # =&gt; undefined, `5+1 &gt; length(+@12345)`
+GET (+@12345) 5 0  # =&gt; empty list (`5 &lt;= length(+@12345)`)
+GET (+@12345) 4 1  # =&gt; list of just 5
+GET (+@12345) ~1 1 # =&gt; undefined, negative start
+GET (+@12345) 1 ~1 # =&gt; undefined, negative length
+</pre></div></p>
+<h2 id="quaternary-fns">Quaternary (Arity 4)<a class="headerlink" href="#quaternary-fns" title="Permanent link"></a></h2>
+<h3 id="fn-set"><code>SET(unchanged, integer, integer, coerce)</code><a class="headerlink" href="#fn-set" title="Permanent link"></a></h3>
+<p>The return value of this function depends on its first argument&rsquo;s type:</p>
+<ul>
+<li><strong><code>String</code></strong>: Returns a new string where the substring of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a string. It is <strong>undefined behaviour</strong> for either the second or third arguments to be negative, or their sum to be larger than the length of the string.</li>
+<li><strong><code>List</code></strong>: Returns a new list where the sublist of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a list. It is <strong>undefined behaviour</strong> for either the second or third arguments to be negative, or their sum to be larger than the length of the list.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong>.</li>
+</ul>
+<p>To put it in plainer terms, <code>SET</code> is used to replace the substring/sublist at the range <code>[start, start+length)</code> with the fourth argument, with it being <strong>undefined behaviour</strong> for any part of the range to not be fully contained within the original list.</p>
+<p>Examples:
+<div class="highlight"><pre>SET &quot;&quot; 0 0 &quot;Hello&quot;  # =&gt; &quot;Hello&quot;
+SET &quot;abcd&quot; 2 1 &quot;!&quot;  # =&gt; &quot;ab!d&quot; (replaces)
+SET &quot;abcd&quot; 2 0 &quot;!&quot;  # =&gt; &quot;ab!cd&quot; (inserts before index `2`)
+SET &quot;abcd&quot; 1 2 TRUE # =&gt; &quot;atrued&quot; (replaces range)
+SET &quot;abcd&quot; 0 2 @    # =&gt; &quot;cd&quot; (deletes range; @ to string is empty)
+
+SET @ 0 0 &quot;Hello&quot;        # =&gt; list of &quot;H&quot;, &quot;e&quot;, &quot;l&quot;, &quot;l&quot;, and &quot;o&quot;
+SET (+@1234) 2 1 ,9      # =&gt; list of 1, 2, 9, and 4 (replaces)
+SET (+@1234) 2 0 &quot;!&quot;     # =&gt; list of 1, 2, &quot;!&quot;, 3, and 4 (inserts before index `2`)
+SET (+@1234) 1 2 (+@789) # =&gt; list of 1, 7, 8, 9, and 4 (replaces range)
+SET (+@1234) 0 2 @       # =&gt; list of 3 and 4 (deletes range; &quot;&quot; to list is empty)
+</pre></div></p>
+<h1 id="extensions">Extensions<a class="headerlink" href="#extensions" title="Permanent link"></a></h1>
+<p>This section describes some <em>entire optional</em> extensions that Knight implementations could add. These are not at all required to be implemented, and are just some ideas for things implementations could add to make writing Knight more <del>enjoyable</del> bearable to write in.</p>
+<p>Again, <strong>absolutely nothing described in this section is required by the Knight specifications</strong>. Knight programs that want to be maximally portable shouldn&rsquo;t assume any of these are implemented.</p>
+<p>Note that, asides from the <code>X</code> function, Knight reserves the right to use any upper case letter or symbol as a function name in future revisions of the specifications. (However, I don&rsquo;t see that happening.)</p>
+<h2 id="ext-command-line-arguments">Command Line Arguments<a class="headerlink" href="#ext-command-line-arguments" title="Permanent link"></a></h2>
+<p>While not strictly required, (because not every implementation language can access command-line arguments—such as knight itself), there is a standardized set of command-line options that most Knight implementations follow:</p>
+<ul>
+<li>If two arguments are given, and the first is <code>-e</code>, interpret the second as a Knight program and execute it.</li>
+<li>If two arguments are given, and the second is <code>-f</code>, interpret the second as a path to a Knight program. Read the contents of that file, and then execute those. </li>
+<li>If no arguments are given, then print out a usage message (such as <code>usage: knight (-e 'expr' | -f &lt;path&gt;)</code>)</li>
+</ul>
+<p>Note that the Knight unit tester expects <code>-e 'expr'</code> to be defined, and you won&rsquo;t be able to use it without this.</p>
+<h3 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link"></a></h3>
+<p>Some programming languages (such as AWK) are not able to be invoked with a simple <code>./knight -e 'OUTPUT "hi"'</code>, and require extra flags (eg AWK&rsquo;s <code>./knight.awk -- -e 'OUTPUT "hi'</code>). If desired, you could simply make a wrapper shell file that executes your program, such as
+<div class="highlight"><pre><span class="c1">#/bin/sh</span>
+./knight.awk -- <span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+</pre></div></p>
+<p>Some languages don&rsquo;t have access to command line arguments at all (like Knight itself). In that case, you may want to try reading a single line from stdin as all the command line arguments. A wrapper script might look like:
+<div class="highlight"><pre><span class="c1">#/bin/sh</span>
+cat &lt;<span class="o">(</span><span class="nb">echo</span> <span class="s2">&quot;</span><span class="nv">$*</span><span class="s2">&quot;</span><span class="o">)</span> /dev/stdin <span class="p">|</span> ./knight
+</pre></div></p>
+<h2 id="ext-handling-undefined-behaviour">Handling Undefined Behaviour<a class="headerlink" href="#ext-handling-undefined-behaviour" title="Permanent link"></a></h2>
+<p>The Knight specs have a lot of undefined behaviour to leave a lot up to implementations. However, this means that writing Knight programs has a lot of potential pitfalls. As such, you may want to catch some forms of undefined behaviour and exit gracefully.</p>
+<p>Some forms may be easier than others: Division by zero is usually pretty easy to detect. But it may be inefficient or cumbersome to ensure that every string that&rsquo;s created is no longer than the maximum integer size. Implementations could pick and choose which ones they handle and which ones they don&rsquo;t.</p>
+<h2 id="ext-functions">Functions<a class="headerlink" href="#ext-functions" title="Permanent link"></a></h2>
+<p>These extensions are simply additional functions implementations can define, or slightly modify how existing ones work.</p>
+<h3 id="ext-x-function">The <code>X</code> Function.<a class="headerlink" href="#ext-x-function" title="Permanent link"></a></h3>
+<p>The function <code>X</code> is explicitly reserved for functions: Knight will never use <code>X</code> for function names, and implementations are free to use it how they want.</p>
+<p>Since its semantics are entirely implementation defined, it&rsquo;s possible to &ldquo;overload&rdquo; it. That is, unlike how <code>R</code>, <code>RAND</code>, <code>RAND_INT</code>, etc. are all the same function, implementations may choose to have different functions starting with <code>X</code>, e.g., <code>X_OPENFILE</code>, <code>X_READFILE</code>, <code>X_CLOSEFILE</code>.</p>
+<h3 id="ext-value"><code>VALUE(string)</code>: Dynamically look up variables<a class="headerlink" href="#ext-value" title="Permanent link"></a></h3>
+<p>This function could convert its argument to a string, and then interpret it as a variable name and lookup that value.</p>
+<p>Examples:
+<div class="highlight"><pre>; = ab 3
+: OUTPUT VALUE + &quot;a&quot; &quot;b&quot; # prints out 3
+</pre></div></p>
+<h3 id="ext-assign-to-strings">Assign to strings within <code>=</code><a class="headerlink" href="#ext-assign-to-strings" title="Permanent link"></a></h3>
+<p>In base Knight, the only valid value for the first argument of <code>=</code> is a variable: Everything else is undefined behaviour. However, implementations could overload <code>=</code> so that if, after evaluating the first argument, it is a string, and then interpreted as a variable name.</p>
+<p>If you want to get really fancy, you could also do destructuring assignment—if the first argument is a list, you convert the second argument to a list, and sequentially assign values.</p>
+<p>Examples:
+<div class="highlight"><pre># Normal assign to strings
+; = (+ &quot;a&quot; &quot;b&quot;) 3
+: OUTPUT ab         #=&gt; prints out 3
+
+# assign to lists
+; = (+@&quot;ab&quot;) (+@12)
+; OUTPUT a          # =&gt; prints out 1
+: OUTPUT b          # =&gt; prints out 2
+</pre></div></p>
+<h3 id="ext-handle"><code>HANDLE(unevaluated, unevaluated)</code>: Try-catch<a class="headerlink" href="#ext-handle" title="Permanent link"></a></h3>
+<p>If your implementation doesn&rsquo;t immediately abort for errors, you may want to look at a &ldquo;try-catch&rdquo; function: The first argument should be evaluated, and its value returned as normal. However, if any errors occurred during this time, the second argument should be evaluated, and its value returned instead. You may also want to set the message of the exception to the variable <code>_</code> for fun.</p>
+<p>To implement this, you&rsquo;ll have to handle <em>some</em> form of undefined behaviour (otherwise, there&rsquo;d be no way to detect errors). Which ones you handle are up to you.</p>
+<p>Examples:
+<div class="highlight"><pre>HANDLE (+1 2) 9 # =&gt; 3, because no errors occurred
+HANDLE (/1 0) 9 # =&gt; 9, because division by zero occurred
+
+# if you do the super-optional `_` part
+OUTPUT HANDLE (/ 1 0) _ # =&gt; prints out the division by zero error message
+</pre></div></p>
+<h3 id="ext-yeet"><code>YEET(string)</code>: Throw an exception<a class="headerlink" href="#ext-yeet" title="Permanent link"></a></h3>
+<p>Instead of implementing the normal method of aborting with an error (<code>; OUTPUT "errmsg" QUIT 1</code>), implementations could opt for <code>YEET</code>ing an error. If implementations abort immediately, this could be similar to the normal method. However, if they have exceptions, this could be used in conjunction with <a href="#ext-handle"><code>HANDLE</code></a> to create a custom error framework.</p>
+<p>Examples:
+<div class="highlight"><pre>YEET &quot;oops&quot; # =&gt; crash with the error message &quot;oops&quot;
+
+; = double_even BLOCK
+    : IF (% number 2)
+        : YEET &quot;not even&quot;
+    : * number 2
+
+; = number +0 PROMPT
+: HANDLE
+    : OUTPUT +++&quot;double &quot; number &quot; is &quot; CALL double_even
+    : OUTPUT +++&quot;unable to double &quot; number &quot;:&quot; _
+</pre></div></p>
+<h3 id="ext-use"><code>USE(string)</code>: Import other knight files<a class="headerlink" href="#ext-use" title="Permanent link"></a></h3>
+<p>In Knight, there is no way to import files whatsoever. This means that every single Knight program will be a single file, which can get unwieldy for larger programs. Implementations may want to implement a <code>USE</code> function, which would import files.</p>
+<p>A few other ideas:</p>
+<ul>
+<li>Import path is relative from the <code>USE</code>ing file</li>
+<li>The <code>.kn</code> extension can be omitted (and would be inferred)</li>
+<li>Duplicate imports could be skipped </li>
+<li>Only accept static strings at the top of a file</li>
+</ul>
+<p>Examples:
+<div class="highlight"><pre># /code/knight/greet.kn
+: = greet BLOCK
+    : OUTPUT ++ greeting &quot;, &quot; place
+
+# /code/knight/main.kn
+; USE &quot;/code/knight/greeting.kn&quot; # if no relative files
+; USE &quot;greeting.kn&quot;              # if relative files
+; USE &quot;greeting&quot;                 # if omit extension
+# (Only import the file once if skipping duplicates)
+
+; = greeting &quot;Hello&quot;
+; = place &quot;world&quot;
+: CALL greet
+</pre></div></p>
+<h3 id="ext-system"><code>$(string, unchanged)</code>: Run a shell command and return its stdout<a class="headerlink" href="#ext-system" title="Permanent link"></a></h3>
+<p><em>This function was previously a required function named <code>`</code>; it is now an optional extension</em></p>
+<p>This extension would convert the first argument to a string and run it as a shell command, returning the stdout as a string. The second argument would be the stdin to the function; if it was <code>NULL</code>, the subprocess would inherit the stdin of the parent process.</p>
+<p>Some other ideas:</p>
+<ul>
+<li>If the exit status is nonzero, return the integer exit status instead</li>
+<li>Set a variable called <code>stderr</code> to the standard error of the subshell</li>
+</ul>
+<h3 id="ext-eval"><code>EVAL(string)</code>: Evaluate a string as Knight code<a class="headerlink" href="#ext-eval" title="Permanent link"></a></h3>
+<p><em>This function was previously a required function; it is now an optional extension</em></p>
+<p>This function would convert its argument to a string, and then execute it as a Knight string. (Of course, the string should be valid knight; if it wasn&rsquo;t, it&rsquo;d be undefined behaviour.)</p>
+<p>This function would act <em>as if</em> its invocation were replaced by the contents of the string, e.g.:
+<div class="highlight"><pre>; = a 3
+; = bar &quot;* a 4&quot;
+: OUTPUT + &quot;a*4=&quot; (EVAL bar)
+</pre></div>
+should be equivalent to
+<div class="highlight"><pre>; = a 3
+; = bar &quot;* a 4&quot;
+: OUTPUT + &quot;a*4=&quot; (* a 4)
+</pre></div></p>
+<h2 id="ext-syntactic-sugar">Syntactic Sugar<a class="headerlink" href="#ext-syntactic-sugar" title="Permanent link"></a></h2>
+<p>These extensions provide syntactic sugar for some common idioms in Knight</p>
+<h3 id="ext-grave-strings"><code>`</code>-string literals<a class="headerlink" href="#ext-grave-strings" title="Permanent link"></a></h3>
+<p>Working with strings in Knight is a bit of a pain: There&rsquo;s no escape sequences, and the only way to generate a larger string is through concatenation.
+<div class="highlight"><pre>OUTPUT ++++greeting &quot;, &quot; name &quot;, aged &quot; age &quot;!
+How are you?&quot;
+</pre></div>
+Implementations could opt to allow for <code>`</code> strings, which both include escape sequences <em>and</em> perform string interpolation.</p>
+<p>Example:
+<div class="highlight"><pre>OUTPUT `{greeting}, {name}, aged {age}!\nHow are you?`
+</pre></div></p>
+<h3 id="ext-list-literal"><code>{ ... }</code>: List Literal<a class="headerlink" href="#ext-list-literal" title="Permanent link"></a></h3>
+<p>As you&rsquo;re probably aware, Knight doesn&rsquo;t have list literals: Instead you must use <code>,</code> to build up lists or <code>+@</code> only with strings and small integers.</p>
+<p>Since Knight doesn&rsquo;t use <code>{</code> and <code>}</code>, implementations could use them as the deliminators for a list literal. However, since these symbols would be parsed much more differently than anything in vanilla Knight, this extension might not be possible for some host languages.</p>
+<p>Example:
+<div class="highlight"><pre>? ,1      {1}     # =&gt; true
+? +@123   {1 2 3} # =&gt; true
+? +,1,&quot;a&quot; {1 &quot;a&quot;} # =&gt; true
+</pre></div></p>
+<h2 id="ext-additional-types">Additional Types<a class="headerlink" href="#ext-additional-types" title="Permanent link"></a></h2>
+<p>These extensions are additional types implementations could define.</p>
+<h3 id="ext-floats">Floats<a class="headerlink" href="#ext-floats" title="Permanent link"></a></h3>
+<p>Knight&rsquo;s only native number type is the <a href="#integer">integer</a>. Additionally, Knight does not use the <code>.</code> symbol at all. Implementations could introduce a float data type, using the <code>.</code> for float literals (eg <code>1.0</code>).</p>
+<p>They could follow similar conversion rules as integers (such as adding something to a float converts the second argument to a float). One thing to be careful about is to not have <code>^</code> or <code>/</code> return floats if the first argument is an integer, as that&rsquo;d make the program no longer spec compliant. Instead, you could overload <code>^</code> and <code>/</code> so that if the first argument is a float, the return value is a float.</p>
+<p>Example:
+<div class="highlight"><pre>OUTPUT 1.2           # prints 1.2
+OUTPUT +0.1 123      # prints 123.1
+OUTPUT / (+0.0 10) 4 # prints 2.5
+
+# You could also use `XNAN` and `XINF` for constants
+OUTPUT XINF # prints &quot;Infinity&quot; or something
+OUTPUT XNAN # prints &quot;NaN&quot; or something
+</pre></div></p>
+<h3 id="ext-map">Maps<a class="headerlink" href="#ext-map" title="Permanent link"></a></h3>
+<p>Knight doesn&rsquo;t have a builtin concept of map. While you can emulate them with lists of length-two lists, it&rsquo;s a bit kludgy to do. Implementations could define their own map type which could be more easily used</p>
+<p>Implementations could use, for example, the <code>{ key : value ... }</code> syntax for map literals. (You could disambiguate this from list literals because the <code>value</code>s of a map would all begin with the <code>:</code> operator.)</p>
+<p>Example:
+<div class="highlight"><pre>{}                 # =&gt; empty map
+{1 : 2}            # =&gt; a map of just 1 to 2
+{&quot;hello&quot; : &quot;world&quot; # =&gt; a map of &quot;hello&quot; to &quot;world&quot; and
+ 123 : 456}        #    123 to 456.
+</pre></div></p>
+<h3 id="ext-objects">Objects<a class="headerlink" href="#ext-objects" title="Permanent link"></a></h3>
+<p>Implementations could define an object type. You could go as complicated or simple as you like.</p>
+<p>Some considerations:</p>
+<ul>
+<li>Add methods to objects</li>
+<li>Add static methods to the type</li>
+<li>Add inheritance</li>
+<li>Add multiple inheritance</li>
+</ul>
+<h2 id="ext-changing-functionality">Changing Functionality<a class="headerlink" href="#ext-changing-functionality" title="Permanent link"></a></h2>
+<p>Unlike most other extensions, these may require significant modifications to a base vanilla implementation.</p>
+<h3 id="ext-local-variables">Local Variables<a class="headerlink" href="#ext-local-variables" title="Permanent link"></a></h3>
+<p>In vanilla Knight, all variables are global: This means that if any <code>BLOCK</code> modifies a variable, it will affect any other block relying upon that. Implementations could provide support for local variables, which would allow for easier recursive functions.</p>
+<p>See also the next extension, <a href="#ext-methods">Methods</a>.</p>
+<h3 id="ext-methods">Methods<a class="headerlink" href="#ext-methods" title="Permanent link"></a></h3>
+<p>In Knight, all <code>BLOCK</code>s operate exclusively upon global variables, making it unwieldy to both pass arguments and write recursive functions.</p>
+<p>Implementations could choose to implement a &ldquo;method&rdquo; type, which would be passed parameters as local variables: These variables would then not overwrite global variables with the same name, and wouldn&rsquo;t be visible to blocks/methods the method calls.</p>
+<p>Example:
+<div class="highlight"><pre># Since `{` is not a part of the knight spec, let&#39;s use it to
+# define arguments if it&#39;s after `BLOCK`
+; = greet BLOCK{greeting where}
+    : ++ greeting &quot;, &quot; where
+
+: OUTPUT CALL greet{&quot;Hello&quot; &quot;world&quot;}
+</pre></div></p>
+<h3 ext-control-flow="ext-control-flow" id="control-flow">Control Flow<a class="headerlink" href="#control-flow" title="Permanent link"></a></h3>
+<p>Vanilla Knight has absolutely no way to &ldquo;exit early&rdquo; from <code>WHILE</code> loops. As an extension, you could implement <code>XBREAK</code> and <code>XCONTINUE</code> functions, which would break/continue from the innermost loop.</p>
+<p>Additionally, you may want to implement a <code>XRETURN</code> function to return early and even <code>XGOTO</code>/<code>XLABEL</code>.</p>
+<p>Heck, you could even implement an <code>XFOR</code> or <code>XFOREACH</code> if you wanted,</p>
+<h2 id="ext-extensibility">Extensibility<a class="headerlink" href="#ext-extensibility" title="Permanent link"></a></h2>
+<p>These extensions are more aimed towards implementations that intend to be libraries.</p>
+<h3 id="ext-embedability">Embedability<a class="headerlink" href="#ext-embedability" title="Permanent link"></a></h3>
+<p><em>Most</em> of Knight is self-contained, needing no interaction with the outside world, with a few exceptions: <code>OUTPUT</code>, <code>DUMP</code>, <code>PROMPT</code>, and <code>QUIT</code>. If writing a library, it may be prudent to make the behaviour of these commands customizable.</p>
+<p>For example, instead of always routing <code>OUTPUT</code> to stdout, you could collect it in a string, which you&rsquo;d return to the caller of your library later on.</p>
+<p><code>QUIT</code> is of special importance, as it is normally implemented with some form of <code>process.exit</code> function, which would <em>also</em> exit the calling library. Instead, you could throw a <code>QuitError</code> with the status code or something.</p>
+<h3 id="ext-native-functions">Register arbitrary native functions<a class="headerlink" href="#ext-native-functions" title="Permanent link"></a></h3>
+<p>Instead of only supporting the vanilla Knight functions (and any extensions you may have implemented), libraries may want to give the ability for users to register custom functions.</p>
+<p>Some considerations:</p>
+<ul>
+<li>Do you only want to allow <code>X</code> functions (which would probably be the simplest, parsing-wise), or also &ldquo;normal&rdquo; functions?</li>
+<li>Are extension functions restricted to only undefined symbols, or can they override native functions too?</li>
+</ul>
+<h3 id="ext-native-types">Register arbitrary native types<a class="headerlink" href="#ext-native-types" title="Permanent link"></a></h3>
+<p>Instead of only supporting the vanilla Knight types (and any extensions you may have implemented), libraries may want to give the ability for users to use custom types.</p>
+<p>For some implementations (such as those that use inheritance), this should be pretty simple: Just ensure the custom types inherit from some <code>Value</code> parent class. However for those that don&rsquo;t use inheritance, it may be a bit more involved.</p></article></body></html>
