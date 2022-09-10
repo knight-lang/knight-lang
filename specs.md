@@ -94,12 +94,12 @@ Implementations are required to recognize a minimum of the following characters 
 - Space (`0x20`, i.e. a space—` `)
 
 ### Interpreting `(`, `)`, and `:` as whitespace {#other-whitespace}
-While not defined as whitespace, implementations are free to ignore `(`, `)`, and `:` in source files. This is because for valid knight programs, `(` and `)` do nothing (see [Parenthesis Groupings](#parenthesis-groupings)), whereas [`:`](#fn-noop) is a function that simply returns its argument, and so could always be omitted.
+While not defined as whitespace, implementations are free to ignore `(`, `)`, and `:` in source files. This is because for valid Knight programs, `(` and `)` do nothing (see [Parenthesis Groupings](#parenthesis-groupings)), whereas [`:`](#fn-noop) is a function that simply returns its argument, and so could always be omitted.
 
 ## Comments
 Comments in Knight start with pound sign (`0x23`, i.e. `#`) and go until either a newline character (`0x0a`, i.e. `\n`) or end of file is encountered. Everything after the `#` should be ignored by the parser. There are no multiline or embedded comments in Knight.
 
-As mentioned in the [the required encoding section](#required-encoding), it's **undefined behaviour** for comments to contain illegal characters. However, like all other undefined behaviour in Knight, implementations are free to define their own behaviour when it is encountered (and thus may allow non-knight-encoding characters in comments).
+As mentioned in the [the required encoding section](#required-encoding), it's **undefined behaviour** for comments to contain illegal characters. However, like all other undefined behaviour in Knight, implementations are free to define their own behaviour when it is encountered (and thus may allow non-Knight-encoding characters in comments).
 
 For those familiar with regex, comments are `/#[^\n]*(\n|$)/`.
 
@@ -472,7 +472,7 @@ bar
 ### `DUMP(unchanged)` {#fn-dump}
 Dumps a debugging representation of its argument to stdout, and then returns it.
 
-This function is really meant to be used for debugging purposes (and unit testing), not in finished Knight programs. As such, there is no strict requirement for the debugging representation is.
+This function is really meant to be used for debugging purposes (and unit testing), not in finished Knight programs. As such, there is no strict requirement for the debugging representation.
 
 It is **undefined behaviour** to pass a `Block` to this function (the unit tester doesn't check for blocks). However, as it's undefined behaviour, implementations may dump a debug representation of `Block`s if they want.
 
@@ -535,7 +535,7 @@ The return value of this function depends on its first argument's type:
 - **`String`**: Converts and returns the first character's ASCII numerical equivalent. It is **undefined behaviour** for the string to be empty.
 - **All other types**: **undefined behaviour**
 
-Implementations may feel free to extend `ASCII` to go beyond ascii, and to use support unicode. However, this is not required.
+Implementations may feel free to extend `ASCII` to go beyond ASCII and even support Unicode. However, this is not required.
 
 Examples:
 ```knight
@@ -564,7 +564,7 @@ Examples:
 ### `[(unchanged)` {#fn-head}
 The return value of this function depends on its first argument's type:
 
-- **`String`**: Returns the a string of just first character. It is **undefined behaviour** for the string to be empty.
+- **`String`**: Returns a string of just first character. It is **undefined behaviour** for the string to be empty.
 - **`List`**: Returns the first element of the list. It is **undefined behaviour** for the list to be empty.
 - **All other types**: **undefined behaviour**
 
@@ -729,7 +729,7 @@ Examples:
 See [`<`](#fn-less-than).
 
 ### `?(unchanged, unchanged)` {#fn-equals}
-Unlike nearly every other function in Knight, this one does not automatically coerced its arguments—instead, it checks to see if arguments are the same type _and_ value. For example, `1` is equivalent to neither `"1"` nor `TRUE`.
+Unlike nearly every other function in Knight, this one does not automatically coerce its arguments—instead, it checks to see if arguments are the same type _and_ value. For example, `1` is equivalent to neither `"1"` nor `TRUE`.
 
 This function is only valid for the "basic types" (`Integer`, `String`, `Boolean`, `Null`, and `List`). Notably, it is **undefined behaviour** for either argument to be a `Block`.
 
@@ -906,14 +906,14 @@ SET (+@1234) 0 2 @       # => list of 3 and 4 (deletes range; "" to list is empt
 ```
 
 # Extensions
-This section describes some _entire optional_ extensions that Knight implementations could add. These are not at all required to be implemented, and are just some ideas for things implementations could add to make writing Knight more ~~enjoyable~~ bearable to write in.
+This section describes some _entirely optional_ extensions that Knight implementations could add. These are not at all required to be implemented, and are just some ideas for things implementations could add to make writing Knight more ~~enjoyable~~ bearable to write in.
 
 Again, **absolutely nothing described in this section is required by the Knight specifications**. Knight programs that want to be maximally portable shouldn't assume any of these are implemented.
 
 Note that, asides from the `X` function, Knight reserves the right to use any upper case letter or symbol as a function name in future revisions of the specifications. (However, I don't see that happening.)
 
 ## Command Line Arguments {#ext-command-line-arguments}
-While not strictly required, (because not every implementation language can access command-line arguments—such as knight itself), there is a standardized set of command-line options that most Knight implementations follow:
+While not strictly required, (because not every implementation language can access command-line arguments—such as Knight itself), there is a standardized set of command-line options that most Knight implementations follow:
 
 - If two arguments are given, and the first is `-e`, interpret the second as a Knight program and execute it.
 - If two arguments are given, and the second is `-f`, interpret the second as a path to a Knight program. Read the contents of that file, and then execute those. 
@@ -935,7 +935,7 @@ cat <(echo "$*") /dev/stdin | ./knight
 ```
 
 ## Handling Undefined Behaviour {#ext-handling-undefined-behaviour}
-The Knight specs have a lot of undefined behaviour to leave a lot up to implementations. However, this means that writing Knight programs has a lot of potential pitfalls. As such, you may want to catch some forms of undefined behaviour and exit gracefully.
+The Knight specs have a lot of undefined behaviour that leaves a lot up to implementations. However, this means that writing Knight programs has a lot of potential pitfalls. As such, you may want to catch some forms of undefined behaviour and exit gracefully.
 
 Some forms may be easier than others: Division by zero is usually pretty easy to detect. But it may be inefficient or cumbersome to ensure that every string that's created is no longer than the maximum integer size. Implementations could pick and choose which ones they handle and which ones they don't.
 
@@ -1005,7 +1005,7 @@ YEET "oops" # => crash with the error message "oops"
 	: OUTPUT +++"unable to double " number ":" _
 ```
 
-### `USE(string)`: Import other knight files {#ext-use}
+### `USE(string)`: Import other Knight files {#ext-use}
 In Knight, there is no way to import files whatsoever. This means that every single Knight program will be a single file, which can get unwieldy for larger programs. Implementations may want to implement a `USE` function, which would import files.
 
 A few other ideas:
@@ -1045,7 +1045,7 @@ Some other ideas:
 ### `EVAL(string)`: Evaluate a string as Knight code {#ext-eval}
 _This function was previously a required function; it is now an optional extension_
 
-This function would convert its argument to a string, and then execute it as a Knight string. (Of course, the string should be valid knight; if it wasn't, it'd be undefined behaviour.)
+This function would convert its argument to a string, and then execute it as a Knight string. (Of course, the string should be valid Knight; if it wasn't, it'd be undefined behaviour.)
 
 This function would act _as if_ its invocation were replaced by the contents of the string, e.g.:
 ```
@@ -1064,7 +1064,7 @@ should be equivalent to
 These extensions provide syntactic sugar for some common idioms in Knight
 
 ### `` ` ``-string literals {#ext-grave-strings}
-Working with strings in Knight is a bit of a pain: There's no escape sequences, and the only way to generate a larger string is through concatenation.
+Working with strings in Knight is a bit of a pain: There are no escape sequences, and the only way to generate a larger string is through concatenation.
 ```knight
 OUTPUT ++++greeting ", " name ", aged " age "!
 How are you?"
@@ -1145,7 +1145,7 @@ Implementations could choose to implement a "method" type, which would be passed
 
 Example:
 ```
-# Since `{` is not a part of the knight spec, let's use it to
+# Since `{` is not a part of the Knight spec, let's use it to
 # define arguments if it's after `BLOCK`
 ; = greet BLOCK{greeting where}
 	: ++ greeting ", " where
@@ -1158,7 +1158,7 @@ Vanilla Knight has absolutely no way to "exit early" from `WHILE` loops. As an e
 
 Additionally, you may want to implement a `XRETURN` function to return early and even `XGOTO`/`XLABEL`.
 
-Heck, you could even implement an `XFOR` or `XFOREACH` if you wanted,
+Heck, you could even implement an `XFOR` or `XFOREACH` if you wanted.
 
 ## Extensibility {#ext-extensibility}
 These extensions are more aimed towards implementations that intend to be libraries.
