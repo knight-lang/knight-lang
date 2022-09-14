@@ -1,6 +1,15 @@
 require 'minitest'
 require 'minitest/spec'
 
+def section(section, name, parallelize: true, &block)
+	describe "[#{section}] #{name}" do
+		include Kn::Test::Spec
+		parallelize_me! if parallelize
+
+		instance_exec(&block)
+	end
+end
+
 module Kn; end
 
 module Kn::Test
@@ -78,15 +87,16 @@ module Kn::Test
 end
 
 module Kn::Test::Spec
-	def eval(expr, **k)
-		case (result = exec("DUMP #{expr}", **k).chomp)
-		when /\ANull\(\)\Z/i                                 then :null
-		when /\A(?:String|Str|Text)\((.*?)\)\Z/mi            then $1
-		when /\A(?:Boolean|Bool)\((true|false)\)\Z/i         then $1.downcase == 'true'
-		when /\A(?:Number|Num|Integer|Int)\(([-+]?\d+)\)\Z/i then $1.to_i
-		else raise Kn::Test::BadResult.new expr, result
-		end
-	end
+  def eval(expr, **k)
+    case (result = exec("DUMP #{expr}", **k).chomp)
+    when /\A(null|nil|none)(\(\))?\Z/i then :null
+    when /\A(?:string|str|text)\((.*?)\)\Z/mi then $1
+    when /\A("')(.*?)(\1)/m then %|"#$2"|.undump # FIXME: maybe just regex replace `\"` and `\'`?
+    when /\A((?:boolean|bool)?\()?(true|false)(?(1)\)|)\Z/i then $2.downcase == 'true'
+    when /\A((?:int|integer|num|number)\()?(\d+)(?(1)\)|)\Z/i then $2.to_i
+    else raise Kn::Test::BadResult.new expr, result
+    end
+  end
 
 	def exec(*a, **k)
 		Kn::Test.exec(*a, **k)
@@ -140,14 +150,5 @@ module Kn::Test::Spec
 	# todo: remove `when_testing` and make it `sanitizes`
 	def it(description, when_testing: nil)
 		super "[#{when_testing}] #{description}" if !when_testing || sanitization?(when_testing)
-	end
-end
-
-def section(number, name, parallelize: true, &block)
-	describe "#{number}. #{name}" do
-		include Kn::Test::Spec
-		parallelize_me! if parallelize
-
-		instance_exec(&block)
 	end
 end

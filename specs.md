@@ -127,7 +127,7 @@ For those familiar with regex, strings are `/'[^']*'|"[^"]*"/`.
 ## Variables {#parsing-variables}
 In Knight, all [variable](#variables)s are lower case (upper case letters are reserved for builtin functions). Variable names must start with an ASCII lower case letter (i.e. `a` (`0x61`) through `z` (`0x7a`)) or an underscore (`_` (`0x5f`)). After the initial letter, variable names may optionally include lower case letters, underscores, or ASCII digits (i.e. `0` (`0x30`) through `9` (`0x39`)). Note that since upper case letters are not a part of variable names, they're allowed to immediately follow variables. `+aRANDOM` should be parsed as `+`, `a`, and `RANDOM`.
 
-Implementations are required to support variable names of at most 127 characters, although they may choose to allow longer variable names.
+Implementations are required to support variable names of at most 127 characters, although they may choose to allow longer variable names. It is **undefined behaviour** for programs to have variable names longer than 127 characters.
 
 For those familiar with regex, variables are `/[a-z_][a-z_0-9]*/`.
 
@@ -269,7 +269,7 @@ The boolean type in Knight has two variants: `false` and `true`. These two value
 
 
 ## Null
-The `null` type is used to indicate the absence of a value within Knight, and is the return value of some function (such as `OUTPUT` and `WHILE`). While it does have conversions defined for all contexts, no conversions _into_ `null` exist.
+The `null` type is used to indicate the absence of a value within Knight, and is the return value of some functions (such as `OUTPUT` and `WHILE`). While it does have conversions defined for all contexts, no conversions _into_ `null` exist.
 
 ### Contexts {#null-contexts}
 (See [here](#evaluation-contexts) for more details on contexts.)
@@ -318,7 +318,7 @@ The Block type does not have any contexts defined. Attempting to coerce a Block 
 ### Valid functions for Blocks
 Because blocks aren't allowed to be used in any contexts, there's only a handful of places they may be used. Attempting to use them anywhere else is considered **undefined behaviour**
 
-- The sole argument to [`:`](#fn-noop), [`BLOCK`](#fn-block) itself (ie `BLOCK BLOCK ...`), [`CALL`](#fn-call), and [`,`](#fn-box).
+- The sole argument to [`:`](#fn-noop), [`BLOCK`](#fn-block) itself (ie `BLOCK BLOCK ...`), [`CALL`](#fn-call), [`DUMP`](#fn-dump), and [`,`](#fn-box).
 - The second argument to [`=`](#fn-while), [`&`](#fn-and), or [`|`](#fn-or)
 - Either argument of [`;`](#fn-then)
 - Either the second or third argument of [`IF`](#fn-if)
@@ -472,9 +472,7 @@ bar
 ### `DUMP(unchanged)` {#fn-dump}
 Dumps a debugging representation of its argument to stdout, and then returns it.
 
-This function is really meant to be used for debugging purposes (and unit testing), not in finished Knight programs. As such, there is no strict requirement for the debugging representation.
-
-It is **undefined behaviour** to pass a `Block` to this function (the unit tester doesn't check for blocks). However, as it's undefined behaviour, implementations may dump a debug representation of `Block`s if they want.
+This function is really meant to be used for debugging purposes (and unit testing), not in finished Knight programs. As such, there is no strict requirement for the debugging representation. Additionally, unlike most functions, `Block`s can be passed as the only argument to `DUMP`.
 
 However, if you want to use the Knight unit tests, then the output of this must conform to the following regexes, or the tester will get confused. _(**TODO**: update these when the unit tester becomes updated.)_
 
@@ -483,6 +481,7 @@ However, if you want to use the Knight unit tests, then the output of this must 
 - `Boolean(<bool>)` - `<bool>` must be either `true` or `false`.
 - `String(<string>)` - The literal contents of the string—no escaping whatsoever should be performed. (e.g. `DUMP "foo'b)ar\"` should write `String(foo'b)ar\)`).
 - `List(<element1>, <element2>, ..., <element n>)`, no newlines. or `[...]`
+- _Whilst `block`s are valid arguments to `DUMP`, the unit tester will never check for them, so implementations are free to do what they want for their dumping_
 
 Like [`OUTPUT`](#fn-output), it's **undefined behaviour** if there's any issues writing to stdout.
 
@@ -916,7 +915,7 @@ Note that, asides from the `X` function, Knight reserves the right to use any up
 While not strictly required, (because not every implementation language can access command-line arguments—such as Knight itself), there is a standardized set of command-line options that most Knight implementations follow:
 
 - If two arguments are given, and the first is `-e`, interpret the second as a Knight program and execute it.
-- If two arguments are given, and the second is `-f`, interpret the second as a path to a Knight program. Read the contents of that file, and then execute those. 
+- If two arguments are given, and the first is `-f`, interpret the second as a path to a Knight program. Read the contents of that file, and then execute those. 
 - If no arguments are given, then print out a usage message (such as `usage: knight (-e 'expr' | -f <path>)`)
 
 Note that the Knight unit tester expects `-e 'expr'` to be defined, and you won't be able to use it without this.
