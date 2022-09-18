@@ -44,11 +44,11 @@
 Knight is a simple programing language, designed with the goal of being easily implementable in nearly any language. Since each language has a slightly different way of doing things, the Knight specs may leave some things up to the implementation. This allows each language to implement Knight in the most idiomatic way possible.
 
 ## Undefined Behaviour
-Yes, Knight has undefined behaviour, which is almost universally considered a bad idea(tm)—it makes programmers' life harder and compilers' easier. However, since Knight's primary focus _is_ to make writing compilers easy (and being somewhat-usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything from sed to Python to Prolog to APL.
+Yes, Knight has undefined behaviour, which is almost universally considered a bad idea (tm)—it makes a programmer's life harder but compiler implementation easier. However, since Knight's primary focus _is_ to make writing compilers easy (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, wheter it be sed, Python, Prolog or APL.
 
 Throughout this document, there will be places where something is described as **undefined behaviour**. If undefined behaviour is ever encountered during the parsing or execution of a Knight program, then the entire program is invalid; implementations may do whatever they want (including ignoring the error, segfaulting, custom extension behaviour, etc.).
 
-Some forms of undefined behaviour may be easier to check than others depending on the implementation language. For example, most implementations should be able to detect a division-by-zero error (e.g. by an exception being thrown). However, it may be more impossible to detect standard out being closed (such as in brainf\*ck). Implementations are encouraged, but not required, to handle easily-checked undefined behaviour.
+Some forms of undefined behaviour may be easier to check than others, depending on the implementation language. For example, most implementations should be able to detect a division-by-zero error (e.g. by an exception being thrown). However, it may be more impossible to detect standard out being closed (such as in brainf\*ck). Implementations are encouraged, but not required, to handle easily-checked undefined behaviour.
 
 To reiterate, **if undefined behaviour is encountered at any point during the parsing or execution of a Knight program, the entire program is ill-defined, and implementations may do whatever they want.**
 
@@ -241,7 +241,7 @@ Note that all mathematical operations in Knight that would cause over/underflow 
 - **integer**: In integer contexts, the integer itself is simply returned.
 - **string**: In string contexts, integers are converted to their base-10 representation. Negative integers should have a `-` prepended to the beginning of the string (positive integers shouldn't get `+`). For example, `0 -> "0"`, `123 -> "123"`, and `~12 -> "-12"`.
 - **boolean**: In boolean contexts, zero becomes `false`, and all other integers (ie nonzero) become `true`.
-- **list**: In list contexts, the digits of the integer should be returned in ascending order. If the integer is negative, each digit should become negated as well. For example, `+@123` would return a list of `1`, then `2`, then `3`, whereas `+@~123` would return a list of `-1`, `-2`, and `-3`.
+- **list**: In list contexts, the digits of the integer should be returned order of most significant to least significant. If the integer is negative, each digit should become negated as well. For example, `+@123` would return a list of `1`, then `2`, then `3`, whereas `+@~123` would return a list of `-1`, `-2`, and `-3`.
 
 ## String
 Strings in Knight are like strings in most other languages, albeit a bit simpler: They're immutable (like all types within Knight), and are _only_ required to be able to represent a [specific subset of ASCII](#required-encoding). Implementations are free to support more characters (e.g. all of ASCII, or Unicode), but this is not required.
@@ -265,7 +265,7 @@ The boolean type in Knight has two variants: `false` and `true`. These two value
 - **integer**: In integer contexts, `false` becomes `0` and `true` becomes `1`.
 - **string**: In string contexts, `false` becomes `"false"` and `true` becomes `"true"`.
 - **boolean**: In boolean contexts, the boolean itself is simply returned.
-- **list**: In list contexts, `false` becomes an empty list and `true` becomes a list just containing `TRUE`. (i.e. `+@FALSE` is equivalent to `@`, whereas `+@TRUE` is equivalent to `,TRUE`).
+- **list**: In list contexts, `false` becomes an empty list and `true` becomes a list just containing `true`. (i.e. `+@FALSE` is equivalent to `@`, whereas `+@TRUE` is equivalent to `,TRUE`).
 
 
 ## Null
@@ -280,7 +280,7 @@ The `null` type is used to indicate the absence of a value within Knight, and is
 - **list**: In list contexts, null becomes an empty list.
 
 ## List
-Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists and entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, lists are ordered (e.g. `[list` should always give you the same element for nonempty lists).
+Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists and entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, a list is a datatype with an order; ie, list elements retain the order in which they are 	. (e.g. `[ list` should always give you the same element for nonempty lists).
 
 While rare in practice, it is **undefined behaviour** for Knight programs to attempt to create lists with a length larger than [the maximum value for integers](#integer-bounds). (Thus, `LENGTH list` will always have a well-defined result.)
 
@@ -318,7 +318,7 @@ The Block type does not have any contexts defined. Attempting to coerce a Block 
 ### Valid functions for Blocks
 Because blocks aren't allowed to be used in any contexts, there's only a handful of places they may be used. Attempting to use them anywhere else is considered **undefined behaviour**
 
-- The sole argument to [`:`](#fn-noop), [`BLOCK`](#fn-block) itself (ie `BLOCK BLOCK ...`), [`CALL`](#fn-call), [`DUMP`](#fn-dump), and [`,`](#fn-box).
+- The sole argument to [`:`](#fn-noop), [`BLOCK`](#fn-block) itself (ie `BLOCK BLOCK ...`), [`CALL`](#fn-call), and [`,`](#fn-box).
 - The second argument to [`=`](#fn-while), [`&`](#fn-and), or [`|`](#fn-or)
 - Either argument of [`;`](#fn-then)
 - Either the second or third argument of [`IF`](#fn-if)
@@ -343,7 +343,7 @@ Every function in Knight has a predetermined arity—there are no variadic funct
 
 Unless otherwise noted, all functions will _evaluate_ their arguments beforehand. This means that `+ a b` should fetch the value of `a`, the value of `b`, and then add them together, and should _not_ attempt to add a literal identifier to another literal identifier (which doesn't even make sense).
 
-All arguments _must_ be evaluated in order (from the first argument to the last)—functions such as `;` rely on this.
+All arguments _must_ be evaluated in order (from left to right)—functions such as `;` rely on this.
 
 As mentioned before, any operators which would return an integer outside of the implementation-supported integer range, the return value is undefined. (i.e. integer overflow is an undefined operation.)
 
@@ -472,7 +472,7 @@ bar
 ### `DUMP(unchanged)` {#fn-dump}
 Dumps a debugging representation of its argument to stdout, and then returns it.
 
-This function is really meant to be used for debugging purposes (and unit testing), not in finished Knight programs. As such, there is no strict requirement for the debugging representation. Additionally, unlike most functions, `Block`s can be passed as the only argument to `DUMP`.
+This function is really meant to be used for debugging purposes (and unit testing), not in finished Knight programs. As such, there is no strict requirement for the debugging representation.
 
 However, if you want to use the Knight unit tests, then the output of this must conform to the following regexes, or the tester will get confused. _(**TODO**: update these when the unit tester becomes updated.)_
 
@@ -481,7 +481,6 @@ However, if you want to use the Knight unit tests, then the output of this must 
 - `Boolean(<bool>)` - `<bool>` must be either `true` or `false`.
 - `String(<string>)` - The literal contents of the string—no escaping whatsoever should be performed. (e.g. `DUMP "foo'b)ar\"` should write `String(foo'b)ar\)`).
 - `List(<element1>, <element2>, ..., <element n>)`, no newlines. or `[...]`
-- _Whilst `block`s are valid arguments to `DUMP`, the unit tester will never check for them, so implementations are free to do what they want for their dumping_
 
 Like [`OUTPUT`](#fn-output), it's **undefined behaviour** if there's any issues writing to stdout.
 
@@ -955,7 +954,7 @@ Examples:
 : OUTPUT VALUE + "a" "b" # prints out 3
 ```
 
-### Assign to strings within `=`	{#ext-assign-to-strings}
+### Assign to strings within `=` {#ext-assign-to-strings}
 In base Knight, the only valid value for the first argument of `=` is a variable: Everything else is undefined behaviour. However, implementations could overload `=` so that if, after evaluating the first argument, it is a string, and then interpreted as a variable name.
 
 If you want to get really fancy, you could also do destructuring assignment—if the first argument is a list, you convert the second argument to a list, and sequentially assign values.
@@ -1062,7 +1061,7 @@ should be equivalent to
 ## Syntactic Sugar {#ext-syntactic-sugar}
 These extensions provide syntactic sugar for some common idioms in Knight
 
-### `` ` ``-string literals {#ext-grave-strings}
+### `` ` ``-string literals {#ext-string-interpolation}
 Working with strings in Knight is a bit of a pain: There are no escape sequences, and the only way to generate a larger string is through concatenation.
 ```knight
 OUTPUT ++++greeting ", " name ", aged " age "!

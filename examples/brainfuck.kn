@@ -6,7 +6,7 @@
 
 # Read the sourcecode in from stdin, and initialize the position
 # into it to zero.
-; = source "[[]]+."#PROMPT
+; = source '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.'
 ; = srcpos 0
 
 # Setup the brainfuck VM. We just need a list of 30,000 zeros and
@@ -17,7 +17,7 @@
 # Since brainfuck reads from stdin a byte at a time, and knight only
 # reads lines at a time, we have to read an entire line in, then
 # use individual bytes.
-; = inpbuf ""
+; = inpbuf ''
 
 # A stack of start indices, used for `[` to keep track of previous iterations.
 ; = start_indices @
@@ -52,7 +52,7 @@
 
 		# If the character is `.`, then print out the ascii value.
 		: IF (? chr '.')
-			: OUTPUT + ASCII [(GET ary idx 1) "\"
+			: OUTPUT + ASCII [(GET ary idx 1) '\'
 
 		# If the character is `,`, then we need to read a single character in. Since knight cannot
 		# read single characters at a time, we have to instead read a whole `PROMPT` line in, then

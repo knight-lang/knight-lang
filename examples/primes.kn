@@ -33,7 +33,6 @@
 		: = all ]all
 	: primes
 
-; = PROMPT 97
 ; = max + 0 PROMPT
 ; OUTPUT ++ "the primes from 2-" max " are:"
 : OUTPUT ^ (CALL primes_upto) " "

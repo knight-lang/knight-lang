@@ -65,7 +65,7 @@
 	: | & (< '@' chr) (> '[' chr) (? '_' chr)
 
 ; = take_while BLOCK
-	; = result ""
+	; = result ''
 	; WHILE & (CALL peek) (CALL block)
 		; = result + result chr
 		: CALL advance
@@ -103,10 +103,11 @@
 
 ; = parse_string BLOCK
 	; = quote chr
+	; CALL advance
 	; = block BLOCK !?chr quote
 	; = string CALL take_while
 	; & (CALL iseof)
-		; OUTPUT ++ "unterminated quote: " quote string
+		; OUTPUT ++ 'unterminated quote: ' quote string
 		: QUIT 1
 	; CALL advance # remove trailing quote, if one exists
 	: + ,type_string ,string
@@ -140,7 +141,7 @@
 ; = parse BLOCK
 	; CALL strip_whitespace_and_comments
 	; & CALL iseof 
-		; OUTPUT "end of stream encountered when a token was expected."
+		; OUTPUT 'end of stream encountered when a token was expected.'
 		: QUIT 1
 	: IF CALL isdigit
 		: CALL parse_integer
@@ -206,9 +207,9 @@
 
 	: IF (? name 'A') : +,1 ,BLOCK
 		; CALL run_next_arg
-		: IF ? type_integer [value : +,type_string  ,ASCII ]value
-		: IF ? type_string  [value : +,type_integer ,ASCII ]value
-		; OUTPUT +"bad type for `A`: " [value QUIT 1
+		: IF ? type_integer [value : +,type_string  ,ASCII []value
+		: IF ? type_string  [value : +,type_integer ,ASCII []value
+		; OUTPUT +'bad type for `A`: ' [value QUIT 1
 
 	: IF (? name ',') : +,1 ,BLOCK
 		: +,type_list ,,CALL run_next_arg
@@ -220,38 +221,39 @@
 		: +,type_list ,]CALL next_list
 
 	: IF (? name '+') : +,2 ,BLOCK
-		; CALL CALL run_next_arg
+		; CALL run_next_arg
 		: IF ? type_integer [value : +,type_integer ,(+ []value CALL next_integer)
 		: IF ? type_string [value  : +,type_string  ,(+ []value CALL next_string)
 		: IF ? type_list [value    : +,type_list    ,(+ []value CALL next_list)
-		; OUTPUT +"bad type for `+`: " [value QUIT 1
+		; OUTPUT +'bad type for `+`: ' [value QUIT 1
 
 	: IF (? name '-') : +,2 ,BLOCK
 		; CALL run_next_arg
 		: IF ? type_integer [value : +,type_integer ,(- []value CALL next_integer)
-		; OUTPUT +"bad type for `-`: " [value QUIT 1
+		; OUTPUT +'bad type for `-`: ' [value QUIT 1
+
 	: IF (? name '*') : +,2 ,BLOCK
 		; CALL run_next_arg
 		: IF ? type_integer [value : +,type_integer ,(* []value CALL next_integer)
 		: IF ? type_string [value  : +,type_string  ,(* []value CALL next_integer)
 		: IF ? type_list [value    : +,type_list    ,(* []value CALL next_integer)
-		; OUTPUT +"bad type for `*`: " [value QUIT 1
+		; OUTPUT +'bad type for `*`: ' [value QUIT 1
 
 	: IF (? name '%') : +,2 ,BLOCK
 		; CALL run_next_arg
 		: IF ? type_integer [value : +,type_integer ,(% []value CALL next_integer)
-		; OUTPUT +"bad type for `%`: " [value QUIT 1
+		; OUTPUT +'bad type for `%`: ' [value QUIT 1
 
 	: IF (? name '/') : +,2 ,BLOCK
 		; CALL run_next_arg
 		: IF ? type_integer [value : +,type_integer ,(/ []value CALL next_integer)
-		; OUTPUT +"bad type for `/`: " [value QUIT 1
+		; OUTPUT +'bad type for `/`: ' [value QUIT 1
 
 	: IF (? name '^') : +,2 ,BLOCK
 		; CALL run_next_arg
 		: IF ? type_integer [value : +,type_integer ,(^ []value CALL next_integer)
 		: IF ? type_list [value    : +,type_list    ,(^ []value CALL next_string)
-		; OUTPUT +"bad type for `^`: " [value QUIT 1
+		; OUTPUT +'bad type for `^`: ' [value QUIT 1
 
 	: IF (? name '?') : +,2 ,BLOCK
 		; CALL next_arg
@@ -263,7 +265,7 @@
 		: IF ? type_string [value  : +,type_boolean ,(< []value CALL next_string)
 		: IF ? type_list [value    : +,type_boolean ,(< []value CALL next_list)
 		: IF ? type_boolean [value : +,type_boolean ,(< []value CALL next_boolean)
-		; OUTPUT +"bad type for `<`: " [value QUIT 1
+		; OUTPUT +'bad type for `<`: ' [value QUIT 1
 
 	: IF (? name '>') : +,2 ,BLOCK
 		; CALL run_next_arg
@@ -271,7 +273,7 @@
 		: IF ? type_string [value  : +,type_boolean ,(> []value CALL next_string)
 		: IF ? type_list [value    : +,type_boolean ,(> []value CALL next_list)
 		: IF ? type_boolean [value : +,type_boolean ,(> []value CALL next_boolean)
-		; OUTPUT +"bad type for `>`: " [value QUIT 1
+		; OUTPUT +'bad type for `>`: ' [value QUIT 1
 
 	: IF (? name '&') : +,2 ,BLOCK
 		: IF CALL next_boolean
@@ -298,7 +300,7 @@
 		; WHILE (; = value [args CALL to_boolean)
 			; = value []args
 			: CALL run
-		; ,type_null NULL
+		: + ,type_null NULL
 
 	: IF (? name 'I') : +,3 ,BLOCK
 		: IF CALL next_boolean
@@ -306,9 +308,23 @@
 		; CALL next_arg
 		: CALL run_next_arg
 
-	: IF (? name 'G') : +,3 ,BLOCK ; OUTPUT "todo" QUIT 1
-	: IF (? name 'S') : +,4 ,BLOCK ; OUTPUT "todo" QUIT 1
-	; OUTPUT ++ "unknown function '" name "'."
+	: IF (? name 'G') : +,3 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_list [value
+			: +,type_list ,GET []value CALL next_integer CALL next_integer
+		: IF ? type_string [value
+			: +,type_string ,GET []value CALL next_integer CALL next_integer
+		; OUTPUT +'bad type for `G`: ' [value QUIT 1
+
+	: IF (? name 'S') : +,4 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_list [value
+			: +,type_list ,SET []value CALL next_integer CALL next_integer CALL next_list
+		: IF ? type_string [value
+			: +,type_string ,SET []value CALL next_integer CALL next_integer CALL next_string
+		; OUTPUT +'bad type for `S`: ' [value QUIT 1
+
+	; OUTPUT ++ 'unknown function `' name '`.'
 	: QUIT 1
 
 
@@ -321,7 +337,7 @@
 	: IF ? type_variable	[value
 		: = value 
 			| ([GET variables []value 1)
-				; OUTPUT +"undefined variable: " GET variable_names []value 1
+				; OUTPUT +'undefined variable: ' GET variable_names []value 1
 				: QUIT 1
 
 	; = args_stack + ,args args_stack
@@ -337,5 +353,92 @@
 	; = variables *,NULL LENGTH variable_names
 	: CALL run
 
-; = stream "; = i = sum 0 ; WHILE < i 10 ;= i + i 1 = sum + sum i OUTPUT sum"
+
+#; = stream "#hello.
+#D 1"
+#: CALL play
+
+#; = stream "; = i = sum 0 ; WHILE < i 10000 ;= i + i 1 = sum + sum i OUTPUT sum"
+; = stream "# An example brainfuck interpreter in Knight. Note that this
+# interpreter uses the native knight integer type, and not
+# the traditional single byte cells.
+
+# Example input: ++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
+
+# Read the sourcecode in from stdin, and initialize the position
+# into it to zero.
+#; = source '[[]]+.'#PROMPT
+; = source '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.'
+; = srcpos 0
+
+# Setup the brainfuck VM. We just need a list of 30,000 zeros and
+# an index into it, which starts at zero.
+; = ary * ,0 30000
+; = idx 0
+
+# Since brainfuck reads from stdin a byte at a time, and knight only
+# reads lines at a time, we have to read an entire line in, then
+# use individual bytes.
+; = inpbuf ''
+
+# A stack of start indices, used for `[` to keep track of previous iterations.
+; = start_indices @
+
+# The brainfuck block itself.
+; = bf BLOCK
+	# We run the body of `bf` while there's stills something left to be read.
+	: WHILE < srcpos (LENGTH source)
+		# Get the current character we're supposed to be looking at, and increment the index.
+		; = chr (GET source srcpos 1)
+		; = srcpos + srcpos 1
+
+		# Now we have a massive if-then chain for all the different brainfuck commands.
+
+		# If the character is `>`, then increment the `ary` index by one.
+		: IF (? chr '>')
+			: = idx + idx 1
+
+		# If the character is `<`, then decrement the `ary` index by one.
+		: IF (? chr '<')
+			: = idx - idx 1
+
+		# If the character is `+`, add one to the pointed to value.
+		: IF (? chr '+')
+			; = curr_value [(GET ary idx 1)
+			: = ary SET ary idx 1 ,(+ curr_value 1) # replace the old index with the new one.
+
+		# If the character is `-`, add one to the pointed to value.
+		: IF (? chr '-')
+			; = curr_value [(GET ary idx 1)
+			: = ary SET ary idx 1 ,(- curr_value 1) # replace the old index with the new one.
+
+		# If the character is `.`, then print out the ascii value.
+		: IF (? chr '.')
+			: OUTPUT + ASCII [(GET ary idx 1) '\'
+
+		# If the character is `,`, then we need to read a single character in. Since knight cannot
+		# read single characters at a time, we have to instead read a whole `PROMPT` line in, then
+		# get the first charcater from that.
+		: IF (? chr ',')
+			; = inpbuf | inpbuf PROMPT
+			; = ary SET ary idx 1 (ASCII [inpbuf)
+			: = inpbuf ]inpbuf
+
+		# If the character is `[`, we have to start a loop. To do this, we have to keep track of the
+		# current position of `srcpos`, so when we reach the end of the loop, we know what to reset
+		# `srcpos` to. Since knight doesn't have local variables, we do this by prepending them to the
+		# `start_indices` list, and then removing them when we're done.
+		: IF (? chr '[')
+			; = start_indices +,srcpos start_indices
+			; WHILE ([GET ary idx 1)
+				; CALL bf
+				: = srcpos [start_indices # reset src pos.
+			; = srcpos endpos # set the next character to the end. FIXME: this doesnt work for loops that never run.
+			: = start_indices ]start_indices
+		: IF (? chr ']')
+			; = endpos srcpos
+			: = srcpos LEN source
+		: NULL
+: CALL bf
+"
 : CALL play
