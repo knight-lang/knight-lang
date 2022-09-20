@@ -21,7 +21,7 @@ section 'OUTPUT' do
 		assert_output "foobar\nbaz\n\n", %|OUTPUT "foobar\nbaz\n"|
 	end
 
-	it 'wont print with a trailing `\`' do
+	it 'wont print a newline with a trailing `\`' do
 		assert_output "", %|OUTPUT "\\"|
 		assert_output "hello", %|OUTPUT "hello\\"|
 		assert_output "world\n", %|OUTPUT "world\n\\"|
@@ -32,7 +32,9 @@ section 'OUTPUT' do
 		assert_output "-123\n", %|OUTPUT ~123|
 		assert_output "true\n", %|OUTPUT TRUE|
 		assert_output "false\n", %|OUTPUT FALSE|
-		assert_output "null\n", %|OUTPUT NULL|
+		assert_output "\n", %|OUTPUT NULL|
+		assert_output "\n", %|OUTPUT @|
+		assert_output "1\n2\n3\n", %|OUTPUT +@123|
 	end
 
 	it 'does not allow blocks or variables as the first operand', when_testing: :strict_types do

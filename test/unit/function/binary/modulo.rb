@@ -1,7 +1,9 @@
 require_relative '../shared'
 
+#TODO: ensure that modulo actually conforms to the `a = (a/b)*b + a%b` requirements
+
 section '%' do
-	it 'modulos positive numbers normally' do
+	it 'modulos positive integers normally' do
 		assert_result 0, %|% 1 1|
 		assert_result 0, %|% 4 4|
 		assert_result 0, %|% 15 1|
@@ -28,22 +30,22 @@ section '%' do
 		refute_runs %|% 1 NULL|
 	end
 
-	# note that, as per the Knight spec, modulo where either number is negative is undefined.
-	it 'does not allow for negative numbers anywhere', when_testing: :invalid_values do
+	# note that, as per the Knight spec, modulo where either integer is negative is undefined.
+	it 'does not allow for negative integers anywhere', when_testing: :invalid_values do
 		refute_runs %|% 1 ~1|
 		refute_runs %|% ~1 1|
 		refute_runs %|% ~1 ~1|
 	end
 
-	it 'only allows a number as the first operand', when_testing: :invalid_types do
+	it 'only allows an integer as the first operand', when_testing: :invalid_types do
 		refute_runs %|% TRUE 1|
 		refute_runs %|% FALSE 1|
 		refute_runs %|% NULL 1|
-		refute_runs %|% "not-a-number" 1|
+		refute_runs %|% "not-a-integer" 1|
 		refute_runs %|% "123" 1| # ie a numeric string
 	end
 
-	it 'does not allow a function or variable as any operand', when_testing: :strict_types do
+	it 'does not allow a block as any operand', when_testing: :strict_types do
 		refute_runs %|; = a 3 : % (BLOCK a) 1|
 		refute_runs %|; = a 3 : % 1 (BLOCK a)|
 		refute_runs %|% (BLOCK QUIT 0) 1|

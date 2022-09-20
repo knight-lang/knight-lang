@@ -1,7 +1,7 @@
 require_relative '../shared'
 
 section '/' do
-	it 'divides nonzero numbers normally' do
+	it 'divides nonzero integers normally' do
 		assert_result 1, %|/ 1 1|
 		assert_result 5, %|/ 10 2|
 		assert_result -5, %|/ ~10 2|
@@ -31,6 +31,7 @@ section '/' do
 		assert_result 7, %|/ 15 "2"|
 		assert_result 22, %|/ 91 "4"|
 		assert_result 9, %|/ 9 TRUE|
+		assert_result 4, %|/ 9 +@12|
 	end
 
 	# Note that there's no way to overflow with division, as we only have integers.
@@ -38,19 +39,22 @@ section '/' do
 	it 'does not divide by zero', when_testing: :zero_division do
 		refute_runs %|/ ~1 0|
 		refute_runs %|/ 100 0|
+		refute_runs %|/ 100 ""|
 		refute_runs %|/ 1 FALSE|
 		refute_runs %|/ 1 NULL|
+		refute_runs %|/ 1 @|
 	end
 
-	it 'only allows a number as the first operand', when_testing: :invalid_types do
+	it 'only allows an integer as the first operand', when_testing: :invalid_types do
 		refute_runs %|/ TRUE 1|
 		refute_runs %|/ FALSE 1|
 		refute_runs %|/ NULL 1|
-		refute_runs %|/ "not-a-number" 1|
+		refute_runs %|/ "not-a-integer" 1|
 		refute_runs %|/ "123" 1| # ie a numeric string
+		refute_runs %|/ +@123 1|
 	end
 
-	it 'does not allow a function or variable as any operand', when_testing: :strict_types do
+	it 'does not allow a block as any operand', when_testing: :strict_types do
 		refute_runs %|; = a 3 : / (BLOCK a) 1|
 		refute_runs %|; = a 3 : / 1 (BLOCK a)|
 		refute_runs %|/ (BLOCK QUIT 0) 1|

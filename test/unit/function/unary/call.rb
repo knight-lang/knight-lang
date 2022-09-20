@@ -1,5 +1,6 @@
 require_relative '../shared'
 
+# See also `types/block.rb`
 section 'CALL' do
 	it 'should run something returned by `BLOCK`' do
 		assert_result 12, %|CALL BLOCK 12|

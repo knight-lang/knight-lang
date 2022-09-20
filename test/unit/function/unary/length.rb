@@ -17,13 +17,14 @@ section 'LENGTH' do
 		assert_result 4, %|LENGTH 1111|
 	end
 
-	it 'returns the same length for negative values' do
+	it 'returns the same length for negative integers' do
 		assert_result 1, %|LENGTH ~0|
 		assert_result 1, %|LENGTH ~1|
 		assert_result 2, %|LENGTH ~59|
 		assert_result 4, %|LENGTH ~1111|
 	end
 
+	# Note that since basic Knight is ascii only, there's no difference between bytes and UTF8.
 	it 'returns the amount of chars in strings' do
 		assert_result 0, %|LENGTH ""|
 		assert_result 3, %|LENGTH "foo"|
@@ -32,9 +33,10 @@ section 'LENGTH' do
 		assert_result 100, %|LENGTH '#{'x' * 100}'|
 	end
 
-	it 'does not coerce its argument to a number and back' do
+	it 'does not coerce its argument to an integer and back' do
 		assert_result 2, %|LENGTH "-0"|
 		assert_result 5, %|LENGTH "49.12"|
+		assert_result 1, %|LENGTH ,"49.12"|
 	end
 
 	it 'returns the amount of elements in a list' do
@@ -60,4 +62,9 @@ section 'LENGTH' do
 		refute_runs %|; = a 0 : LENGTH BLOCK a|
 		refute_runs %|LENGTH BLOCK QUIT 0|
 	end
+
+  it 'supports lists and strings of max size', when_testing: :container_bounds do
+    assert_equal MAX_INT, %|LENGTH *,1 #{MAX_INT_S}|
+    assert_equal MAX_INT, %|LENGTH *"1" #{MAX_INT_S}|
+  end
 end

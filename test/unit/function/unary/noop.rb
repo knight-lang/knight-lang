@@ -7,6 +7,7 @@ section ':' do
 		assert_result true, %|: TRUE|
 		assert_result false, %|: FALSE|
 		assert_result :null, %|: NULL|
+		assert_result [], %|: @|
 	end
 
 	it 'also works with BLOCK return values' do

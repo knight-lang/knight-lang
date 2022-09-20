@@ -1,7 +1,7 @@
 require_relative '../shared'
 
 section '-' do
-	it 'adds numbers normally' do
+	it 'subtracts integers normally' do
 		assert_result 0, %|- 0 0|
 		assert_result -1, %|- 1 2|
 		assert_result -2, %|- 4 6|
@@ -13,12 +13,13 @@ section '-' do
 		assert_result 9, %|- ~4 ~13|
 	end
 
-	it 'converts other values to numbers' do
+	it 'converts other values to integers' do
 		assert_result -1, %|- 1 "2"|
 		assert_result 46, %|- 91 "45"|
 		assert_result 8, %|- 9 TRUE|
 		assert_result 9, %|- 9 FALSE|
 		assert_result 9, %|- 9 NULL|
+		assert_result 6, %|- 9 +@145|
 	end
 
 	it 'evaluates arguments in order' do
@@ -31,15 +32,16 @@ section '-' do
 		fail "todo: overflow (need to get bit length)"
 	end
 
-	it 'only allows a number as the first operand', when_testing: :invalid_types do
+	it 'only allows an integer as the first operand', when_testing: :invalid_types do
 		refute_runs %|- TRUE 1|
 		refute_runs %|- FALSE 1|
 		refute_runs %|- NULL 1|
-		refute_runs %|- "not-a-number" 1|
+		refute_runs %|- "not-a-integer" 1|
 		refute_runs %|- "123" 1| # ie a numeric string
+		refute_runs %|- @ 1|
 	end
 
-	it 'does not allow a function or variable as any operand', when_testing: :strict_types do
+	it 'does not allow a block as any operand', when_testing: :strict_types do
 		refute_runs %|; = a 3 : - (BLOCK a) 1|
 		refute_runs %|; = a 3 : - 1 (BLOCK a)|
 		refute_runs %|- (BLOCK QUIT 0) 1|

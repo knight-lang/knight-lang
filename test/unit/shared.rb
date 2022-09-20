@@ -5,7 +5,7 @@ MIN_INT_S = "~#{-MIN_INT}"
 MAX_INT_S = "#{MAX_INT}"
 
 WHITESPACE = %W[\t \n \r \s]
-REQUIRED_ENCODING = %W[
+KNIGHT_ENCODING = %W[
   \t \n \r \s
     ! " # $ % & ' ( ) * + , - . /
   0 1 2 3 4 5 6 7 8 9 : ; < = > ?

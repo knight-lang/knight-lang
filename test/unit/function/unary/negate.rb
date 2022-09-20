@@ -9,12 +9,14 @@ section '~' do
     assert_result 0, %|~0|
   end
 
-  it 'converts its argument to a number' do
+  it 'converts its argument to an integer' do
     assert_result -2, %|~ "2"|
     assert_result -45, %|~ "45"|
     assert_result -1, %|~ TRUE|
     assert_result 0, %|~ FALSE|
     assert_result 0, %|~ NULL|
+    assert_result 3, %|~ +@999|
+    assert_result 3, %|~ +@~999|
   end
 
   it 'requires exactly one argument', when_testing: :argument_count do

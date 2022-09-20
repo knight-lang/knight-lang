@@ -1,5 +1,6 @@
 require_relative '../shared'
 
+# See also `types/block.rb`
 section 'BLOCK' do
 	it 'should not eval its argument' do
 		assert_runs %|BLOCK variable|

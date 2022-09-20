@@ -49,7 +49,7 @@ section '>' do
 			assert_result true, %|> "1" 0|
 		end
 
-		it 'performs it even with numbers' do
+		it 'performs it even with integers' do
 			assert_result false, %|> "0" "00"|
 			assert_result false, %|> "1" "12"|
 			assert_result false, %|> "100" "12"|
@@ -62,7 +62,7 @@ section '>' do
 			assert_result false, %|> "  100" "  12"|
 		end
 
-		it 'coerces the RHS to a number' do
+		it 'coerces the RHS to an integer' do
 			assert_result false, %|> "0" 1|
 			assert_result false, %|> "1" 12|
 			assert_result false, %|> "100" 12|
@@ -79,12 +79,12 @@ section '>' do
 			assert_result true,  %|> "faslf" FALSE|
 
 			assert_result false, %|> "nulk" NULL|
-			assert_result false, %|> "null" NULL|
+			assert_result false, %|> "null" NULL| # FIXME
 			assert_result true,  %|> "nulm" NULL|
 		end
 	end
 
-	describe 'when the first arg is a number' do
+	describe 'when the first arg is an integer' do
 		it 'performs numeric comparison' do
 			assert_result false, %|> 1 1|
 			assert_result false, %|> 0 0|
@@ -102,7 +102,7 @@ section '>' do
 			assert_result true,  %|> ~4 ~13|
 		end
 
-		it 'coerces the RHS to a number' do
+		it 'coerces the RHS to an integer' do
 			assert_result false, %|> 0 TRUE|
 			assert_result false, %|> 0 "1"|
 			assert_result false, %|> 0 "49"|
@@ -128,11 +128,11 @@ section '>' do
 		assert_result false, %|> (= n FALSE) !n|
 	end
 
-	it 'only allows a number, boolean, or string as the first operand', when_testing: :invalid_types do
+	it 'only allows an integer, boolean, or string as the first operand', when_testing: :invalid_types do
 		refute_runs %|> NULL 1|
 	end
 
-	it 'does not allow a function or variable as any operand', when_testing: :strict_types do
+	it 'does not allow a block as any operand', when_testing: :strict_types do
 		refute_runs %|; = a 3 : > (BLOCK a) 1|
 		refute_runs %|; = a 3 : > 1 (BLOCK a)|
 		refute_runs %|> (BLOCK QUIT 0) 1|

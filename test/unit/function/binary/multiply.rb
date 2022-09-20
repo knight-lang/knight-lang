@@ -14,11 +14,12 @@ section '*' do
 			assert_result '', %|* "what up?" 0|
 		end
 
-		it 'coerces the RHS to a number' do
+		it 'coerces the RHS to an integer' do
 			assert_result 'foofoofoo', %|* "foo" "3"|
 			assert_result 'foo', %|* "foo" TRUE|
 			assert_result '', %|* "foo" NULL|
 			assert_result '', %|* "foo" FALSE|
+			assert_result 'foofoofoo', %|* "foo" +@123|
 		end
 
 		it 'only allows for a nonnegative duplication amount', when_testing: :invalid_values do
@@ -29,7 +30,36 @@ section '*' do
 		end
 	end
 
-	describe 'when the first arg is a number' do
+	describe 'when the first arg is a list' do
+		it 'duplicates itself with positive integers' do
+			assert_result [], %|* @ 12|
+			assert_result [1], %|* ,1 1|
+			assert_result ['a1', 'a1', 'a1', 'a1'], %|* ,"a1" 4|
+			assert_result [1, 2, 1, 2, 1, 2], %|* +@12 3|
+		end
+
+		it 'returns an empty list when multiplied by zero' do
+			assert_result [], %|* ,"hi" 0|
+			assert_result [], %|* ,"what up?" 0|
+		end
+
+		it 'coerces the RHS to an integer' do
+			assert_result ['foo', 'foo', 'foo'], %|* ,"foo" "3"|
+			assert_result ['foo'], %|* ,"foo" TRUE|
+			assert_result [], %|* ,"foo" NULL|
+			assert_result [], %|* ,"foo" FALSE|
+			assert_result ['foo', 'foo', 'foo'], %|* "foo" +@123|
+		end
+
+		it 'only allows for a nonnegative duplication amount', when_testing: :invalid_values do
+			refute_runs %|* ,"hello" ~1|
+			refute_runs %|* ,"hello" ~4|
+			refute_runs %|* @ ~4|
+			refute_runs %|* ,"1" ~4|
+		end
+	end
+
+	describe 'when the first arg is an integer' do
 		it 'works with integers' do
 			assert_result 0, %|* 0 0|
 			assert_result 2, %|* 1 2|
@@ -48,6 +78,7 @@ section '*' do
 			assert_result 9, %|* 9 TRUE|
 			assert_result 0, %|* 9 FALSE|
 			assert_result 0, %|* 9 NULL|
+			assert_result 27, %|* 9 +@123|
 		end
 
 		it 'errors on overflow', when_testing: :overflow do
@@ -61,13 +92,13 @@ section '*' do
 		assert_result -15, %|* (= n 15) (- n 16)|
 	end
 
-	it 'only allows a number or string as the first operand', when_testing: :invalid_types do
+	it 'only allows an integer, string, or list as the first operand', when_testing: :invalid_types do
 		refute_runs %|* TRUE 1|
 		refute_runs %|* FALSE 1|
 		refute_runs %|* NULL 1|
 	end
 
-	it 'does not allow a function or variable as any operand', when_testing: :strict_types do
+	it 'does not allow a block as any operand', when_testing: :strict_types do
 		refute_runs %|; = a 3 : * (BLOCK a) 1|
 		refute_runs %|; = a 3 : * 1 (BLOCK a)|
 		refute_runs %|* (BLOCK QUIT 0) 1|

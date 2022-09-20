@@ -13,7 +13,7 @@ section '?' do
 			assert_result false, %|? NULL ""|
 			assert_result false, %|? NULL "0"|
 			assert_result false, %|? NULL "NULL"|
-			assert_result false, %|? NULL "null"|
+			assert_result false, %|? NULL ""|
 		end
 	end
 
@@ -37,7 +37,7 @@ section '?' do
 		end
 	end
 
-	describe 'when the first arg is a number' do
+	describe 'when the first arg is an integer' do
 		it 'is only equal to itself' do
 			assert_result true, %|? 0 0|
 			assert_result true, %|? ~0 0|
@@ -101,7 +101,7 @@ section '?' do
 			assert_result false, %|? "N" NULL|
 			assert_result false, %|? "NULL" NULL|
 			assert_result false, %|? "Null" NULL|
-			assert_result false, %|? "null" NULL|
+			assert_result false, %|? "" NULL|
 		end
 	end
 
@@ -113,7 +113,7 @@ section '?' do
 		assert_result true, %|? (= n NULL) n|
 	end
 
-	it 'does not allow a function or variable as any operand', when_testing: :strict_types do
+	it 'does not allow a block as any operand', when_testing: :strict_types do
 		refute_runs %|; = a 3 : ? (BLOCK a) 1|
 		refute_runs %|; = a 3 : ? 1 (BLOCK a)|
 		refute_runs %|? (BLOCK QUIT 0) 1|

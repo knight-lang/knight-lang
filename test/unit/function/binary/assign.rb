@@ -1,4 +1,4 @@
-require_relative '../shared'
+irequire_relative '../shared'
 
 # See `unit/3-variable` for more unit tests with variables specifically
 section '=' do

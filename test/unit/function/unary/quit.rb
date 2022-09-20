@@ -30,6 +30,8 @@ section 'QUIT' do
 		assert_equal 1, exitstatus(%|QUIT TRUE|)
 		assert_equal 0, exitstatus(%|QUIT FALSE|)
 		assert_equal 0, exitstatus(%|QUIT NULL|)
+		assert_equal 0, exitstatus(%|QUIT @|)
+		assert_equal 1, exitstatus(%|QUIT ,123|)
 	end
 
 	it 'requires exactly one argument', when_testing: :argument_count do

@@ -15,6 +15,9 @@ section '!' do
 
 		assert_result true,  %|! 0|
 		assert_result false, %|! 1|
+
+		assert_result true, %|! @|
+		assert_result false, %|! ,@|
 	end
 
 	it 'requires exactly one argument', when_testing: :argument_count do
