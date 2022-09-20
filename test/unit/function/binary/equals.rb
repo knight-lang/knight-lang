@@ -105,6 +105,53 @@ section '?' do
 		end
 	end
 
+	describe 'when the first arg is a list' do
+		it 'is only equal to itself' do
+			assert_result true, %|? @ @|
+			assert_result true, %|? ,@ ,@|
+			assert_result true, %|? ,'a' +@"a"|
+			assert_result true, %|? ,0 +@0|
+			assert_result true, %|? ,"1" ,"1"|
+			assert_result true, %|? +@"foobar" +@"foobar"|
+			assert_result true, %|? ,TRUE +@TRUE|
+			assert_result true, %|? +@123 ++,1,2,3|
+			assert_result true, %|? *,2 4 +@2222|
+			assert_result true, %|? @, GET *,2 4 0 0|
+		end
+
+		it 'is not equal to other lists' do
+			assert_result false, %|? @ ,1|
+			assert_result false, %|? @ ,@|
+			assert_result false, %|? ,1 @|
+			assert_result false, %|? +@123 ++,1,2|
+			assert_result false, %|? +@123 ++,1,2|
+		end
+
+		it 'is not equal to equivalent types' do
+			assert_result false, %|? @ 0|
+			assert_result false, %|? ,1 1|
+
+			assert_result false, %|? @ TRUE|
+			assert_result false, %|? ,1 TRUE|
+			assert_result false, %|? ,TRUE TRUE|
+
+			assert_result false, %|? @ FALSE|
+			assert_result false, %|? ,0 FALSE|
+			assert_result false, %|? ,FALSE FALSE|
+
+			assert_result false, %|? @ NULL|
+			assert_result false, %|? ,0 NULL|
+			assert_result false, %|? ,NULL NULL|
+
+			assert_result false, %|? @ ""|
+			assert_result false, %|? ,0 "0"|
+			assert_result false, %|? ,"" ""|
+			assert_result false, %|? ,"hello" "hello"|
+			assert_result false, %|? +@"hello" "hello"|
+			assert_result false, %|? +@"h" "h"|
+		end
+	end
+
 	it 'evaluates arguments in order' do
 		assert_result true, %|? (= n 45) n|
 		assert_result true, %|? (= n "mhm") n|

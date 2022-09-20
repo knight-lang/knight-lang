@@ -6,6 +6,7 @@ section '&' do
 		assert_result false, %|& FALSE QUIT 1|
 		assert_result :null, %|& NULL QUIT 1|
 		assert_result '', %|& "" QUIT 1|
+		assert_result [], %|& @ QUIT 1|
 	end
 
 	it 'executes the rhs only if the lhs is truthy' do
@@ -14,6 +15,7 @@ section '&' do
 		assert_result 3, %|; & "hi" (= a 3) a|
 		assert_result 4, %|; & "0" (= a 4) a|
 		assert_result 5, %|; & "NaN" (= a 5) a|
+		assert_result 6, %|; & ,@ a|
 	end
 
 	it 'works with BLOCK for the second argument' do
