@@ -8,7 +8,7 @@ section 'null' do
     end
   end
 
-  describe 'conversions'
+  describe 'conversions' do
     describe 'integer' do
       it 'converts to zero' do
         assert_result 0, %|+ 0 NULL|

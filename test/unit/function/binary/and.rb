@@ -15,7 +15,7 @@ section '&' do
 		assert_result 3, %|; & "hi" (= a 3) a|
 		assert_result 4, %|; & "0" (= a 4) a|
 		assert_result 5, %|; & "NaN" (= a 5) a|
-		assert_result 6, %|; & ,@ a|
+		assert_result 6, %|; & ,@ (= a 6) a|
 	end
 
 	it 'accepts blocks as the second operand' do

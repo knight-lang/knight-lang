@@ -1,11 +1,11 @@
 require_relative '../../shared'
 
-section '~' do
+section ',' do
   it 'converts normal arguments to a list of just that' do
     assert_result [0],  %|,0|
     assert_result [1],  %|,1|
     assert_result [1234],  %|,1234|
-    assert_result [~1234],  %|,~1234|
+    assert_result [-1234],  %|,~1234|
 
     assert_result [""], %|,""|
     assert_result ["hello"], %|,"hello"|

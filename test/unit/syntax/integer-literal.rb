@@ -3,7 +3,7 @@ require_relative '../shared'
 section 'integer literal' do
   it 'parses basic integers properly' do
     assert_result 0, %|0|
-    assert_result 1, %|0|
+    assert_result 1, %|1|
     assert_result -1, %|~1| # technically not an integer literal, but unary function applied to one.
 
     assert_result 123, %|123|

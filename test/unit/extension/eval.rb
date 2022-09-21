@@ -1,3 +1,4 @@
+return
 section 'EVAL' do
 	it 'evaluates text as Knight code' do
 		assert_result 12, %|EVAL "12"|

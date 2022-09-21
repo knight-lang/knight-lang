@@ -10,7 +10,7 @@ section 'list' do
     it 'parses `,` as a list of length one' do
       assert_result [true], %|,TRUE|
       assert_result [[]], %|,@|
-      assert_result ["Hello"], %|,"hello"|
+      assert_result ["hello"], %|,"hello"|
     end
   end
 
@@ -43,7 +43,7 @@ section 'list' do
 
       it 'inserts a newline between subsequent elements' do
         assert_result "hello\ntrue\n123", %|+'' ++,'hello' ,TRUE ,123|
-        assert_result (['x']*100).join("\n"), %|+'' *,x 100|
+        assert_result (['x']*100).join("\n"), %|+'' *,"x" 100|
       end
 
       it 'does not handle nested lists specially' do

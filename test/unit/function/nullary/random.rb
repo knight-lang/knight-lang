@@ -8,6 +8,6 @@ section 'RANDOM' do
 	end
 
 	it 'should return a random value each time it is called' do
-		assert_result false, '%|? RANDOM RANDOM|'
+		assert_result false, %|? RANDOM RANDOM|
 	end
 end

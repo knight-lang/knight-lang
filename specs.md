@@ -470,19 +470,49 @@ bar
 ```
 
 ### `DUMP(unchanged)` {#fn-dump}
-Dumps a debugging representation of its argument to stdout, and then returns it.
+Dumps a debugging representation of its argument to stdout, then returns its evaluated argument.
 
-This function is really meant to be used for debugging purposes (and unit testing), not in finished Knight programs. As such, there is no strict requirement for the debugging representation.
+This function is also with the unit testing framework uses to ensure that implementations conform to the Knight specifications.
 
-However, if you want to use the Knight unit tests, then the output of this must conform to the following regexes, or the tester will get confused. _(**TODO**: update these when the unit tester becomes updated.)_
+This function writes the following to stdout, _without a trailing newline_:
 
-- `Null()`,
-- `Integer(<integer>)` - `<integer>` should be base-10, with a leading `-` if negative.
-- `Boolean(<bool>)` - `<bool>` must be either `true` or `false`.
-- `String(<string>)` - The literal contents of the string—no escaping whatsoever should be performed. (e.g. `DUMP "foo'b)ar\"` should write `String(foo'b)ar\)`).
-- `List(<element1>, <element2>, ..., <element n>)`, no newlines. or `[...]`
+- **`integer`**: Its string representation.
+- **`boolean`**: Its string representation.
+- **`null`**: Just `null`.
+- **`string`**: A `"`, followed by the contents of the string, and ended with another `"`. The contents of the string should be verbatim, except for the following replacements:
+	- tab (`0x09`): `\t`
+	- newline (`0x0A`): `\n`
+	- carriage return (`0x0D`): `\r`
+	- backslash (`0x5C`): `\\`
+	- double quote (`0x22`): `\"`
+- **`list`**: A `[`, followed by the `DUMP`ing of each element within the list. A `, ` (comma _and_ then space) should be added between elements, but not at the end. A closing `]` should be written when done.
+- **All other types**: **undefined behaviour**
 
 Like [`OUTPUT`](#fn-output), it's **undefined behaviour** if there's any issues writing to stdout.
+
+Examples:
+```knight
+DUMP 3 #=> 3
+DUMP ~3 #=> -3
+
+DUMP TRUE #=> true
+DUMP FALSE #=> false
+DUMP NULL #=> null
+
+DUMP 'hello' #=> "hello"
+DUMP 'hel"lo' #=> "hel\"lo"
+DUMP "hel'lo" #=> "hel'lo"
+DUMP '<carrige return>
+<tab>' #=> "\r\n\t"
+DUMP '\"' => "\\\""
+
+DUMP @ #=> []
+DUMP ,3 #=> [3]
+DUMP ,,,3 #=> [[[3]]]
+DUMP ,"[]" #=> ["[]"]
+DUMP +@123 #=> [1, 2, 3]
+DUMP +@'\\3" #=> ["\\", "\\", "3"]
+```
 
 ### `LENGTH(list)` {#fn-length}
 Returns the length of the argument when converted to a list.

@@ -40,13 +40,14 @@ section 'string' do
         assert_result  456, %|+0 "    \n\r  456"|
         assert_result  456, %|+0 "    \n\r +456"|
         assert_result -456, %|+0 "    \n\r -456"|
-        assert_result    0, %|+0 "    \n\r+ 456"|
+        assert_result    0, %|+0 "    \n\r+ 456"| # space after yields zero
         assert_result    0, %|+0 "    \n\r- 456"|
       end
 
       it 'stops after the first digit' do
         assert_result 12, %|+0 " \n 12a"|
         assert_result 12, %|+0 "12a34"|
+        assert_result 12, %|+0 "\n \r\t\n \r   12a34"|
       end
 
       it 'does not parse escapes' do
@@ -76,11 +77,11 @@ section 'string' do
       it 'simply returns itself' do
         assert_result '', %|+'' ''|
         assert_result '', %|+'' ""|
-        assert_result '"', %|+'' "'|
+        assert_result '"', %|+'' '"'|
         assert_result "'", %|+'' "'"|
         assert_result 'hello world', %|+'' "hello world"|
         assert_result '0', %|+'' "0"|
-        assert_result '1234', %|+'' " 1234"|
+        assert_result ' 1234', %|+'' " 1234"|
         assert_result ('x' * 1000), %|+'' "#{"x" * 1000}"|
       end
     end
@@ -113,11 +114,11 @@ section 'string' do
       end
 
       it 'returns a list of length-one strings' do
-        assert_result ['"'], %|+@ "'|
+        assert_result ['"'], %|+@ '"'|
         assert_result ["'"], %|+@ "'"|
         assert_result 'hello world'.chars, %|+@ "hello world"|
         assert_result ['0'], %|+@ "0"|
-        assert_result '1234'.chars, %|+@ " 1234"|
+        assert_result ' 1234'.chars, %|+@ " 1234"|
         assert_result ('x' * 1000).chars, %|+@ "#{"x" * 1000}"|
       end
     end

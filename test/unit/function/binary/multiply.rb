@@ -48,7 +48,7 @@ section '*' do
 			assert_result ['foo'], %|* ,"foo" TRUE|
 			assert_result [], %|* ,"foo" NULL|
 			assert_result [], %|* ,"foo" FALSE|
-			assert_result ['foo', 'foo', 'foo'], %|* "foo" +@123|
+			assert_result ['foo', 'foo', 'foo'], %|* ,"foo" +@123|
 		end
 
 		it 'only allows for a nonnegative duplication amount', when_testing: :invalid_values do

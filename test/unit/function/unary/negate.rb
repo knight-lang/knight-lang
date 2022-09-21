@@ -15,8 +15,8 @@ section '~' do
     assert_result -1, %|~ TRUE|
     assert_result 0, %|~ FALSE|
     assert_result 0, %|~ NULL|
-    assert_result 3, %|~ +@999|
-    assert_result 3, %|~ +@~999|
+    assert_result -3, %|~ +@999|
+    assert_result -3, %|~ +@~999|
   end
 
   it 'requires exactly one argument', when_testing: :argument_count do

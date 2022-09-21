@@ -3,7 +3,7 @@ require_relative '../../shared'
 section '+' do
 	describe 'when the first arg is a string' do
 		it 'concatenates' do
-			assert_result "1121a3", %|+ "112" "1a3|
+			assert_result "1121a3", %|+ "112" "1a3"|
 			assert_result "Plato Aristotle", %|+ "Plato" " Aristotle"|
 			assert_result "Because why not?", %|++ "Because " "why" " not?"|
 		end
@@ -22,7 +22,7 @@ section '+' do
 			assert_result '', %|+ "" NULL|
 			assert_result '1234', %|+ "" 1234|
 			assert_result '-123', %|+ "" ~123|
-			assert_result "1\n2\n3\n4", %|+ "" +@123|
+			assert_result "1\n2\n3", %|+ "" +@123|
 		end
 
 		# a bug from the c impl

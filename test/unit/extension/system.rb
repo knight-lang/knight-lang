@@ -1,3 +1,4 @@
+return
 section '`' do
 	it 'should return the stdout of the subshell' do
 		assert_result "line1\nline2\nline3", %q|` "printf 'line1\nline2\nline3'"|

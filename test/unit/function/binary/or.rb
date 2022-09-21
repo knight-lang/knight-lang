@@ -16,7 +16,7 @@ section '|' do
 		assert_result 2, %(; | FALSE (= a 2) a)
 		assert_result 3, %(; | NULL (= a 3) a)
 		assert_result 4, %(; | "" (= a 4) a)
-		assert_result 5, %(; | @ (= a 4) a)
+		assert_result 5, %(; | @ (= a 5) a)
 	end
 
 	it 'accepts blocks as the second operand' do

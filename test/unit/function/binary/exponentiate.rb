@@ -84,23 +84,22 @@ section '^' do
 		it 'returns the list joined by the second argument' do
 			assert_result '1-2-3', %|^ +@123 '-'|
 			assert_result "4\n5\n6\n7", %|^ +@4567 '\n'|
-			assert_result 'a' + ("XXa"*99), %|^ *'a' 100 'XX'|
-			assert_result 'ab'*100, %|^ *'ab' 100 ''|
+			assert_result 'a' + ("XXa"*99), %|^ *,'a' 100 'XX'|
+			assert_result 'ab'*100, %|^ *+@'ab' 100 ''|
 		end
 
 		it 'coerces the second argument to a string' do
 			assert_result '10203', %|^ +@123 0|
-			assert_result "4true5true6true6", %|^ +@4567 TRUE|
-			assert_result 'a' + ("XXa"*99), %|^ *'a' 100 ,'XX'|
-			assert_result 'ab'*100, %|^ *'ab' 100 NULL|
-			assert_result 'ab'*100, %|^ *'ab' 100 @|
+			assert_result "4true5true6true7", %|^ +@4567 TRUE|
+			assert_result 'a' + ("XXa"*99), %|^ *,'a' 100 ,'XX'|
+			assert_result 'ab'*100, %|^ *+@'ab' 100 NULL|
+			assert_result 'ab'*100, %|^ *+@'ab' 100 @|
 		end
 	end
 
 	it 'evaluates arguments in order' do
 		assert_result 91125, %|^ (= n 45) (- n 42)|
 		assert_result 15, %|^ (= n 15) (- n 14)|
-		assert_result 0, %|^ (= n 15) (- n 16)|
 	end
 
 	it 'does not allow 0 to be raised to a negative power', when_testing: :zero_division do

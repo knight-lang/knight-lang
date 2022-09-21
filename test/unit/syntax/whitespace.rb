@@ -3,12 +3,12 @@ require_relative '../shared'
 section 'whitespace' do
   describe 'whitespace needed after integers' do
     it 'is needed before other integers' do
-      WHITESPACE.product('', *WHITESPACE) do |chr, chr2|
+      WHITESPACE.product([''] + WHITESPACE) do |chr, chr2|
         assert_result 3, %|+ 1#{chr}#{chr2}2|
       end
     end
     it 'is not needed before variables' do
-      assert_equal 3, %|; = a 2 : + 1a|
+      assert_result 3, %|; = a 2 : + 1a|
     end
 
     it 'is not needed before functions' do
@@ -23,19 +23,19 @@ section 'whitespace' do
 
   describe 'whitespace needed after variables' do
     it 'is needed before integers' do
-      WHITESPACE.product('', *WHITESPACE) do |chr, chr2|
+      WHITESPACE.product(['', *WHITESPACE]) do |chr, chr2|
         assert_result 3, %|; = a 1 : + a#{chr}#{chr2}2|
       end
     end
 
     it 'is needed before other variables' do
-      WHITESPACE.product('', *WHITESPACE) do |chr, chr2|
+      WHITESPACE.product(['', *WHITESPACE]) do |chr, chr2|
         assert_result 3, %|; = a 1 ; = b 2 : + a#{chr}#{chr2}b|
       end
     end
 
     it 'is not needed before functions' do
-      assert_result 3, %|; = a 1 : + aLENGTH 1| # word fn
+      assert_result 3, %|; = a 2 : + aLENGTH 1| # word fn
       assert_result 7, %|; = a 1 : + a* 2 3| # symbolic fn
     end
 
@@ -51,12 +51,12 @@ section 'whitespace' do
     end
 
     it 'is not needed before variables' do
-      assert_result 3, %|; = a 3 : LENGTHa| # word fn
+      assert_result 1, %|; = a 3 : LENGTHa| # word fn
       assert_result -3, %|; = a 3 : ~a| # symbolic fn
     end
     
     it 'is needed between word functions' do
-      WHITESPACE.product('', *WHITESPACE) do |chr, chr2|
+      WHITESPACE.product(['', *WHITESPACE]) do |chr, chr2|
         assert_result 0, %|* RANDOM#{chr}#{chr2}LENGTH ""|
       end
     end

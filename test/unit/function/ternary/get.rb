@@ -33,7 +33,7 @@ section 'GET' do
 			assert_result ['b', 'c'], %|GET +@"abcd" 1 2|
 			assert_result [3, 4], %|GET +@1234 2 2|
 			assert_result [], %|GET +@1234 3 0|
-			assert_result [], %|GET @ 3 0|
+			assert_result [], %|GET @ 0 0|
 		end
 
 		it 'works for all possible combinations of 6 characters' do
