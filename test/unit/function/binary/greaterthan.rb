@@ -1,5 +1,5 @@
-require_relative '../shared'
-
+require_relative '../../shared'
+fail
 section '>' do
 	describe 'when the first arg is a boolean' do
 		it 'is only true when TRUTHY and the rhs is falsey' do

@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 # See also `types/block.rb`
 section 'BLOCK' do
@@ -6,6 +6,10 @@ section 'BLOCK' do
 		assert_runs %|BLOCK variable|
 		assert_runs %|BLOCK QUIT 1|
 		assert_runs %|BLOCK + a 4|
+	end
+
+	it 'accepts blocks as its sole operand' do
+		assert_runs %|BLOCK BLOCK QUIT 1|
 	end
 
 	it 'requires exactly one argument', when_testing: :argument_count do

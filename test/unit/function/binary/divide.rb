@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 section '/' do
 	it 'divides nonzero integers normally' do

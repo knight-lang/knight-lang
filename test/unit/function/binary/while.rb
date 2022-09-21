@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 section 'WHILE' do
 	it 'returns null' do

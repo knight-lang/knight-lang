@@ -1,5 +1,6 @@
-require_relative '../shared'
+require_relative '../../shared'
 
+fail
 section 'PROMPT' do
 	# it 'should return a string without'
 	# 		it 'should return a string without the \n or \r\n' do

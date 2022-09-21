@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 section '~' do
   it 'converts normal arguments to a list of just that' do
@@ -21,7 +21,7 @@ section '~' do
     assert_result [[1,2,3]], %|,+@123|
   end
 
-  it 'allows blocks as the only operand' do
+  it 'accepts blocks as the only operand' do
     assert_runs %|,BLOCK a|
   end
 

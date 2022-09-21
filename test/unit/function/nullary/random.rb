@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 section 'RANDOM' do
 	# Due to how random integers work, these tests can't be 100% accurate

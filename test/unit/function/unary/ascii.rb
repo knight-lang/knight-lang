@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 # TODO: have checks for non-ascii values.
 section 'ASCII' do

@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 section ';' do
 	it 'executes arguments in order' do

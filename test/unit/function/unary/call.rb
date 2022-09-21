@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 # See also `types/block.rb`
 section 'CALL' do

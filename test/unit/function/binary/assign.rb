@@ -1,6 +1,6 @@
-irequire_relative '../shared'
+require_relative '../../shared'
 
-# See `unit/3-variable` for more unit tests with variables specifically
+# See `variable` for more unit tests with variables specifically
 section '=' do
 	it 'assigns to variables' do
 		assert_result 12, %|; = a 12 : a|
@@ -10,12 +10,17 @@ section '=' do
 		assert_result 12, %|= a 12|
 	end
 
+	it 'accepts blocks as the second operand' do
+		assert_runs %|= foo BLOCK QUIT 1|
+	end
+
 	it 'only accepts a variable as the first argument', when_testing: :invalid_types do
 		refute_runs %|= 1 1|
 		refute_runs %|= "foo" 1|
 		refute_runs %|= TRUE 1|
 		refute_runs %|= FALSE 1|
 		refute_runs %|= NULL 1|
+		refute_runs %|= @ 1|
 	end
 
 	it 'does not accept BLOCK values for the first arg', when_testing: :strict_types do

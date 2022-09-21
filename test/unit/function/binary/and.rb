@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 section '&' do
 	it 'returns the lhs if its falsey' do
@@ -18,7 +18,7 @@ section '&' do
 		assert_result 6, %|; & ,@ a|
 	end
 
-	it 'works with BLOCK for the second argument' do
+	it 'accepts blocks as the second operand' do
 		assert_result 3, %|; = a 3 : CALL & 1 BLOCK a|
 		assert_result 5, %|; = a 3 : CALL & 1 BLOCK + a 2|
 	end

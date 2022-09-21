@@ -1,5 +1,6 @@
-require_relative '../shared'
+require_relative '../../shared'
 
+fail
 #TODO: ensure that modulo actually conforms to the `a = (a/b)*b + a%b` requirements
 
 section '%' do

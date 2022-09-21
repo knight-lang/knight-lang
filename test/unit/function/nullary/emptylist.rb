@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 # See also the `types/list.rb` file
 section '@' do

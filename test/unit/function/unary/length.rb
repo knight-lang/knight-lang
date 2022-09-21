@@ -1,4 +1,4 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 section 'LENGTH' do
 	it 'returns 0 for NULL' do

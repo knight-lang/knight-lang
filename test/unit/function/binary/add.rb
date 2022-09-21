@@ -1,9 +1,9 @@
-require_relative '../shared'
+require_relative '../../shared'
 
 section '+' do
 	describe 'when the first arg is a string' do
 		it 'concatenates' do
-			assert_result "1121a3", %|+ "112" "1a3"|
+			assert_result "1121a3", %|+ "112" "1a3|
 			assert_result "Plato Aristotle", %|+ "Plato" " Aristotle"|
 			assert_result "Because why not?", %|++ "Because " "why" " not?"|
 		end
