@@ -1,8 +1,5 @@
 require_relative '../../shared'
 
-fail "todo: should it be modulo or remainder?"
-#TODO: ensure that modulo actually conforms to the `a = (a/b)*b + a%b` requirements
-
 section '%' do
 	it 'modulos positive bases normally' do
 		assert_result 0, %|% 1 1|
@@ -11,8 +8,7 @@ section '%' do
 		assert_result 3, %|% 123 10|
 		assert_result 0, %|% 15 3|
 		assert_result 2, %|% 14 3|
-		assert_result -2, %|% ~14 3|
-		assert_result -1, %|% ~4 3|
+		assert_result 3, %|% 3 1234|
 	end
 
 	it 'converts other values to integers' do
@@ -37,10 +33,14 @@ section '%' do
 	end
 
 	# note that, as per the Knight spec, modulo where either integer is negative is undefined.
-	it 'does not allow for negative integers for the second operand', when_testing: :invalid_values do
+	it 'does not allow for negative integers anywhere', when_testing: :invalid_values do
 		refute_runs %|% 1 ~1|
 		refute_runs %|% 5 ~123|
 		refute_runs %|% 99 ~123|
+		refute_runs %|% ~99 123|
+		refute_runs %|% ~5 123|
+		refute_runs %|% ~1 123|
+		refute_runs %|% ~1 ~123|
 	end
 
 	it 'only allows an integer as the first operand', when_testing: :invalid_types do

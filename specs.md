@@ -693,15 +693,16 @@ Examples:
 ### `%(unchanged, coerced)` {#fn-remainder}
 The return value of this function depends on its first argument's type:
 
-- **`Integer`**: The second argument is coerced to an integer, and then the remainder of `<arg1> / <arg2>` (rounding towards zero) is returned. Note that this means that, for all `a`, `a = (a/b)*b + a%b`. It is **undefined behaviour** for the second argument not to be a strictly positive integer.
+- **`Integer`**: The second argument is coerced to an integer, and then the remainder of `<arg1> / <arg2>` (rounding towards zero) is returned. It is **undefined behaviour** for the second argument not to be a strictly positive integer, or the first to not be zero or positive.
 - **All other types**: **undefined behaviour**
 
 ```
 % 7 3    # => 1
-% ~5 2   # => -1
-% ~7 5   # => -2
+% 10 5   # => 0
+% 5 10   # => 5
 % 7 0    # undefined, 0 is not positive
 % 7 ~2   # undefined, -2 is not positive
+% ~7 2   # undefined, -7 is not positive
 ```
 
 ### `^(unchanged, coerce)` {#fn-power}
