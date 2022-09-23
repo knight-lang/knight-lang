@@ -1,6 +1,6 @@
 require_relative '../../shared'
 
-fail
+fail "todo: should it be modulo or remainder?"
 #TODO: ensure that modulo actually conforms to the `a = (a/b)*b + a%b` requirements
 
 section '%' do

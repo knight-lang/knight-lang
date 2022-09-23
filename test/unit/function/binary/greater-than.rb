@@ -1,5 +1,5 @@
 require_relative '../../shared'
-fail
+
 section '>' do
 	describe 'when the first arg is a boolean' do
 		it 'is only true when TRUTHY and the rhs is falsey' do
@@ -7,12 +7,14 @@ section '>' do
 			assert_result true, %|> TRUE 0|
 			assert_result true, %|> TRUE ""|
 			assert_result true, %|> TRUE NULL|
+			assert_result true, %|> TRUE @|
 		end
 
 		it 'is false all other times' do
 			assert_result false, %|> TRUE TRUE|
 			assert_result false, %|> TRUE 1|
 			assert_result false, %|> TRUE "1"|
+			assert_result false, %|> TRUE ,1|
 
 			assert_result false, %|> FALSE ~1|
 			assert_result false, %|> FALSE TRUE|
@@ -22,6 +24,7 @@ section '>' do
 			assert_result false, %|> FALSE 0|
 			assert_result false, %|> FALSE ""|
 			assert_result false, %|> FALSE NULL|
+			assert_result false, %|> FALSE @|
 		end
 	end
 
@@ -45,8 +48,8 @@ section '>' do
 			assert_result true,  %|> "z" "Z"|
 			assert_result false, %|> "Z" "z"|
 
-			assert_result true, %|> ":" 9|
-			assert_result true, %|> "1" 0|
+			assert_result true, %|> ":" "9"|
+			assert_result true, %|> "1" "0"|
 		end
 
 		it 'performs it even with integers' do
@@ -71,16 +74,22 @@ section '>' do
 			assert_result true, %|> "12" 100|
 
 			assert_result false, %|> "trud" TRUE|
+			assert_result false, %|> "trud" +@TRUE|
 			assert_result false, %|> "true" TRUE|
+			assert_result false, %|> "true" ,TRUE|
 			assert_result true,  %|> "truf" TRUE|
+			assert_result true,  %|> "truf" +@TRUE|
 
 			assert_result false, %|> "falsd" FALSE|
+			assert_result false, %|> "falsd" ,FALSE|
 			assert_result false, %|> "false" FALSE|
+			assert_result false, %|> "false" ,FALSE|
 			assert_result true,  %|> "faslf" FALSE|
+			assert_result true,  %|> "faslf" ,FALSE|
 
-			assert_result false, %|> "nulk" NULL|
-			assert_result false, %|> "null" NULL| # FIXME
-			assert_result true,  %|> "nulm" NULL|
+			assert_result false, %|> "" NULL|
+			assert_result true, %|> " " NULL|
+			assert_result true, %|> " " @|
 		end
 	end
 
@@ -114,8 +123,38 @@ section '>' do
 			assert_result true, %|> 01 ""|
 			assert_result true, %|> 0 "-1"|
 			assert_result true, %|> ~1 "-2"|
+			assert_result false, %|> 0 @|
+			assert_result false, %|> 0 ,1|
+			assert_result true, %|> 1 @|
+			assert_result true, %|> 2 ,1|
 		end
 	end
+
+	describe 'when the first arg is a list' do
+		it 'performs element-by-element comparison' do
+			assert_result false, %|> @ @|
+			assert_result false, %|> ,1 ,1|
+			assert_result false, %|> ,0 ,0|
+			assert_result true, %|> +@12 +@100| # 0 < 2
+			assert_result false, %|> +@100 +@12| # 2 > 0
+			assert_result true, %|> +@120 +@12| # first one's length is longer
+			assert_result false, %|> +@12 +@12|
+
+			assert_result true, %|> ,+@120 ,+@12|
+		end
+
+		it 'coerces the RHS to a list' do
+			assert_result false, %|> @ NULL|
+			assert_result false, %|> ,1 1|
+			assert_result false, %|> ,0 0|
+			assert_result true, %|> +@12 100| # 0 < 2
+			assert_result false, %|> +@100 12| # 2 > 0
+			assert_result true, %|> +@120 12| # first one's length is longer
+			assert_result false, %|> +@12 12|
+			assert_result true, %|> +@"abc" "ab"|
+		end
+	end
+
 
 	it 'evaluates arguments in order' do
 		assert_result true,  %|> (= n 45) 44|

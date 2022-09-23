@@ -34,4 +34,8 @@ section 'variable' do
   it 'does not use upper case letters' do
     assert_result true, %|= abcTRUE|
   end
+
+  it 'parses the maximum length variable' do
+    assert_result true, %|= #{'a' * 127} TRUE|
+  end
 end

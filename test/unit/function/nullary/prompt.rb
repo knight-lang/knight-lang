@@ -1,25 +1,31 @@
 require_relative '../../shared'
 
-fail
 section 'PROMPT' do
-	# it 'should return a string without'
-	# 		it 'should return a string without the \n or \r\n' do
-	# 			old_stdin = $stdin
-	# 			IO.pipe do |r,w|
-	# 				w.write "line one\x0Aline two\x0D\x0Aa\x0D\x0A\x0D\x0A\x0Aline three"
-	# 				w.close
-	# 				$stdin = r
-	# 				assert_equal 'line one|line two|a|||line three|', eval(<<-EOS)
-	# 					+ + PROMPT '|' # line one
-	# 					+ + PROMPT '|' # line two
-	# 					+ + PROMPT '|' # a
-	# 					+ + PROMPT '|' # <blank1>
-	# 					+ + PROMPT '|' # <blank2>
-	# 				    + PROMPT '|' # line three
-	# 				EOS
-	# 			ensure
-	# 				$stdin = old_stdin
-	# 			end
-	# 		end
+	it 'should read a line from stdin' do
+		assert_result "foo", %|PROMPT|, stdin: "foo"
+		assert_result "foo", %|PROMPT|, stdin: "foo\nbar"
+		assert_result "foo", %|PROMPT|, stdin: "foo\nbar\nbaz"
+	end
 
+	it 'should strip trailing `\r` and `\r\n`' do
+		assert_result "foo", %|PROMPT|, stdin: "foo\n"
+		assert_result "foo", %|PROMPT|, stdin: "foo\nbar"
+		assert_result "foo", %|PROMPT|, stdin: "foo\r\nbar"
+	end
+
+	it 'should not strip a lone trailing `\r`' do
+		assert_result "foo\r", %|PROMPT|, stdin: "foo\r"
+	end
+
+	it 'should be able to read multiple lines' do
+		assert_result "foo:bar:baz", %|++++ PROMPT ":" PROMPT ":" PROMPT|, stdin: "foo\nbar\r\nbaz\n"
+	end
+
+	it 'should return an empty string for empty lines' do
+		assert_result "", %|+ PROMPT PROMPT|, stdin: "\n\r\nx"
+	end
+
+	it 'should return NULL at EOF' do
+		assert_result :null, %|PROMPT|, stdin: ""
+	end
 end

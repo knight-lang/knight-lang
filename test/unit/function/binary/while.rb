@@ -10,14 +10,14 @@ section 'WHILE' do
 	end
 
 	it 'will eval the body until the condition is false' do
-		assert_result 45, <<~EOS
+		assert_result 45, <<~KNIGHT
 			; = i 0
 			; = sum 0
 			; WHILE (< i 10)
 				; = sum + sum i
 				: = i + i 1
 			: sum
-		EOS
+		KNIGHT
 	end
 
 	it 'does not accept BLOCK values', when_testing: :strict_types do

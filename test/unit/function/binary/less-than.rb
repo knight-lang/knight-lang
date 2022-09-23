@@ -7,6 +7,7 @@ section '<' do
 			assert_result true, %|< FALSE 1|
 			assert_result true, %|< FALSE "1"|
 			assert_result true, %|< FALSE ~1|
+			assert_result true, %|< FALSE ,1|
 		end
 
 		it 'is false all other times' do
@@ -14,6 +15,7 @@ section '<' do
 			assert_result false, %|< FALSE 0|
 			assert_result false, %|< FALSE ""|
 			assert_result false, %|< FALSE NULL|
+			assert_result false, %|< FALSE @|
 
 			assert_result false, %|< TRUE TRUE|
 			assert_result false, %|< TRUE FALSE|
@@ -24,6 +26,8 @@ section '<' do
 			assert_result false, %|< TRUE 0|
 			assert_result false, %|< TRUE ""|
 			assert_result false, %|< TRUE NULL|
+			assert_result false, %|< TRUE @|
+			assert_result false, %|< TRUE ,1|
 		end
 	end
 
@@ -47,8 +51,8 @@ section '<' do
 			assert_result false, %|< "z" "Z"|
 			assert_result true,  %|< "Z" "z"|
 
-			assert_result true, %|< "/" 0|
-			assert_result true, %|< "8" 9|
+			assert_result true, %|< "/" "0"|
+			assert_result true, %|< "8" "9"|
 		end
 
 		it 'performs it even with integers' do
@@ -72,17 +76,23 @@ section '<' do
 			assert_result false, %|< "12" 100|
 			assert_result false, %|< "12" 100|
 
+			assert_result true, %|< "trud" +@TRUE|
 			assert_result true, %|< "trud" TRUE|
 			assert_result false, %|< "true" TRUE|
+			assert_result false, %|< "true" ,TRUE|
 			assert_result false, %|< "truf" TRUE|
+			assert_result false, %|< "truf" +@TRUE|
 
 			assert_result true, %|< "falsd" FALSE|
+			assert_result true, %|< "falsd" ,FALSE|
 			assert_result false, %|< "false" FALSE|
+			assert_result false, %|< "false" ,FALSE|
 			assert_result false, %|< "faslf" FALSE|
+			assert_result false, %|< "faslf" ,FALSE|
 
-			assert_result true, %|< "nulk" NULL|
-			assert_result false, %|< "null" NULL| # FIXME
-			assert_result false, %|< "nulm" NULL|
+			assert_result false, %|< "" NULL|
+			assert_result false, %|< " " NULL|
+			assert_result false, %|< " " @|
 		end
 	end
 
@@ -109,12 +119,40 @@ section '<' do
 			assert_result true, %|< 0 "1"|
 			assert_result true, %|< 0 "49"|
 			assert_result true, %|< ~2 "-1"|
+			assert_result true, %|< ~2 @|
+			assert_result true, %|< ~2 ,1|
 
 			assert_result false, %|< 0 FALSE|
 			assert_result false, %|< 0 NULL|
 			assert_result false, %|< 0 "0"|
 			assert_result false, %|< 0 "-1"|
 			assert_result false, %|< 0 ""|
+			assert_result false, %|< 0 @|
+			assert_result true, %|< 0 ,1|
+		end
+	end
+
+	describe 'when the first arg is a list' do
+		it 'performs element-by-element comparison' do
+			assert_result false, %|< @ @|
+			assert_result false, %|< ,1 ,1|
+			assert_result false, %|< ,0 ,0|
+			assert_result true, %|< +@100 +@12| # 0 < 2
+			assert_result false, %|< +@12 +@100| # 2 > 0
+			assert_result true, %|< +@12 +@120| # first one's length is smaller
+
+			assert_result true, %|< ,+@12 ,+@120|
+		end
+
+		it 'coerces the RHS to a list' do
+			assert_result false, %|< @ NULL|
+			assert_result false, %|< ,1 1|
+			assert_result false, %|< ,0 0|
+			assert_result true, %|< +@100 12| # 0 < 2
+			assert_result false, %|< +@12 100| # 2 > 0
+			assert_result true, %|< +@12 120| # first one's length is smaller
+
+			assert_result true, %|< +@"ab" "abc"|
 		end
 	end
 
@@ -129,7 +167,7 @@ section '<' do
 		assert_result true,  %|< (= n FALSE) !n|
 	end
 
-	it 'only allows an integer, boolean, or string as the first operand', when_testing: :invalid_types do
+	it 'only allows an integer, boolean, string, or list as the first operand', when_testing: :invalid_types do
 		refute_runs %|< NULL 1|
 	end
 

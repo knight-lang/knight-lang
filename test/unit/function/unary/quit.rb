@@ -5,7 +5,7 @@ section 'QUIT' do
 		def exitstatus(expr)
 			# exit codes shouldn't print anything.
 			assert_silent do
-				exec expr, raise_on_failure: false
+				tester.execute expr, raise_on_failure: false
 			end
 
 			$?.exitstatus

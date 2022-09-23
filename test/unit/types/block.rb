@@ -8,7 +8,7 @@ section 'boolean' do
     end
   end
 
-  define 'functions' do
+  describe 'functions' do
     it 'should be usable as the sole argument to `:`' do
       assert_runs %|: BLOCK QUIT 1|
     end
@@ -18,7 +18,7 @@ section 'boolean' do
     end
 
     it 'should be usable as the sole argument to `CALL`' do
-      assert_RESULT 3, %|CALL BLOCK + 1 2|
+      assert_result 3, %|CALL BLOCK + 1 2|
       assert_result 7, %|; = bar BLOCK + 4 foo ; = foo 3 : CALL bar|
     end
 
