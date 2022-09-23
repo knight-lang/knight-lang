@@ -1,27 +1,34 @@
-# Knight2.0-beta Changelog
-**NOTE**: This _is not_ the official knight2.0 changelog. Most of the changes mentioned in here will be the same to knight2.0, but some may be tweaked.
+# Knight2.0 Changelog from Knight1.2
 
 ## TL;DR
 - New features:
 	- Added lists
 	- Added `@` (empty list literal function)
 	- Added `,` (boxing function)
+	- Added `[` (head function)
+	- Added `]` (tail function)
+	- `DUMP`'s output has been standardized
+	- `ASCII` and `~` have been added (they were added in 1.2)
 
 - Removed features:
-	- `{`, `}`, `[`, and `]` are no longer whitespace, and are undefined instead.
-	- `EVAL` is now optional
-	- `` ` `` is now optional
-	- variable names now have a required max length of 255, not 65535
+	- Command Line arguments are now optional
+	- `{` and `}` are no longer whitespace, and are undefined instead.
+	- `EVAL` is now optional.
+	- `$` (previously named `` ` ``) is now optional.
+	- Variable names now have a required max length of 127, not 65535.
+	- Sections in the specs aren't numbered anymore.
 
 - Feature updates:
+	- Unit tester has been reworked
 	- `LENGTH` now converts its argument to a list
 	- `+` now accepts lists and concatenates them
 	- `*` now accepts lists and replicates them
 	- `^` now accepts lists and joins them
 	- `<`, `>`, and `?` now accept lists and behave like most other langs
-	- `GET` Now accepts lists (length of 0 gets _that_ element)
-	- `SUBSTITUTE` renamed to `SET`
-	- `SET` Now accepts lists 
+	- `GET` Now accepts lists
+	- `SET` (previously named `SUBSTITUTE`) Now accepts lists
+	- `%` only requires supporting nonnegative arguments.
+	- `^` only requires supporting nonnegative exponents.
 
 # New Features
 ## Lists
@@ -30,21 +37,21 @@ It's what we've all been waiting for: Lists. Lists are immutable, heterogeneous 
 ### Conversions
 - `null -> list`: Empty list
 - `bool -> list`: Empty list for `FALSE`, a list of just `TRUE` for `TRUE`.
-- `int -> list`: List of digits; undefined if integer is negative. (maybe? you could just make abs?)
-- `string -> list`: List of chars
+- `int -> list`: List of digits. If the int is negative, each digit is negative.
+- `string -> list`: List of characters in the string
 
 - `list -> bool`: Whether list is nonempty
 - `list -> int`: Length of list
 - `list -> string`: Elements of the list joined with a newline
 
 ### List Construction
-To keep in line with the fixed arity approach of Knight, there are no "list literals". Instead, there's a few ways to create lists:
+To keep in line with the fixed arity approach of Knight, there are no "list literals". Instead, you create lists either via `@` (empty list), `,` (create a list of just length one) or "`+ @ ...`", coerce to a list:
 ```
-@            # empty list
-,123         # list of length one, just `123`
-+ @ 1234     # a list of `1`, `2`, `3`, and `4`
-+ @ "ABC"    # a list of `"A"`, `"B"`, and `"C"`
-+ ,"A" ,TRUE # a list of `"A"` and `TRUE`
+@            # []
+,123         # [123]
++ @ 1234     # [1, 2, 3, 4]
++ @ "ABC"    # ["A", "B", "C"]
++ ,"A" ,TRUE # ["A", true]
 ```
 
 ## `@()` Function

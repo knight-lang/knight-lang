@@ -241,7 +241,7 @@ Note that all mathematical operations in Knight that would cause over/underflow 
 - **integer**: In integer contexts, the integer itself is simply returned.
 - **string**: In string contexts, integers are converted to their base-10 representation. Negative integers should have a `-` prepended to the beginning of the string (positive integers shouldn't get `+`). For example, `0 -> "0"`, `123 -> "123"`, and `~12 -> "-12"`.
 - **boolean**: In boolean contexts, zero becomes `false`, and all other integers (ie nonzero) become `true`.
-- **list**: In list contexts, the digits of the integer should be returned order of most significant to least significant. If the integer is negative, each digit should become negated as well. For example, `+@123` would return a list of `1`, then `2`, then `3`, whereas `+@~123` would return a list of `-1`, `-2`, and `-3`.
+- **list**: In list contexts, the digits of the integer should be returned order of most significant to least significant. If the integer is negative, each digit should become negated as well. For example, `DUMP +@123` prints `[1, 2, 3]`, whereas `DUMP +@~123` prints `[-1, -2, -3]`.
 
 ## String
 Strings in Knight are like strings in most other languages, albeit a bit simpler: They're immutable (like all types within Knight), and are _only_ required to be able to represent a [specific subset of ASCII](#required-encoding). Implementations are free to support more characters (e.g. all of ASCII, or Unicode), but this is not required.
@@ -254,7 +254,7 @@ While rare in practice, it is **undefined behaviour** for Knight programs to att
 - **integer**: (This is roughly equivalent to C's `atoi`). To convert a string to an integer, the following is done: (1) strip all leading [whitespace](#whitespace), (2) an optional `+` or `-` may occur (3) take as many ascii digits as possible, stopping at the first non-digit or end of string. Interpret those digits as a string literal, negating it if `-` occurred. If no digits are found, return zero. In regex terms, this is `/^\s*([-+?\d*)/`. Note that if the resulting integer is out of bounds for what the integer type can handle, it is **undefined behaviour**.
 - **string**: In string contexts, the string itself is returned.
 - **boolean**: In boolean contexts, only empty strings are `false`. All other strings (ie nonempty) are `true`, including things like `"0"`.
-- **list**: In list contexts, the characters of the string should be returned, with each element of the list being a string containing just that character. (For example, `+@"abc"` would return a list of `"a"` followed by `"b"` followed by `"c"`).
+- **list**: In list contexts, the characters of the string should be returned, with each element of the list being a string containing just that character. (For example, `DUMP +@"abc"` prints `["a", "b", "c"]`.)
 
 ## Boolean
 The boolean type in Knight has two variants: `false` and `true`. These two values are used to indicate truthiness within Knight, and is the type that's converted to within boolean contexts.
@@ -280,7 +280,7 @@ The `null` type is used to indicate the absence of a value within Knight, and is
 - **list**: In list contexts, null becomes an empty list.
 
 ## List
-Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists and entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, a list is a datatype with an order; ie, list elements retain the order in which they are 	. (e.g. `[ list` should always give you the same element for nonempty lists).
+Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists and entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, a list is a datatype with an order; ie, list elements retain the order in which they are. (e.g. `[ list` should always give you the same element for nonempty lists).
 
 While rare in practice, it is **undefined behaviour** for Knight programs to attempt to create lists with a length larger than [the maximum value for integers](#integer-bounds). (Thus, `LENGTH list` will always have a well-defined result.)
 
@@ -296,12 +296,12 @@ While rare in practice, it is **undefined behaviour** for Knight programs to att
 Due to Knight's fixed-arity syntax, it's impossible to have list literals (although you could definitely add them as an extension if you wanted). There's generally three ways to create lists in Knight:
 ```knight
 # Way 1, automatic coercion by adding something to `@`
-+@123   # => a list of `1`, `2`, and `3`.
-+@"abc" # => a list of `"a"`, `"b"`, and `"c"`.
++@123   # => [1, 2, 3]
++@"abc" # => ["a", "b", "c"]
 
 # Way 2, adding "boxed" elements together:
-+ (+ ,1 ,2) ,3 # => also a list of `1`, `2`, and `3`.
-+ ,TRUE ,FALSE # => a list of `true` and `false`
++ (+ ,1 ,2) ,3 # => [1, 2, 3]
++ ,TRUE ,FALSE # => [true, false]
 
 # Way 3 (a variant of 2), doing some form of iteration:
 ; = list @
@@ -584,9 +584,9 @@ This function returns a list containing just its argument. In Python terms, `lam
 
 Examples:
 ```knight
-,1   # => a list of just 1
-,,"" # => a list of just a list of ""
-,,@  # => a list of just an empty list
+,1   # => [1]
+,,"" # => [[""]]
+,,@  # => [[[]]]
 ```
 
 ### `[(unchanged)` {#fn-head}
@@ -622,8 +622,8 @@ Examples:
 ]""       # => undefined, empty string
 
 ],1       # => empty list
-](+@1234) # => a list of 2, 3, and 4
-](+@1111) # => a list of 1, 1, and 1
+](+@1234) # => [2, 3, 4]
+](+@1111) # => [1, 1, 1]
 ]@        # => undefined, empty list.
 ```
 
@@ -640,9 +640,9 @@ Examples:
 ```knight
 + "2a" 3         # => "2a3"
 + 3 "2a"         # => 5
-+ @ "abc"        # => a list of "a", "b", and "c"
-+ (+@12)  (+@34) # => a list of 1, 2, 3, and 4
-+ (+@12) ,(+@34) # => a list of 1, 2, and a list of 3 and 4
++ @ "abc"        # => ["a", "b", "c"]
++ (+@12) 34      # => [1, 2, 3, 4]
++ (+@12) ,(+@34) # => [1, 2, [3, 4]]
 ```
 
 ### `-(unchanged, coerced)` {#fn-subtract}
@@ -670,7 +670,7 @@ Examples:
 * 3 "2a"  # => 6
 * 3 FALSE # => 0
 * "2a" 3  # => "2a2a2a"
-* (,1) 5  # => a list of 5 1s
+* (,1) 5  # => [1, 1, 1, 1, 1]
 * (,1) 0  # => empty list
 * "2a" ~3 # undefined, negative length
 * (,1) ~1 # undefined, negative length
