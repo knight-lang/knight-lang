@@ -13,3 +13,4 @@ The following is a list of Knight implementations, some of which are in progress
 - [polyscone](https://github.com/polyscone): https://github.com/polyscone/knight
 - [razetime](https://github.com/razetime): https://github.com/razetime/knight-apl
 - [ThePuzzlemaker](https://github.com/ThePuzzlemaker): WASM WAT: [knight.wat](https://github.com/ThePuzzlemaker/knight.wat); Clojure: [knight.clj](https://github.com/ThePuzzlemaker/knight.clj)
+- [gitonthescene](https://github.com/gitonthescene): https://github.com/gitonthescene/k-night
