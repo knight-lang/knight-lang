@@ -103,6 +103,7 @@ class Sections
 
   def initialize(sections = ALL)
     @sections = sections.to_set
+    @anything_set = false
   end
 
   def clear
@@ -135,6 +136,8 @@ class Sections
   end
 
   def enable(*sections)
+    clear unless @anything_set
+    @anything_set = true
     sections = [:all] if sections.empty?
 
     sections.each do |section|
@@ -143,6 +146,7 @@ class Sections
   end
 
   def disable(*sections)
+    @anything_set = true
     sections = [:all] if sections.empty?
 
     sections.each do |section|
