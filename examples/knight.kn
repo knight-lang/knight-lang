@@ -439,7 +439,13 @@
 	: CALL run
 )
 
+# NOTE:
+# Below is _technically_ not a completely legal knight implementation: It strips
+# out `\r`s if they're the second-to-last character in a line. However, if you
+# embed the source code directly into the `stream` literal, it will parse `\r`s
+# correctly.
 ; = stream ""
-; WHILE & (!?NULL = tmp PROMPT) (!?tmp "$")
+; = end_of_stream_marker PROMPT 
+; WHILE !? end_of_stream_marker (= tmp PROMPT)
 	: = stream ++ stream newline tmp
 : CALL play
