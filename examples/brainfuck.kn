@@ -2,11 +2,16 @@
 # interpreter uses the native knight integer type, and not
 # the traditional single byte cells.
 
+# NOTE: This brainfuck implementation doesn't work. It doesn't handle `[..]`s that
+# dont run at least once properly. The knight code is still valid, it just won't
+# actually run brainfuck programs.
+
+
 # Example input: ++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
 
 # Read the sourcecode in from stdin, and initialize the position
 # into it to zero.
-; = source '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.'
+; = source PROMPT
 ; = srcpos 0
 
 # Setup the brainfuck VM. We just need a list of 30,000 zeros and

@@ -1,0 +1,2 @@
+# Golfed version of fibonacci
+;=fB I<n 2n;=n-nT;=n-n;=tCfT+tCf;=n+0'10' O Cf

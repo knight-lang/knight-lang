@@ -1,38 +1,32 @@
-# Checks to see if `chr` is a digit.
 ; = isdigit BLOCK
 	: & (< '/' chr) (< chr ':')
+; = isspace BLOCK
+	: | (? chr ' ') (? chr '	') # either a space or tab
 
-# Parses out the `lhs`, `rhs`, and `op`.
 ; = parse BLOCK
- 	# convert expr to a number, ignoring invalid values.
 	; = lhs + 0 expr
-
-	# Strip `lhs` and any leading whitespace
-	; WHILE (; (= chr GET expr 0 1) | (CALL isdigit) (? chr ' '))
-		; = expr SET expr 0 1 ""
-		: & (! expr)
+	; = expr ]expr # remove the first character, in case it's a hyphen
+	; WHILE (; = chr [expr | (CALL isdigit) (CALL isspace))
+		: | (= expr ]expr)
 			; OUTPUT "expecting in put of the form NUM <op> NUM"
 			: QUIT 1
-
-	# op is just the first non-digit chr.
-	; = op GET expr 0 1
-	# rhs is just the remainder of the expression as a number
-	: = rhs + 0 (SET expr 0 1 "")
+	; = op [expr
+	: = rhs +0 ]expr
 
 ; = eval BLOCK
-	: IF | (? op '+')
-	     | (? op '-')
-	     | (? op '*')
-	     | (? op '/')
-	     | (? op '%')
-	       (? op '^')
-		: OUTPUT EVAL ++++ op " " lhs " " rhs
-	# ELSE
+	: OUTPUT (
+		IF ? '+' op : + lhs rhs
+		IF ? '-' op : - lhs rhs
+		IF ? '*' op : * lhs rhs
+		IF ? '/' op : / lhs rhs
+		IF ? '%' op : % lhs rhs
+		IF ? '^' op : ^ lhs rhs
+		# ELSE:
 		; OUTPUT ++ "unknown operator '" op "'"
 		: QUIT 1
-
+	)
 
 ; OUTPUT "enter an expression in the form 'NUM <op> NUM'"
-; = expr "2 * 24" #PROMPT
+; = expr PROMPT
 ; CALL parse
 : CALL eval

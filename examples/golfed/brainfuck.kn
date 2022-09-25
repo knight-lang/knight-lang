@@ -5,20 +5,20 @@ LsI?93=cA:Gs iT;=e i=iLsI?91c;=l+,i l;W
 T]aI?62c+]a,[aI?60c+Ga-LaT1Sa-LaT01@a
 
 
-# Slightly ungolfed:
-# example input: ++++++++[>++++[>++>+++>+++>+<< <<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
-
-;=s PROMPT #
-;=a*,0 30000;=i~1;=p=l@
-C=bB
-	W<=i+1iLs
-		I?93=cA Gs iT;=e i=iLs
-		I?91c;=l+,i l;W[a;Cb=i[l;=i e=l]l
-		I?46cO+A[a"\"
-		I?44c;=a+,A=p|pP]a=p]p
-		=a
-			I?43c+,+[aT]a
-			I?45c+,-[aT]a
-			I?62c+]a,[a
-			I?60c+Ga-LaT1Sa-LaT01@
-			a
+# # Slightly ungolfed:
+# # example input: ++++++++[>++++[>++>+++>+++>+<< <<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
+# 
+# ;=s PROMPT #
+# ;=a*,0 30000;=i~1;=p=l@
+# C=bB
+# 	W<=i+1iLs
+# 		I?93=cA Gs iT;=e i=iLs
+# 		I?91c;=l+,i l;W[a;Cb=i[l;=i e=l]l
+# 		I?46cO+A[a"\"
+# 		I?44c;=a+,A=p|pP]a=p]p
+# 		=a
+# 			I?43c+,+[aT]a
+# 			I?45c+,-[aT]a
+# 			I?62c+]a,[a
+# 			I?60c+Ga-LaT1Sa-LaT01@
+# 			a
