@@ -1,5 +1,6 @@
 #!/bin/sh
 
+echo "NOTE: THIS PROBABLY DOESN'T WORK"
 if [ $# = 0 ]; then
 	echo "usage: $0 [-nocapture] [executable]" >/dev/stderr
 	exit 1
@@ -13,8 +14,8 @@ fi
 : "${KNIGHT_HOME:="$(dirname "$0")"}"
 
 runit () {
-	time "$@" -f "$KNIGHT_HOME/knight.kn" <<EOS
-$KNIGHT_HOME/knight.kn
+	time "$@" -f "$KNIGHT_HOME/examples/knight.kn" <<EOS
+$KNIGHT_HOME/examples/knight.kn
 $KNIGHT_HOME/examples/fizzbuzz.kn
 EOS
 }

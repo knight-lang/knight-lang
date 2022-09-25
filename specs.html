@@ -1122,9 +1122,9 @@ body .markdown-body
 <h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link"></a></h1>
 <p>Knight is a simple programing language, designed with the goal of being easily implementable in nearly any language. Since each language has a slightly different way of doing things, the Knight specs may leave some things up to the implementation. This allows each language to implement Knight in the most idiomatic way possible.</p>
 <h2 id="undefined-behaviour">Undefined Behaviour<a class="headerlink" href="#undefined-behaviour" title="Permanent link"></a></h2>
-<p>Yes, Knight has undefined behaviour, which is almost universally considered a bad idea(tm)—it makes programmers&rsquo; life harder and compilers&rsquo; easier. However, since Knight&rsquo;s primary focus <em>is</em> to make writing compilers easy (and being somewhat-usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything from sed to Python to Prolog to APL.</p>
+<p>Yes, Knight has undefined behaviour, which is almost universally considered a bad idea (tm)—it makes a programmer&rsquo;s life harder but compiler implementation easier. However, since Knight&rsquo;s primary focus <em>is</em> to make writing compilers easy (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, wheter it be sed, Python, Prolog or APL.</p>
 <p>Throughout this document, there will be places where something is described as <strong>undefined behaviour</strong>. If undefined behaviour is ever encountered during the parsing or execution of a Knight program, then the entire program is invalid; implementations may do whatever they want (including ignoring the error, segfaulting, custom extension behaviour, etc.).</p>
-<p>Some forms of undefined behaviour may be easier to check than others depending on the implementation language. For example, most implementations should be able to detect a division-by-zero error (e.g. by an exception being thrown). However, it may be more impossible to detect standard out being closed (such as in brainf*ck). Implementations are encouraged, but not required, to handle easily-checked undefined behaviour.</p>
+<p>Some forms of undefined behaviour may be easier to check than others, depending on the implementation language. For example, most implementations should be able to detect a division-by-zero error (e.g. by an exception being thrown). However, it may be more impossible to detect standard out being closed (such as in brainf*ck). Implementations are encouraged, but not required, to handle easily-checked undefined behaviour.</p>
 <p>To reiterate, <strong>if undefined behaviour is encountered at any point during the parsing or execution of a Knight program, the entire program is ill-defined, and implementations may do whatever they want.</strong></p>
 <h1 id="syntax">Syntax<a class="headerlink" href="#syntax" title="Permanent link"></a></h1>
 <p>Knight is a Polish-Notation (PN) language: Instead of the traditional &ldquo;infix notation&rdquo; (e.g. <code>output(1 + 2 * 4)</code>), functions come <em>before</em> their arguments (e.g. <code>OUTPUT + 1 * 2 4</code>).</p>
@@ -1311,7 +1311,7 @@ OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
 <li><strong>integer</strong>: In integer contexts, the integer itself is simply returned.</li>
 <li><strong>string</strong>: In string contexts, integers are converted to their base-10 representation. Negative integers should have a <code>-</code> prepended to the beginning of the string (positive integers shouldn&rsquo;t get <code>+</code>). For example, <code>0 -&gt; "0"</code>, <code>123 -&gt; "123"</code>, and <code>~12 -&gt; "-12"</code>.</li>
 <li><strong>boolean</strong>: In boolean contexts, zero becomes <code>false</code>, and all other integers (ie nonzero) become <code>true</code>.</li>
-<li><strong>list</strong>: In list contexts, the digits of the integer should be returned in ascending order. If the integer is negative, each digit should become negated as well. For example, <code>+@123</code> would return a list of <code>1</code>, then <code>2</code>, then <code>3</code>, whereas <code>+@~123</code> would return a list of <code>-1</code>, <code>-2</code>, and <code>-3</code>.</li>
+<li><strong>list</strong>: In list contexts, the digits of the integer should be returned order of most significant to least significant. If the integer is negative, each digit should become negated as well. For example, <code>DUMP +@123</code> prints <code>[1, 2, 3]</code>, whereas <code>DUMP +@~123</code> prints <code>[-1, -2, -3]</code>.</li>
 </ul>
 <h2 id="string">String<a class="headerlink" href="#string" title="Permanent link"></a></h2>
 <p>Strings in Knight are like strings in most other languages, albeit a bit simpler: They&rsquo;re immutable (like all types within Knight), and are <em>only</em> required to be able to represent a <a href="#required-encoding">specific subset of ASCII</a>. Implementations are free to support more characters (e.g. all of ASCII, or Unicode), but this is not required.</p>
@@ -1322,7 +1322,7 @@ OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
 <li><strong>integer</strong>: (This is roughly equivalent to C&rsquo;s <code>atoi</code>). To convert a string to an integer, the following is done: (1) strip all leading <a href="#whitespace">whitespace</a>, (2) an optional <code>+</code> or <code>-</code> may occur (3) take as many ascii digits as possible, stopping at the first non-digit or end of string. Interpret those digits as a string literal, negating it if <code>-</code> occurred. If no digits are found, return zero. In regex terms, this is <code>/^\s*([-+?\d*)/</code>. Note that if the resulting integer is out of bounds for what the integer type can handle, it is <strong>undefined behaviour</strong>.</li>
 <li><strong>string</strong>: In string contexts, the string itself is returned.</li>
 <li><strong>boolean</strong>: In boolean contexts, only empty strings are <code>false</code>. All other strings (ie nonempty) are <code>true</code>, including things like <code>"0"</code>.</li>
-<li><strong>list</strong>: In list contexts, the characters of the string should be returned, with each element of the list being a string containing just that character. (For example, <code>+@"abc"</code> would return a list of <code>"a"</code> followed by <code>"b"</code> followed by <code>"c"</code>).</li>
+<li><strong>list</strong>: In list contexts, the characters of the string should be returned, with each element of the list being a string containing just that character. (For example, <code>DUMP +@"abc"</code> prints <code>["a", "b", "c"]</code>.)</li>
 </ul>
 <h2 id="boolean">Boolean<a class="headerlink" href="#boolean" title="Permanent link"></a></h2>
 <p>The boolean type in Knight has two variants: <code>false</code> and <code>true</code>. These two values are used to indicate truthiness within Knight, and is the type that&rsquo;s converted to within boolean contexts.</p>
@@ -1332,7 +1332,7 @@ OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
 <li><strong>integer</strong>: In integer contexts, <code>false</code> becomes <code>0</code> and <code>true</code> becomes <code>1</code>.</li>
 <li><strong>string</strong>: In string contexts, <code>false</code> becomes <code>"false"</code> and <code>true</code> becomes <code>"true"</code>.</li>
 <li><strong>boolean</strong>: In boolean contexts, the boolean itself is simply returned.</li>
-<li><strong>list</strong>: In list contexts, <code>false</code> becomes an empty list and <code>true</code> becomes a list just containing <code>TRUE</code>. (i.e. <code>+@FALSE</code> is equivalent to <code>@</code>, whereas <code>+@TRUE</code> is equivalent to <code>,TRUE</code>).</li>
+<li><strong>list</strong>: In list contexts, <code>false</code> becomes an empty list and <code>true</code> becomes a list just containing <code>true</code>. (i.e. <code>+@FALSE</code> is equivalent to <code>@</code>, whereas <code>+@TRUE</code> is equivalent to <code>,TRUE</code>).</li>
 </ul>
 <h2 id="null">Null<a class="headerlink" href="#null" title="Permanent link"></a></h2>
 <p>The <code>null</code> type is used to indicate the absence of a value within Knight, and is the return value of some functions (such as <code>OUTPUT</code> and <code>WHILE</code>). While it does have conversions defined for all contexts, no conversions <em>into</em> <code>null</code> exist.</p>
@@ -1345,7 +1345,7 @@ OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
 <li><strong>list</strong>: In list contexts, null becomes an empty list.</li>
 </ul>
 <h2 id="list">List<a class="headerlink" href="#list" title="Permanent link"></a></h2>
-<p>Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists and entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, lists are ordered (e.g. <code>[list</code> should always give you the same element for nonempty lists).</p>
+<p>Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists are entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, a list is a datatype with an order; ie, list elements retain the order in which they are. (e.g. <code>[ list</code> should always give you the same element for nonempty lists).</p>
 <p>While rare in practice, it is <strong>undefined behaviour</strong> for Knight programs to attempt to create lists with a length larger than <a href="#integer-bounds">the maximum value for integers</a>. (Thus, <code>LENGTH list</code> will always have a well-defined result.)</p>
 <h3 id="list-contexts">Contexts<a class="headerlink" href="#list-contexts" title="Permanent link"></a></h3>
 <p>(See <a href="#evaluation-contexts">here</a> for more details on contexts.)</p>
@@ -1358,12 +1358,12 @@ OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
 <h3 id="list-literals">List Literals<a class="headerlink" href="#list-literals" title="Permanent link"></a></h3>
 <p>Due to Knight&rsquo;s fixed-arity syntax, it&rsquo;s impossible to have list literals (although you could definitely add them as an extension if you wanted). There&rsquo;s generally three ways to create lists in Knight:
 <div class="highlight"><pre># Way 1, automatic coercion by adding something to `@`
-+@123   # =&gt; a list of `1`, `2`, and `3`.
-+@&quot;abc&quot; # =&gt; a list of `&quot;a&quot;`, `&quot;b&quot;`, and `&quot;c&quot;`.
++@123   # =&gt; [1, 2, 3]
++@&quot;abc&quot; # =&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
 
 # Way 2, adding &quot;boxed&quot; elements together:
-+ (+ ,1 ,2) ,3 # =&gt; also a list of `1`, `2`, and `3`.
-+ ,TRUE ,FALSE # =&gt; a list of `true` and `false`
++ (+ ,1 ,2) ,3 # =&gt; [1, 2, 3]
++ ,TRUE ,FALSE # =&gt; [true, false]
 
 # Way 3 (a variant of 2), doing some form of iteration:
 ; = list @
@@ -1377,7 +1377,7 @@ OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
 <h3 id="valid-functions-for-blocks">Valid functions for Blocks<a class="headerlink" href="#valid-functions-for-blocks" title="Permanent link"></a></h3>
 <p>Because blocks aren&rsquo;t allowed to be used in any contexts, there&rsquo;s only a handful of places they may be used. Attempting to use them anywhere else is considered <strong>undefined behaviour</strong></p>
 <ul>
-<li>The sole argument to <a href="#fn-noop"><code>:</code></a>, <a href="#fn-block"><code>BLOCK</code></a> itself (ie <code>BLOCK BLOCK ...</code>), <a href="#fn-call"><code>CALL</code></a>, <a href="#fn-dump"><code>DUMP</code></a>, and <a href="#fn-box"><code>,</code></a>.</li>
+<li>The sole argument to <a href="#fn-noop"><code>:</code></a>, <a href="#fn-block"><code>BLOCK</code></a> itself (ie <code>BLOCK BLOCK ...</code>), <a href="#fn-call"><code>CALL</code></a>, and <a href="#fn-box"><code>,</code></a>.</li>
 <li>The second argument to <a href="#fn-while"><code>=</code></a>, <a href="#fn-and"><code>&amp;</code></a>, or <a href="#fn-or"><code>|</code></a></li>
 <li>Either argument of <a href="#fn-then"><code>;</code></a></li>
 <li>Either the second or third argument of <a href="#fn-if"><code>IF</code></a></li>
@@ -1394,7 +1394,7 @@ OUTPUT ((*) a 2) # illegal, the `(*)` isn&#39;t a single expression
 <h1 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link"></a></h1>
 <p>Every function in Knight has a predetermined arity—there are no variadic functions.</p>
 <p>Unless otherwise noted, all functions will <em>evaluate</em> their arguments beforehand. This means that <code>+ a b</code> should fetch the value of <code>a</code>, the value of <code>b</code>, and then add them together, and should <em>not</em> attempt to add a literal identifier to another literal identifier (which doesn&rsquo;t even make sense).</p>
-<p>All arguments <em>must</em> be evaluated in order (from the first argument to the last)—functions such as <code>;</code> rely on this.</p>
+<p>All arguments <em>must</em> be evaluated in order (from left to right)—functions such as <code>;</code> rely on this.</p>
 <p>As mentioned before, any operators which would return an integer outside of the implementation-supported integer range, the return value is undefined. (i.e. integer overflow is an undefined operation.)</p>
 <h2 id="evaluation-contexts">Evaluation Contexts<a class="headerlink" href="#evaluation-contexts" title="Permanent link"></a></h2>
 <p>Certain functions impose certain contexts on their arguments, coercing other types to the required type. (See each type&rsquo;s coercion contexts for their exact semantics.) The following are the contexts used within this document:</p>
@@ -1486,18 +1486,47 @@ foo
 bar
 </pre></div></p>
 <h3 id="fn-dump"><code>DUMP(unchanged)</code><a class="headerlink" href="#fn-dump" title="Permanent link"></a></h3>
-<p>Dumps a debugging representation of its argument to stdout, and then returns it.</p>
-<p>This function is really meant to be used for debugging purposes (and unit testing), not in finished Knight programs. As such, there is no strict requirement for the debugging representation. Additionally, unlike most functions, <code>Block</code>s can be passed as the only argument to <code>DUMP</code>.</p>
-<p>However, if you want to use the Knight unit tests, then the output of this must conform to the following regexes, or the tester will get confused. <em>(<strong>TODO</strong>: update these when the unit tester becomes updated.)</em></p>
+<p>Dumps a debugging representation of its argument to stdout, then returns its evaluated argument.</p>
+<p>This function is also with the unit testing framework uses to ensure that implementations conform to the Knight specifications.</p>
+<p>This function writes the following to stdout, <em>without a trailing newline</em>:</p>
 <ul>
-<li><code>Null()</code>,</li>
-<li><code>Integer(&lt;integer&gt;)</code> - <code>&lt;integer&gt;</code> should be base-10, with a leading <code>-</code> if negative.</li>
-<li><code>Boolean(&lt;bool&gt;)</code> - <code>&lt;bool&gt;</code> must be either <code>true</code> or <code>false</code>.</li>
-<li><code>String(&lt;string&gt;)</code> - The literal contents of the string—no escaping whatsoever should be performed. (e.g. <code>DUMP "foo'b)ar\"</code> should write <code>String(foo'b)ar\)</code>).</li>
-<li><code>List(&lt;element1&gt;, &lt;element2&gt;, ..., &lt;element n&gt;)</code>, no newlines. or <code>[...]</code></li>
-<li><em>Whilst <code>block</code>s are valid arguments to <code>DUMP</code>, the unit tester will never check for them, so implementations are free to do what they want for their dumping</em></li>
+<li><strong><code>integer</code></strong>: Its string representation.</li>
+<li><strong><code>boolean</code></strong>: Its string representation.</li>
+<li><strong><code>null</code></strong>: Just <code>null</code>.</li>
+<li><strong><code>string</code></strong>: A <code>"</code>, followed by the contents of the string, and ended with another <code>"</code>. The contents of the string should be verbatim, except for the following replacements:<ul>
+<li>tab (<code>0x09</code>): <code>\t</code></li>
+<li>newline (<code>0x0A</code>): <code>\n</code></li>
+<li>carriage return (<code>0x0D</code>): <code>\r</code></li>
+<li>backslash (<code>0x5C</code>): <code>\\</code></li>
+<li>double quote (<code>0x22</code>): <code>\"</code></li>
+</ul>
+</li>
+<li><strong><code>list</code></strong>: A <code>[</code>, followed by the <code>DUMP</code>ing of each element within the list. A <code>,</code> (comma <em>and</em> then space) should be added between elements, but not at the end. A closing <code>]</code> should be written when done.</li>
+<li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
 </ul>
 <p>Like <a href="#fn-output"><code>OUTPUT</code></a>, it&rsquo;s <strong>undefined behaviour</strong> if there&rsquo;s any issues writing to stdout.</p>
+<p>Examples:
+<div class="highlight"><pre>DUMP 3 #=&gt; 3
+DUMP ~3 #=&gt; -3
+
+DUMP TRUE #=&gt; true
+DUMP FALSE #=&gt; false
+DUMP NULL #=&gt; null
+
+DUMP &#39;hello&#39; #=&gt; &quot;hello&quot;
+DUMP &#39;hel&quot;lo&#39; #=&gt; &quot;hel\&quot;lo&quot;
+DUMP &quot;hel&#39;lo&quot; #=&gt; &quot;hel&#39;lo&quot;
+DUMP &#39;&lt;carrige return&gt;
+&lt;tab&gt;&#39; #=&gt; &quot;\r\n\t&quot;
+DUMP &#39;\&quot;&#39; =&gt; &quot;\\\&quot;&quot;
+
+DUMP @ #=&gt; []
+DUMP ,3 #=&gt; [3]
+DUMP ,,,3 #=&gt; [[[3]]]
+DUMP ,&quot;[]&quot; #=&gt; [&quot;[]&quot;]
+DUMP +@123 #=&gt; [1, 2, 3]
+DUMP +@&#39;\\3&#39; #=&gt; [&quot;\\&quot;, &quot;\\&quot;, &quot;3&quot;]
+</pre></div></p>
 <h3 id="fn-length"><code>LENGTH(list)</code><a class="headerlink" href="#fn-length" title="Permanent link"></a></h3>
 <p>Returns the length of the argument when converted to a list.</p>
 <p>Note: The length of strings are the same as the length of their list coercion, as the list coercion returns a list of the chars in the list.</p>
@@ -1553,9 +1582,9 @@ ASCII &quot;&quot; # undefined (empty isnt valid)
 <h3 id="fn-box"><code>,(unchanged)</code><a class="headerlink" href="#fn-box" title="Permanent link"></a></h3>
 <p>This function returns a list containing just its argument. In Python terms, <code>lambda x: [x]</code>.</p>
 <p>Examples:
-<div class="highlight"><pre>,1   # =&gt; a list of just 1
-,,&quot;&quot; # =&gt; a list of just a list of &quot;&quot;
-,,@  # =&gt; a list of just an empty list
+<div class="highlight"><pre>,1   # =&gt; [1]
+,,&quot;&quot; # =&gt; [[&quot;&quot;]]
+,,@  # =&gt; [[[]]]
 </pre></div></p>
 <h3 id="fn-head"><code>[(unchanged)</code><a class="headerlink" href="#fn-head" title="Permanent link"></a></h3>
 <p>The return value of this function depends on its first argument&rsquo;s type:</p>
@@ -1587,8 +1616,8 @@ ASCII &quot;&quot; # undefined (empty isnt valid)
 ]&quot;&quot;       # =&gt; undefined, empty string
 
 ],1       # =&gt; empty list
-](+@1234) # =&gt; a list of 2, 3, and 4
-](+@1111) # =&gt; a list of 1, 1, and 1
+](+@1234) # =&gt; [2, 3, 4]
+](+@1111) # =&gt; [1, 1, 1]
 ]@        # =&gt; undefined, empty list.
 </pre></div></p>
 <h2 id="binary-fns">Binary (Arity 2)<a class="headerlink" href="#binary-fns" title="Permanent link"></a></h2>
@@ -1603,9 +1632,9 @@ ASCII &quot;&quot; # undefined (empty isnt valid)
 <p>Examples:
 <div class="highlight"><pre>+ &quot;2a&quot; 3         # =&gt; &quot;2a3&quot;
 + 3 &quot;2a&quot;         # =&gt; 5
-+ @ &quot;abc&quot;        # =&gt; a list of &quot;a&quot;, &quot;b&quot;, and &quot;c&quot;
-+ (+@12)  (+@34) # =&gt; a list of 1, 2, 3, and 4
-+ (+@12) ,(+@34) # =&gt; a list of 1, 2, and a list of 3 and 4
++ @ &quot;abc&quot;        # =&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]
++ (+@12) 34      # =&gt; [1, 2, 3, 4]
++ (+@12) ,(+@34) # =&gt; [1, 2, [3, 4]]
 </pre></div></p>
 <h3 id="fn-subtract"><code>-(unchanged, coerced)</code><a class="headerlink" href="#fn-subtract" title="Permanent link"></a></h3>
 <p>The return value of this function depends on its first argument&rsquo;s type:</p>
@@ -1629,7 +1658,7 @@ ASCII &quot;&quot; # undefined (empty isnt valid)
 <div class="highlight"><pre>* 3 &quot;2a&quot;  # =&gt; 6
 * 3 FALSE # =&gt; 0
 * &quot;2a&quot; 3  # =&gt; &quot;2a2a2a&quot;
-* (,1) 5  # =&gt; a list of 5 1s
+* (,1) 5  # =&gt; [1, 1, 1, 1, 1]
 * (,1) 0  # =&gt; empty list
 * &quot;2a&quot; ~3 # undefined, negative length
 * (,1) ~1 # undefined, negative length
@@ -1649,14 +1678,15 @@ ASCII &quot;&quot; # undefined (empty isnt valid)
 <h3 id="fn-remainder"><code>%(unchanged, coerced)</code><a class="headerlink" href="#fn-remainder" title="Permanent link"></a></h3>
 <p>The return value of this function depends on its first argument&rsquo;s type:</p>
 <ul>
-<li><strong><code>Integer</code></strong>: The second argument is coerced to an integer, and then the remainder of <code>&lt;arg1&gt; / &lt;arg2&gt;</code> (rounding towards zero) is returned. Note that this means that, for all <code>a</code>, <code>a = (a/b)*b + a%b</code>. It is <strong>undefined behaviour</strong> for the second argument not to be a strictly positive integer.</li>
+<li><strong><code>Integer</code></strong>: The second argument is coerced to an integer, and then the remainder of <code>&lt;arg1&gt; / &lt;arg2&gt;</code> (rounding towards zero) is returned. It is <strong>undefined behaviour</strong> for the second argument not to be a strictly positive integer, or the first to not be zero or positive.</li>
 <li><strong>All other types</strong>: <strong>undefined behaviour</strong></li>
 </ul>
 <div class="highlight"><pre>% 7 3    # =&gt; 1
-% ~5 2   # =&gt; -1
-% ~7 5   # =&gt; -2
+% 10 5   # =&gt; 0
+% 5 10   # =&gt; 5
 % 7 0    # undefined, 0 is not positive
 % 7 ~2   # undefined, -2 is not positive
+% ~7 2   # undefined, -7 is not positive
 </pre></div>
 
 <h3 id="fn-power"><code>^(unchanged, coerce)</code><a class="headerlink" href="#fn-power" title="Permanent link"></a></h3>
@@ -1964,7 +1994,7 @@ should be equivalent to
 </pre></div></p>
 <h2 id="ext-syntactic-sugar">Syntactic Sugar<a class="headerlink" href="#ext-syntactic-sugar" title="Permanent link"></a></h2>
 <p>These extensions provide syntactic sugar for some common idioms in Knight</p>
-<h3 id="ext-grave-strings"><code>`</code>-string literals<a class="headerlink" href="#ext-grave-strings" title="Permanent link"></a></h3>
+<h3 id="ext-string-interpolation"><code>`</code>-string literals<a class="headerlink" href="#ext-string-interpolation" title="Permanent link"></a></h3>
 <p>Working with strings in Knight is a bit of a pain: There are no escape sequences, and the only way to generate a larger string is through concatenation.
 <div class="highlight"><pre>OUTPUT ++++greeting &quot;, &quot; name &quot;, aged &quot; age &quot;!
 How are you?&quot;
