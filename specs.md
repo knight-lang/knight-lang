@@ -280,7 +280,7 @@ The `null` type is used to indicate the absence of a value within Knight, and is
 - **list**: In list contexts, null becomes an empty list.
 
 ## List
-Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists and entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, a list is a datatype with an order; ie, list elements retain the order in which they are. (e.g. `[ list` should always give you the same element for nonempty lists).
+Lists are the only container type defined in Knight. Like most runtime languages, lists in Knight are heterogeneous—that is, the same list must be able to hold multiple values (e.g. both an integer and a string). Additionally, like strings, lists are entirely immutable: All operations that would normally modify a list in other languages simply returns a new list in Knight. Lastly, a list is a datatype with an order; ie, list elements retain the order in which they are. (e.g. `[ list` should always give you the same element for nonempty lists).
 
 While rare in practice, it is **undefined behaviour** for Knight programs to attempt to create lists with a length larger than [the maximum value for integers](#integer-bounds). (Thus, `LENGTH list` will always have a well-defined result.)
 
