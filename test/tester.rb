@@ -20,7 +20,7 @@ module Kn::Test
       super <<~EOS
         Expression returned nonzero exit status:
         ===[expression]===
-        #{expression}
+        #{expression.inspect}
         ===[status]===
         #{status}
       EOS
@@ -32,7 +32,7 @@ module Kn::Test
       super <<~EOS
         Unable to parse result:
         ===[expression]===
-        #{expression}
+        #{expression.inspect}
         ===[invalid result]===
         #{result}
       EOS
