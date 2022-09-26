@@ -12,7 +12,7 @@ The following is the list of all languages that I've written it in.
 | -------- |---------|:---------------------:|:----------:|:-----------------:|:-----:| ----- |
 | [AWK](https://github.com/knight-lang/shell/blob/master/knight.awk) | 1.0 | X | X | X | X | My AWK interpreter segfaults randomly, but after running each test 100x, they all passed. |
 | [Assembly (x86)](https://github.com/knight-lang/asm) | 1.0 |   |   | X | X | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
-| [C](https://github.com/knight-lang/c/tree/master/ast) | 1.2 (but close to 2.0) | X | X | X | X | Fully functional, and the fastest. |
+| [C](https://github.com/knight-lang/c/tree/master/ast) | 2.0 | X | X | X | X | Fully functional  |
 | [C++](https://github.com/knight-lang/cpp) | 1.1 | X | X | X | X | Works with C++17; It could use a facelift though, as I used a bit too much dynamic dispatch. |
 | [C#](https://github.com/knight-lang/csharp) | 1.0 | X | X | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [Go](https://github.com/knight-lang/go) | 2.0 | X |  | X | X | Fully functional, but undocumented. |
