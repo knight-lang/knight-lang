@@ -13,8 +13,22 @@ section 'PROMPT' do
 		assert_result "foo", %|PROMPT|, stdin: "foo\r\nbar"
 	end
 
-	it 'should not strip a lone trailing `\r`' do
-		assert_result "foo\r", %|PROMPT|, stdin: "foo\r"
+	it 'should strip all trailing `\r`s' do
+		assert_result "foo", %|PROMPT|, stdin: "foo\r\n"
+		assert_result "foo", %|PROMPT|, stdin: "foo\r\r\r\r\n"
+		assert_result "foo", %|PROMPT|, stdin: "foo\r\nhello"
+		assert_result "foo", %|PROMPT|, stdin: "foo\r\r\r\r\nhello"
+		assert_result "foo", %|PROMPT|, stdin: "foo\r"
+		assert_result "foo", %|PROMPT|, stdin: "foo\r\r\r\r"
+	end
+
+	it 'does not strip `\r`s in the middle'do
+		assert_result "foo\rhello", %|PROMPT|, stdin: "foo\rhello"
+		assert_result "foo\rhello", %|PROMPT|, stdin: "foo\rhello\n"
+		assert_result "foo\rhello", %|PROMPT|, stdin: "foo\rhello\r\n"
+		assert_result "foo\r\r\r\rhello", %|PROMPT|, stdin: "foo\r\r\r\rhello"
+		assert_result "foo\r\r\r\rhello", %|PROMPT|, stdin: "foo\r\r\r\rhello\n"
+		assert_result "foo\r\r\r\rhello", %|PROMPT|, stdin: "foo\r\r\r\rhello\r\n"
 	end
 
 	it 'should be able to read multiple lines' do

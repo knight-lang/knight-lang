@@ -1,4 +1,4 @@
-# Official Knight Specifications (v2.0)
+# Official Knight Specifications (v2.0.1)
 ## Table of Contents
 * [Overview](#overview)
 	- [Undefined Behaviour](#undefined-behaviour)
@@ -381,11 +381,22 @@ The function `@` simply returns the an empty list. This function exists because 
 As discussed in the [Literals Functions](#literal-functions) section, `@` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
 ### `PROMPT()` {#fn-prompt}
-The prompt function reads a line (terminated either by `\n` or end of file being reached, whichever is first) from standard in. Before returning the line, if either a trailing `\r\n` or `\n` is present, strip it (regardless of the operating system). If there's nothing left in standard in (i.e. end of file was reached before reading anything), `null` should be returned instead.
+The prompt function reads a line (terminated either by `\n` or end of file being reached, whichever is first) from standard in. Before returning the line, a trailing `\n` should be removed, and then as many trailing `\r`s as possible should be removed. If there's nothing left in standard in (i.e. end of file was reached before reading anything), `null` should be returned instead.
 
 If there's a problem reading from stdin (e.g, it's closed, permission issues, etc., but _not_ if EOF was reached—see previous line), it is considered **undefined behaviour**.
 
 If the line that's read contains any characters that [are not supported in Knight](#required-encoding), it is considered **undefined behaviour**.
+
+Examples of how `PROMPT` functions (input (with escapes) on the left, result on the right):
+```
+hello\n           #=> "hello"
+hello\r\n         #=> "hello"
+hello\r\r\r\r\r\n #=> "hello"
+hello\rworld\r\n  #=> "hello\rworld"
+hello\r\r\r<eof>  #=> "hello"
+hello<eof>        #=> "hello"
+<eof>             #=> NULL
+```
 
 ### `RANDOM()` {#fn-random}
 This function must return a (pseudo-) random integer between 0 and—at a minimum—32767 (`0x7fff`). Implementations are free to return a larger random integer if they desire; however, all random integers must be zero or positive.

@@ -102,7 +102,9 @@ module Kn::Test
             status = if @executable.respond_to? :call
               @executable.call(expr, out: out_write, in: in_read, err: err_write)
             else
-              system(*Array(executable), '-e', expr, out: out_write, in: in_read, err: err_write)
+              exe = [*Array(@executable), '-e', expr]
+              puts "executing: #{exe.inspect} (stdin=#{stdin.inspect})" if $VERBOSE
+              system(*exe, out: out_write, in: in_read, err: err_write)
               $?
             end
 

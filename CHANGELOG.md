@@ -1,3 +1,6 @@
+# Knight2.0.1 Changelog from Knight2.0
+- `PROMPT`'s specifications have been slightly tweaked: Instead of stripping only trailing `\r\n` or `\n`, it now strips a trailing `\n`, and then as many trailing `\r` as possible. (In regex, strip `\r*\n?$`.)
+
 # Knight2.0 Changelog from Knight1.2
 
 This is the complete list of the differences between Knight1.2 and Knight2.0. For exact semantics of the different functions, see the specs.
