@@ -1,10 +1,6 @@
 require_relative 'tester'
 require_relative 'context'
 
-# require_relative './context'
-$tester = Tester.new(File.join(Dir.pwd, 'knight'))
-$tester.executable = Dir.home + "/code/knight/c/ast/bin/knight"
-
 class TestContext
   def initialize(testcase, tester)
     @testcase = testcase
@@ -12,10 +8,10 @@ class TestContext
   end
 
   def assert_result(expected, expression)
-    result = @tester.evaluate expression, test_location: caller(1, 1)[0]
+    result = @tester.evaluate expression, test_location: caller(1, 1)[0], testcase: @testcase
 
-    return unless expected == result.parsed_result
-    
+    return if expected == result.parsed_result
+
     result.error <<~EOS, caller(1)
       bad result for expression: #{expression.inspect}
         expected: #{expected.inspect}
@@ -23,7 +19,6 @@ class TestContext
     EOS
   end
 end
-
 
 class TestCase
   def initialize(sections, description, sanitizations, body)
@@ -36,17 +31,15 @@ class TestCase
   end
 
   def to_s
-    @to_s ||= "#{@sections.join('.')}: #@description"
+    @to_s ||= "#{@sections.join('.')}.#{@description.inspect}"
   end
 
   def run(tester)
     TestContext.new(self, tester).instance_exec(&@body)
-    nil
-  rescue ExecutionFailure => err
-    tester.failure(self, err)
-    Failure.new(self, err)
-  rescue => err
-    Failure.new(self, "<uncaught internal error>: #{err.full_backtrace}", Context.new)
+  # rescue ExecutionFailure => err
+  #   tester.failure(self, err)
+  # rescue => err
+  #   Failure.new(self, "<uncaught internal error>: #{err.full_backtrace}", Context.new)
   end
 end
 
@@ -69,32 +62,26 @@ class Harness
     @tests.push TestCase.new(@current_scopes.dup, description, when_testing, block)
   end
 
-  def run(tester, **kwargs)
+  def run(tester, print_test_results: true, **kwargs)
     failures = []
 
     @tests.each do |test|
-      next unless test.should_run?(**kwargs)
-      failure = test.run(tester) and failures.push failure
+      test.run(tester) if test.should_run?(**kwargs)
+      puts '.' if print_test_results
+
+    rescue TestError => err
+      failures.push err
+      puts 'E' if print_test_results
+
+    rescue => unexpected_err
+      failures.push UncaughtInternalError.new(unexpected_err)
+      puts '!' if print_test_results
     end
 
     failures
   end
 end
 
-h = Harness.new
-h.section 'function' do
-  h.describe 'unary' do
-    h.describe '+' do
-      h.it 'adds properly' do
-        assert_result 4, '+ 1 2'
-      end
-    end
-  end
-end
-
-h.run($tester, sections: [], sanitizations: []).each do |failure|
-  puts failure
-end
 # p @scopes
 __END__
 

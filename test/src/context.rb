@@ -1,22 +1,16 @@
+require 'json'
 require_relative 'backports'
-
-class ExecutionFailure < RuntimeError
-  attr_reader :context, :cause
-  def initialize(message, context, cause=nil)
-    super message
-    @context = context
-    @cause = cause
-  end
-end
+require_relative 'error'
 
 class Context
-  attr_reader :tester, :expression, :stdin, :stdout, :stderr, :exit_status, :test_location
+  attr_reader :tester, :expression, :stdin, :stdout, :stderr, :exit_status, :test_location, :testcase
   alias result stdout
 
   # Creates a new `Context` with the given expression. The function `Tester.create_context` is a
   # shorthand for this.
-  def initialize(tester, expression, test_location:, stdin: nil)
+  def initialize(tester, expression, testcase:, test_location:, stdin: nil)
     @tester = tester
+    @testcase = testcase
     @test_location = test_location[/^(.*?)(:in `|$)/, 1]
     @expression = expression
     @stdin = stdin
@@ -24,17 +18,27 @@ class Context
 
   def to_h
     instance_variables
-      .reject { |iv| iv == :@tester }
+      .reject { |iv| iv == :@tester || iv == :@testcase }
       .map { |iv| [iv[1..], instance_variable_get(iv)] }
       .to_h
   end
 
-  def to_s
-    ["CONTEXT:", *to_h.map{|k,v| "#{k}: #{v.inspect}"}].join "\n\t"
+  def to_json(*rest)
+    to_h.to_json(*rest)
   end
+
   def inspect; "Context(#{to_h})"end
+  def to_s
+    to_h.map{|k,v| "#{k}: #{v.inspect}"}.join("\n")
+  end
 
   def verbose(message)
+    return unless @tester.verbose?
+    print message
+    print " (context=#{to_json})" if @tester.verbose? 
+    when 0 then # do nothing
+    when 1 then puts message
+
     log message if @tester.verbose?
   end
 
@@ -44,12 +48,6 @@ class Context
 
   def log(message)
     puts "#{message} (#{self})"
-  end
-
-  def error(message, err=nil, whence=caller(1))
-    exception = ExecutionFailure.new(message, self, err)
-    exception.set_backtrace whence
-    raise exception
   end
 
   def execute!(raise_on_failure: true)
@@ -63,7 +61,8 @@ class Context
     end
 
     # Actually execute the expression and get the exit status.
-    verbose "executing expression"
+    verbose "executing expression: #@expression"
+
     @exit_status = @tester._execute(expression: @expression, in: in_read, out: out_write, err: err_write)
 
     # Read the stdout and stderr, warning if there's a problem doing that.
@@ -71,14 +70,14 @@ class Context
     out_write.close rescue warn "unable to close stdout: #$!"
     @stderr = err_read.read rescue warn("unable to read stderr: #$!")
     @stdout = out_read.read rescue warn("unable to read stdout: #$!")
-    verbose "got result"
+    verbose "got result: #{@stdout.inspect}"
 
     # Raise exceptions if there's a problem with executing the test. `raise_on_failure` exists as
     # some tests expect failure (eg `QUIT 1`), and `ignore_all_failures?` exists to bypass these
     # checks (e.g. if the executable always outputs something to stderr)
     if raise_on_failure && !@tester.ignore_all_failures?
-      error "nonzero exit status" unless @exit_status.success?
-      error "stderr wasn't empty" unless @stderr.empty?
+      raise NonZeroExitStatus.new(self) unless @exit_status.success?
+      raise StderrNotEmpty.new(self) unless @stderr.empty?
     end
 
     self # return self
@@ -100,7 +99,8 @@ class Context
     raise ArgumentError, "stdout isn't set" if @stdout.nil?
 
     @parsed_result ||= parse!(out = @stdout.dup).tap do
-      error "expression wasn't exactly one `DUMP` result." unless out.empty?
+      next if out.empty?
+      raise ParseError.new("stdout wasn't exactly one `DUMP` result.", self)
     end
   end
 
@@ -126,13 +126,13 @@ class Context
       eles = [parse!(str)]
 
       until str.delete_prefix! ']'
-        str.delete_prefix! ', ' or error "expected `, ` after element in array"
+        str.delete_prefix! ', ' or raise ParseError.new("expected exactly `, ` after element in array", self)
         eles.push parse! str 
       end
 
       eles
     else
-      error "unknown expression start: #{str.inspect}"
+      raise ParseError.new("unknown expression start: #{str[0].inspect}", self)
     end
   end
 end
