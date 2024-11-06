@@ -27,6 +27,10 @@ class Tester
     system(*@executable, '-e', expression, **kwargs)
     $?
   end
+
+  def should_test?(section)
+    true
+  end
 end
 
 

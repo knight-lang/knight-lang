@@ -9,6 +9,7 @@
 	; = guesses + guesses 1
 	: OUTPUT (
 		IF (< guess secret) "Too low!"
-		IF (> guess secret) "Too high!" "Perfect!")
+		IF (> guess secret) "Too high!"
+								  "Perfect!")
 
 : OUTPUT ++ "It took you " guesses " guesses"

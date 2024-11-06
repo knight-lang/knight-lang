@@ -1,3 +1,5 @@
+require_relative 'context'
+
 class TestCase
   def initialize(section, description, when_testing: [], &body)
     @section = section
@@ -5,6 +7,12 @@ class TestCase
     @sanitizations = when_testing
     @body = body
   end
+
+  def inspect
+    @inspect ||= "#@section.#{@description.inspect}"
+  end
+
+  def run(context)
 end
 
 class Section
@@ -13,7 +21,12 @@ class Section
     @name = name
     @aliases = aliases
     @subsections = []
+    @before = []
     @tests = []
+  end
+
+  def children
+    @tests + @subsections.map(&:children)
   end
 
   def to_s
@@ -45,8 +58,33 @@ class Section
     @subsections.push section
     section.instance_exec(&block)
   end
+  alias describe section
+
+  def before(&block)
+    @before.push block
+  end
 
   def it(*a, **k, &b)
     @tests.push TestCase.new(self, *a, **k, &b)
+  end
+
+  def run(tester)
+    return unless tester.should_test? self
+
+    context = Context.new self, tester
+
+    @before.each do |before|
+      context.instance_exec(&before)
+    end
+
+    success = false
+
+    @subsections.each do |subsection|
+      success &= subsections.run tester
+    end
+
+    @tests.each do |test|
+      success &= test.run context
+    end
   end
 end

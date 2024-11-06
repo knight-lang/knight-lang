@@ -14,8 +14,8 @@
 		# printing out the return value of the `IF` chain:
 		: OUTPUT
 			: IF ! (% n 15) "FizzBuzz"
-			: IF ! (% n 5)  "Fizz"
-			: IF ! (% n 3)  "Buzz"
+			: IF ! (% n 5)  "Buzz"
+			: IF ! (% n 3)  "Fizz"
 			                n
 
 # Set `max` to 100, and then execute the block.
