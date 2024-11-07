@@ -76,7 +76,9 @@ module Kn::Test
       :undefined_variables
     ].freeze
 
-    attr_accessor :sanitizations, :executable
+    attr_accessor :sanitizations, :executable, :verbose
+
+    alias verbose? verbose
 
     def initialize(sanitizations: DEFAULT_SANITIATIONS.dup, executable: nil, &block)
       @sanitizations = sanitizations
@@ -89,6 +91,7 @@ module Kn::Test
     alias sanitized? sanitizes?
 
     def execute(expr, stdin: :close, raise_on_failure: true)
+      puts "running: #{expr.inspect}" if verbose?
       IO.pipe do |out_read, out_write|
         IO.pipe do |err_read, err_write|
           IO.pipe do |in_read, in_write|

@@ -33,6 +33,10 @@ OptParse.new.instance_exec do
 		end
 	end
 
+	on '--[no-]verbose', 'Print out each test before it is run' do |verb|
+		$tester.verbose = verb
+	end
+
 	on '-f', '--force', "Run the executable even if it's not executable", Array do |san|
 		force = true
 	end

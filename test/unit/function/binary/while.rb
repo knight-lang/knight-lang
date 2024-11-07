@@ -13,6 +13,7 @@ section 'WHILE' do
 		assert_result 45, <<~KNIGHT
 			; = i 0
 			; = sum 0
+			; D 1
 			; WHILE (< i 10)
 				; = sum + sum i
 				: = i + i 1
