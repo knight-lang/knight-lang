@@ -10,7 +10,7 @@ The following is the list of all languages that I've written it in.
 
 | Language | Version | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
 | -------- |---------|:---------------------:|:----------:|:-----------------:|:-----:| ----- |
-| [AWK](https://github.com/knight-lang/shell/blob/master/knight.awk) | 1.0 | X | X | X | X | My AWK interpreter segfaults randomly, but after running each test 100x, they all passed. |
+| [AWK](https://github.com/knight-lang/awk/blob/main/knight.awk) | 2.1 | X | X | X | X | Unfortunately, MacOS's awk segfaults on `DUMP PROMPT` sometimes. Other than that, it works. |
 | [Assembly (x86)](https://github.com/knight-lang/asm) | 1.0 |   |   | X | X | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
 | [C](https://github.com/knight-lang/c/tree/master/ast) | 2.0.1 | X | X | X | X | Fully functional  |
 | [C++](https://github.com/knight-lang/cpp) | 2.0.1 | X | X | X | X | Works with C++17 |
