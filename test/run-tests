@@ -37,6 +37,10 @@ OptParse.new.instance_exec do
 		force = true
 	end
 
+	on '-v', '--[no-]verbose', "Enable verbose mode (or not)" do |verb|
+		$tester.verbose = true
+	end
+
 	on '-Z', '--dont-sanitize[=SAN,...]', 'Do not test SANS; disables all without args', Array do |san|
 		if san
 			$tester.sanitizations -= san.map(&:to_sym)
