@@ -36,7 +36,11 @@ module Kn::Test
     end
 
     def assert_result(expected, expr, **k)
-      assert_equal expected, tester.evaluate(expr, **k), "Offending expression: #{expr.inspect}"
+      assert_equal(
+        expected,
+        tester.evaluate(expr, **k),
+        "Offending expression: #{expr.inspect}#{k[:stdin] && " (stdin: #{k[:stdin].inspect})"}"
+      )
     end
 
     def refute_runs(*a, **k)

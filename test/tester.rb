@@ -114,13 +114,13 @@ module Kn::Test
               $?
             end
 
-            if !status.success? && raise_on_failure
-              raise NonzeroExitStatus.new(expr, status)
-            end
-
             err_write.close
             unless (err = err_read.read).empty?
               raise StderrNotEmpty.new(expr, err)
+            end
+
+            if !status.success? && raise_on_failure
+              raise NonzeroExitStatus.new(expr, status)
             end
 
             out_write.close
