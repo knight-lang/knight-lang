@@ -10,7 +10,7 @@ The following is the list of all languages that I've written it in.
 
 | Language | Version | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
 | -------- |---------|:---------------------:|:----------:|:-----------------:|:-----:| ----- |
-| [AWK](https://github.com/knight-lang/awk/blob/main/knight.awk) | 2.1 | X | X | X | X | Unfortunately, MacOS's awk segfaults on `DUMP PROMPT` sometimes. Other than that, it works. |
+| [AWK](https://github.com/knight-lang/awk) | 2.1 | X | X | X | X | Unfortunately, MacOS's awk segfaults on `DUMP PROMPT` sometimes. Other than that, it works. |
 | [Assembly (x86)](https://github.com/knight-lang/asm) | 1.0 |   |   | X | X | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
 | [C](https://github.com/knight-lang/c/tree/master/ast) | 2.0.1 | X | X | X | X | Fully functional  |
 | [C++](https://github.com/knight-lang/cpp) | 2.0.1 | X | X | X | X | Works with C++17 |
@@ -28,6 +28,7 @@ The following is the list of all languages that I've written it in.
 | [Raku](https://github.com/knight-lang/raku) | 1.1 | X | X | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
 | [Ruby](https://github.com/knight-lang/ruby) | 1.0 | X |   | X | X | A hacky version currently exists; a more sophisticated one is being worked on. |
 | [Rust](https://github.com/knight-lang/rust) | 2.0.1 | X |   | X | X | Captures _all_ UB if you enable `strict-compliance`. Also has most extensions |
+| [ZSH](https://github.com/knight-lang/zsh) | 2.0.1 | X | X | X | X | |
 
 ## Personal Languages
 I love language design, and have written quite a few programming languages. I generally try to get the languages fleshed out enough so that I can write a fully compliant Knight interpreter in it.
@@ -131,77 +132,40 @@ Tokens may follow directly one after another (eg `1a` is parsed as `1` and then 
 Additionally, while not technically whitesapce, `(`, `)`, and `:` can be safely interpreted as whitespace as well. As such, expressions such as `OUTPUT * a (IF b 3 b)` can be written as `O*aIb 3b`.
 
 ## EBNF
-Knight's pseudo-ENBF is as follows:
+Knight's ENBF is as follows:
 ```ebnf
 program := expr ;
-expr
- := integer-literal
-  | string-literal
-  | identifier
-  | nullary
-  | unary expr
-  | binary expr expr
-  | ternary expr expr expr
-  | quaternary expr expr expr expr ;
+expr := integer-literal
+      | string-literal
+      | identifier
+      | nullary
+      | unary      expr
+      | binary     expr expr
+      | ternary    expr expr expr
+      | quaternary expr expr expr expr ;
 
 integer-literal := DIGIT {DIGIT} ;
-string-literal := `'` {NON_SINGLE} `'` | `"` {NON_DOUBLE} `"` ;
-identifier := LOWER {LOWER | DIGIT};
+string-literal  := `'` {NON_SINGLE} `'` | `"` {NON_DOUBLE} `"` ;
+identifier      := LOWER {LOWER | DIGIT} ;
 
-nullary
- := '@'
-  | ('T' | 'F' | 'N' | 'P' | 'R'){UPPER} ;
-unary
- := ':' | '!' | '~' | ',' | '[' | ']'
-  | ('B' | 'C' | 'Q' | 'D' | 'O' | 'L' | 'A'){UPPER} ;
-binary
- := '+' | '-' | '*' | '/' | '%' | '^' | '<'
-  | '>' | '?' | '&' | '|' | ';' | '='
-  | 'W'{UPPER} ;
-ternary := ('I' | 'G'){UPPER} ;
-quaternary := 'S'{UPPER} ;
+nullary := '@'
+         | ('T' | 'F' | 'N' | 'P' | 'R') {UPPER} ;
 
-UPPER := [A-Z_] ;
-LOWER := [a-z_] ;
+unary := ':' | '!' | '~' | ',' | '[' | ']'
+       | ('B' | 'C' | 'Q' | 'D' | 'O' | 'L' | 'A') {UPPER} ;
+
+binary := '+' | '-' | '*' | '/' | '%' | '^'
+        | '<' | '>' | '?' | '&' | '|' | ';' | '='
+        | 'W' {UPPER} ;
+
+ternary := ('I' | 'G') {UPPER} ;
+
+quaternary := 'S' {UPPER} ;
+
+UPPER := [A-Z] | '_' ;
+LOWER := [a-z] | '_' ;
 DIGIT := [0-9] ;
-NON_SINGLE := (? any character except single quote (`'`) *)
-NON_DOUBLE := (? any character except double quote (`"`) *)
+NON_SINGLE := (? any character except single quote (`'`) *) ;
+NON_DOUBLE := (? any character except double quote (`"`) *) ;
 ```
 
-## Functions
-- `TRUE()`: Returns the `true` value.
-- `FALSE()`: Returns the `false` value.
-- `NULL()`: Returns the `null` value.
-- `@()`: Returns an empty list.
-- `PROMPT()`: Reads a line from stdin, deleting the newline; returns `null` if stdin is done.
-- `RANDOM()`: Returns a random integer.
-- `:(value)`: A no-op, simply returns `value`.
-- `BLOCK(body)`: Returns `body` without evaluating it.
-- `CALL(block)`: Executes a block's body.
-- `QUIT(code)`: Exits with the status code.
-- `DUMP(value)`: Dumps a debugging representation of `value` to stdout, then returns it
-- `OUTPUT(value)`: Prints `value` to stdout. Prints a newline unless the value ends in `\` (which wont be printed).
-- `LENGTH(value)`: Converts `value` to a list and gets its length.
-- `!(value)`: Converts `value` to a boolean and negates it.
-- `~(value)`: Converts `value` to a number and negates it.
-- `ASCII(value)`: Acts as `chr`/`ord` in other langs depending on its argument.
-- `,(value)`: Returns a list containing just `value`.
-- `[(container)`: Returns the first character/element.
-- `](container)`: Returns the everything but the character/element.
-- `+(lhs, rhs)`: Adds `lhs` and `rhs`; coerces `rhs` to `lhs`'s type.
-- `-(lhs, rhs)`: Subtracts two integers.
-- `*(lhs, rhs)`: Multiplies two integers, or repeats lists and strings.
-- `/(lhs, rhs)`: Divides two integers.
-- `%(lhs, rhs)`: Modulos two integers.
-- `^(lhs, rhs)`: Exponentiates two integers, or joins a list by a string.
-- `<(lhs, rhs)`: Sees if `lhs` is less than `rhs`.
-- `>(lhs, rhs)`: Sees if `lhs` is greater than `rhs`.
-- `?(lhs, rhs)`: Sees if `lhs` is equal to `rhs`.
-- `&(lhs, rhs)`: Returns `lhs` if falsey, otherwise evaluates rhs.
-- `|(lhs, rhs)`: Returns `lhs` if truthy, otherwise evaluates rhs.
-- `;(lhs, rhs)`: Evaluates `lhs`, then evaluates and returns `rhs`.
-- `=(variable, value)`: Assigns `value` to `variable`.
-- `WHILE(cond, body)`: Executes `body` while `cond` is truthy.
-- `IF(cond, iftrue, iffalse)`: Executes and returns `iftrue` or `iffalse` depending on `cond`.
-- `GET(container, start, length)`: Returns a sublist/substring of `container` in the range `[start, start+length]`
-- `SET(container, start, length, replacement)`: Returns a new list/string with the given range of `container` replaced by `replacement`.
