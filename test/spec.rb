@@ -44,7 +44,7 @@ module Kn::Test
     end
 
     def refute_runs(*a, **k)
-      assert_raises NonzeroExitStatus do
+      assert_raises NonzeroExitStatus, StderrNotEmpty do
         if block_given?
           yield
         else
