@@ -91,7 +91,7 @@ module Kn::Test
     alias sanitized? sanitizes?
 
     def execute(expr, stdin: :close, raise_on_failure: true)
-      puts "running: #{expr.inspect}" if verbose?
+      puts "running: #{expr.inspect}#{stdin == :close ? "" : " (stdin=#{stdin.inspect})"}" if verbose?
       IO.pipe do |out_read, out_write|
         IO.pipe do |err_read, err_write|
           IO.pipe do |in_read, in_write|
