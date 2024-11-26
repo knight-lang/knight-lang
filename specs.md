@@ -328,7 +328,7 @@ Notably, functions like [`?`](#fn-equals) and [`DUMP`](#fn-dump) do not require 
 # Variables
 All variables in Knight are global and last for the duration of the program; there are no function-local variables. This means that once a variable is assigned a value, the variable should be accessible at any point for the duration of the program. Also, like most runtime languages, variables are not typed—you can assign a string to a variable that previously held a block.
 
-Implementations are only required to support variables between 1 and 127 characters long, however they may choose to support longer. As is described in the [variable parsing](#parsing-variables) section, names must conform to the regex `/[a-z_][a-z0-9_]*/`.
+Implementations are only required to support variables between 1 and 127 characters long, however they may choose to support longer. As is described in the [variable parsing](#parsing-variables) section, names must conform to the regex `/[a-z_][a-z0-9_]*/`. 
 
 ### Possible optimizations for Variables
 Note that while technically you're required to both have every variable accessible at all times _and_ able to be assigned every type, Knight supports no form of introspection or runtime evaluation (without optional extensions such as `EVAL` or `VALUE`). That is, there's no way at runtime to dynamically assign/lookup a variable. So, if you can prove that a variable is unused after a certain point, or is only assigned a specific type, you should feel free to perform optimizations.
@@ -360,27 +360,27 @@ Certain functions impose certain contexts on their arguments, coercing other typ
 
 ## Nullary (Arity 0) {#nullary-fns}
 
-### `TRUE()` {#fn-true}
+### `TRUE` {#fn-true}
 The function `TRUE` simply returns the true boolean value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `TRUE` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-### `FALSE()` {#fn-false}
+### `FALSE` {#fn-false}
 The function `FALSE` simply returns the false boolean value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `FALSE` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-### `NULL()` {#fn-null}
+### `NULL` {#fn-null}
 The function `NULL` simply returns the null value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `NULL` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-### `@()` {#fn-empty-list}
+### `@` {#fn-empty-list}
 The function `@` simply returns the an empty list. This function exists because there's no easy way to get an empty list (other than `GET ,1 0 0`, which is terrible.)
 
 As discussed in the [Literals Functions](#literal-functions) section, `@` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-### `PROMPT()` {#fn-prompt}
+### `PROMPT` {#fn-prompt}
 The prompt function reads a line (terminated either by `\n` or end of file being reached, whichever is first) from standard in. Before returning the line, a trailing `\n` should be removed, and then as many trailing `\r`s as possible should be removed. If there's nothing left in standard in (i.e. end of file was reached before reading anything), `null` should be returned instead.
 
 If there's a problem reading from stdin (e.g, it's closed, permission issues, etc., but _not_ if EOF was reached—see previous line), it is considered **undefined behaviour**.
@@ -398,19 +398,19 @@ hello<eof>        #=> "hello"
 <eof>             #=> NULL
 ```
 
-### `RANDOM()` {#fn-random}
+### `RANDOM` {#fn-random}
 This function must return a (pseudo-) random integer between 0 and—at a minimum—32767 (`0x7fff`). Implementations are free to return a larger random integer if they desire; however, all random integers must be zero or positive.
 
 Note that `RANDOM` _should_ return different integers between subsequent calls and program executions, although this isn't strictly verifiable by virtue of how random integers work. Regardless, programs should use a somewhat unique seed for every program run (e.g. a simple `srand(time(NULL)))` is sufficient).
 
 ## Unary (Arity 1) {#unary-fns}
 
-### `:(unchanged)` {#fn-noop}
+### `: unchanged` {#fn-noop}
 A no-op: Simply returns its value unchanged (after executing it of course).
 
 As discussed in the [Other Whitespace](#other-whitespace) section, `:` may either be interpreted as a function of arity 1 or whitespace. 
 
-### `BLOCK(unevaluated)` {#fn-block}
+### `BLOCK unevaluated` {#fn-block}
 Unlike nearly every other function in Knight, the `BLOCK` function does _not_ execute its argument—instead, it returns the argument, unevaluated. This is the only way for Knight programs to get unevaluated blocks of code, which can be used for delayed execution.
 
 The `BLOCK` function is intended to be used to create user-defined "functions", which can be run via [`CALL`](#fn-call). However, as it simply returns its argument, there's no way to provide arguments to user-defined functions: you must simply use global variables:
@@ -423,7 +423,7 @@ The `BLOCK` function is intended to be used to create user-defined "functions", 
 ```
 See the [Block type](#block) for exact semantics of how to use `BLOCK`'s return value.
 
-### `CALL(<special>)` {#fn-call}
+### `CALL <special>` {#fn-call}
 Just as [`BLOCK`](#fn-block) delays the execution of its argument, `CALL` should "resume execution" of the argument, evaluating as if the `BLOCK` as defined at the call site.
 
 Examples:
@@ -437,7 +437,7 @@ Examples:
 
 Calling this function with anything other than [`BLOCK`](#fn-block)'s return value is considered **undefined behaviour**.
 
-### `QUIT(integer)` {#fn-quit}
+### `QUIT integer` {#fn-quit}
 Stops the entire Knight program with the given status code.
 
 It is **undefined behaviour** if the given status code is not within 0 to 127, inclusive. (However, since it is undefined behaviour, implementations are free to accept status codes outside this range.)
@@ -451,7 +451,7 @@ QUIT ~1    # undefined behaviour
 QUIT 128   # undefined behaviour
 ```
 
-### `OUTPUT(string)` {#fn-output}
+### `OUTPUT string` {#fn-output}
 Writes its argument (converted to a string) to standard out, flushes standard out, and then returns `null`.
 
 Normally, a newline should be written after `string` (which should also flush stdout on most systems). However, if the string ends with a backslash (`\`), the backslash is _not written to stdout_, and trailing newline is suppressed. 
@@ -480,7 +480,7 @@ foo
 bar
 ```
 
-### `DUMP(unchanged)` {#fn-dump}
+### `DUMP unchanged` {#fn-dump}
 Dumps a debugging representation of its argument to stdout, then returns its evaluated argument.
 
 This function is also with the unit testing framework uses to ensure that implementations conform to the Knight specifications.
@@ -525,7 +525,7 @@ DUMP +@123 #=> [1, 2, 3]
 DUMP +@'\\3' #=> ["\\", "\\", "3"]
 ```
 
-### `LENGTH(list)` {#fn-length}
+### `LENGTH list` {#fn-length}
 Returns the length of the argument when converted to a list.
 
 Note: The length of strings are the same as the length of their list coercion, as the list coercion returns a list of the chars in the list.
@@ -542,7 +542,7 @@ LENGTH @         # => 0
 LENGTH (*,0 100) # => 100
 ```
 
-### `!(boolean)` {#fn-not}
+### `! boolean` {#fn-not}
 Returns the logical negation of its argument: truthy values become `false`, and falsey values become `true`.
 
 Examples:
@@ -553,7 +553,7 @@ Examples:
 !,0   # => true
 ```
 
-### `~(integer)` {#fn-negate}
+### `~ integer` {#fn-negate}
 Converts the argument to an integer, then negates it. Note that this is numeric negation (i.e. like unary `-` in other languages) and _not_ bitwise negation.
 
 Examples:
@@ -567,7 +567,7 @@ Examples:
 ~2147483648 #=> undefined (max integer is 2147483647)
 ```
 
-### `ASCII(unchanged)` {#fn-ascii}
+### `ASCII unchanged` {#fn-ascii}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: Interprets it as an ASCII codepoint, and returns a string containing just that character. It is **undefined behaviour** if the codepoint is not [in the encoding](#required-encoding).
@@ -590,7 +590,7 @@ ASCII "
 ASCII "" # undefined (empty isnt valid)
 ```
 
-### `,(unchanged)` {#fn-box}
+### `, unchanged` {#fn-box}
 This function returns a list containing just its argument. In Python terms, `lambda x: [x]`.
 
 Examples:
@@ -600,7 +600,7 @@ Examples:
 ,,@  # => [[[]]]
 ```
 
-### `[(unchanged)` {#fn-head}
+### `[ unchanged` {#fn-head}
 The return value of this function depends on its first argument's type:
 
 - **`String`**: Returns a string of just first character. It is **undefined behaviour** for the string to be empty.
@@ -618,7 +618,7 @@ Examples:
 [@        # => undefined, empty list.
 ```
 
-### `](unchanged)` {#fn-tail}
+### `] unchanged` {#fn-tail}
 The return value of this function depends on its first argument's type:
 
 - **`String`**: Returns the a string with everything _but_ the first character. It is **undefined behaviour** for the string to be empty.
@@ -639,7 +639,7 @@ Examples:
 ```
 
 ## Binary (Arity 2) {#binary-fns}
-### `+(unchanged, coerced)` {#fn-add}
+### `+ unchanged coerced` {#fn-add}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: The second argument is coerced to an integer, and added to the first.
@@ -656,7 +656,7 @@ Examples:
 + (+@12) ,(+@34) # => [1, 2, [3, 4]]
 ```
 
-### `-(unchanged, coerced)` {#fn-subtract}
+### `- unchanged coerced` {#fn-subtract}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: The second argument is coerced to an integer, and then subtracted from the first.
@@ -668,7 +668,7 @@ Examples:
 - ~1 4   #=> -5
 ```
 
-### `*(unchanged, coerced)` {#fn-multiply}
+### `* unchanged coerced` {#fn-multiply}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: The second argument is coerced to an integer, and multiplied with the first.
@@ -687,7 +687,7 @@ Examples:
 * (,1) ~1 # undefined, negative length
 ```
 
-###  `/(unchanged, coerced)` {#fn-divide}
+###  `/ unchanged coerced` {#fn-divide}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: The second argument is coerced to an integer, and then divided from the first. Non-whole results must be rounded towards zero. It is **undefined behaviour** for the second argument to be zero.
@@ -701,7 +701,7 @@ Examples:
 / 1 0    # undefined
 ```
 
-### `%(unchanged, coerced)` {#fn-remainder}
+### `% unchanged coerced` {#fn-remainder}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: The second argument is coerced to an integer, and then the remainder of `<arg1> / <arg2>` (rounding towards zero) is returned. It is **undefined behaviour** for the second argument not to be a strictly positive integer, or the first to not be zero or positive.
@@ -716,7 +716,7 @@ The return value of this function depends on its first argument's type:
 % ~7 2   # undefined, -7 is not positive
 ```
 
-### `^(unchanged, coerce)` {#fn-power}
+### `^ unchanged coerced` {#fn-power}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: The second argument is coerced to an integer, and then the first integer is raised to the power of the second integer. Note that `^ 0 1` should return `1`. It is **undefined behaviour** for the second argument to be negative.
@@ -736,7 +736,7 @@ Examples:
 ^ (+@123) "!" # "1!2!3"
 ```
 
-### `<(unchanged, coerced)` {#fn-less-than}
+### `< unchanged coerced` {#fn-less-than}
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: Coerces the second argument to an integer, then returns whether the first is smaller than the second.
@@ -762,13 +762,13 @@ Examples:
 < +@13 ,2  # => false, 1 < 2
 ```
 
-### `>(unchanged, coerced)` {#fn-greater-than}
+### `> unchanged coerced` {#fn-greater-than}
 This is exactly the same as [`<`](#fn-less-than), except for operands reversed, i.e. `> a b` should return the same value as `< b a` (barring the fact that `a` should be evaluated before `b`).
 
 Examples:
 See [`<`](#fn-less-than).
 
-### `?(unchanged, unchanged)` {#fn-equals}
+### `? unchanged unchanged` {#fn-equals}
 Unlike nearly every other function in Knight, this one does not automatically coerce its arguments—instead, it checks to see if arguments are the same type _and_ value. For example, `1` is equivalent to neither `"1"` nor `TRUE`.
 
 This function is only valid for the "basic types" (`Integer`, `String`, `Boolean`, `Null`, and `List`). Notably, it is **undefined behaviour** for either argument to be a `Block`.
@@ -783,7 +783,7 @@ Examples:
 ? ,@ ,,@     # => false
 ```
 
-### `&(unchanged, unevaluated)` {#fn-and}
+### `& unchanged unevaluated` {#fn-and}
 This function acts similar to `&&` in some loosely-typed languages: If the first argument (after being evaluated) is falsey, it is returned directly. However, if it is truthy, the second argument is evaluated and returned.
 
 Unlike most functions, `Block`s can be passed as the second argument to `&`.
@@ -796,7 +796,7 @@ Examples:
 & @ 4          # => @
 ```
 
-### `|(unchanged, unevaluated)` {#fn-or}
+### `| unchanged unevaluated` {#fn-or}
 This function acts similar to `||` in some loosely-typed languages: If the first argument (after being evaluated) is truthy, it is returned directly. However, if it is falsey, the second argument is evaluated and returned.
 
 Unlike most functions, `Block`s can be passed as the second argument to `|`.
@@ -811,7 +811,7 @@ Examples:
 
 This is one of the few functions that `Block`s can be used, albeit in `|` only as the second argument.
 
-### `;(unchanged, unchanged)` {#fn-then}
+### `; unchanged unchanged` {#fn-then}
 This function simply returns its second argument (after evaluating them both because of the `unchanged` context). Its entire purpose is to act as a "sequencing" function, where the first argument's value can be discarded.
 
 Unlike most functions, `Block`s can be passed as either argument to `;`.
@@ -832,7 +832,7 @@ OUTPUT ; = x 3 x # also prints 3
 : OUTPUT prod #=> prints out 3628800
 ```
 
-### `=(<special>, unchanged)` {#fn-assign}
+### `= <special> unchanged` {#fn-assign}
 If the first argument is not a [variable](#variables), it is considered **undefined behaviour**. (However, see the entirely optional [assign to strings](#ext-assign-to-strings) extension.)
 
 This function evaluates the second argument, and then both assigns it to the variable in the first argument and returns it. This is the only way to update variables within Knight.
@@ -847,7 +847,7 @@ Examples:
 = "a" 4     # undefined, `"a"` isnt a variable
 ```
 
-### `WHILE(unevaluated, unevaluated)` {#fn-while}
+### `WHILE unevaluated unevaluated` {#fn-while}
 This function should evaluate the second argument as long as the first argument evaluates to a truthy value. After the first argument becomes falsey, `null` should be returned.
 
 Note that, unlike most programming languages, Knight does not have a builtin way to "`continue`" or "`break`" from a loop. The only way a `WHILE` stops is once its condition becomes false. (However, see the highly optional [Control flow](ext-control-flow) extension if you want to attempt adding them in.)
@@ -877,7 +877,7 @@ Examples:
 ```
 
 ## Ternary (Arity 3) {#ternary-fns}
-### `IF(boolean, unevaluated, unevaluated)` {#fn-if}
+### `IF boolean unevaluated unevaluated` {#fn-if}
 If the first argument is truthy, this function will evaluate and return the second argument. However, if it's falsey, it will evaluate and return the third argument.
 
 Unlike most functions, `Block`s can be passed as either the second or third argument to `IF`.
@@ -890,7 +890,7 @@ IF FALSE QUIT 1 "!"        # => "!"; it wont quit.
 IF "0" TRUE QUIT 1         # => true
 ```
 
-### `GET(unchanged, integer, integer)` {#fn-get}
+### `GET unchanged integer integer` {#fn-get}
 The return value of this function depends on its first argument's type:
 
 - **`String`**: Returns a substring starting at the second argument with a length of the third argument. Indexing starts at `0`. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the string.
@@ -921,7 +921,7 @@ GET (+@12345) 1 ~1 # => undefined, negative length
 ```
 
 ## Quaternary (Arity 4) {#quaternary-fns}
-### `SET(unchanged, integer, integer, coerce)` {#fn-set}
+### `SET unchanged integer integer coerced` {#fn-set}
 The return value of this function depends on its first argument's type:
 
 - **`String`**: Returns a new string where the substring of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a string. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the string.
@@ -987,7 +987,7 @@ The function `X` is explicitly reserved for functions: Knight will never use `X`
 
 Since its semantics are entirely implementation defined, it's possible to "overload" it. That is, unlike how `R`, `RAND`, `RAND_INT`, etc. are all the same function, implementations may choose to have different functions starting with `X`, e.g., `X_OPENFILE`, `X_READFILE`, `X_CLOSEFILE`.
 
-### `VALUE(string)`: Dynamically look up variables {#ext-value}
+### `VALUE string`: Dynamically look up variables {#ext-value}
 This function could convert its argument to a string, and then interpret it as a variable name and lookup that value.
 
 Examples:
@@ -1013,7 +1013,7 @@ Examples:
 : OUTPUT b          # => prints out 2
 ```
 
-### `HANDLE(unevaluated, unevaluated)`: Try-catch {#ext-handle}
+### `HANDLE unevaluated unevaluated`: Try-catch {#ext-handle}
 If your implementation doesn't immediately abort for errors, you may want to look at a "try-catch" function: The first argument should be evaluated, and its value returned as normal. However, if any errors occurred during this time, the second argument should be evaluated, and its value returned instead. You may also want to set the message of the exception to the variable `_` for fun.
 
 To implement this, you'll have to handle _some_ form of undefined behaviour (otherwise, there'd be no way to detect errors). Which ones you handle are up to you.
@@ -1027,7 +1027,7 @@ HANDLE (/1 0) 9 # => 9, because division by zero occurred
 OUTPUT HANDLE (/ 1 0) _ # => prints out the division by zero error message
 ```
 
-### `YEET(string)`: Throw an exception {#ext-yeet}
+### `YEET string`: Throw an exception {#ext-yeet}
 Instead of implementing the normal method of aborting with an error (`; OUTPUT "errmsg" QUIT 1`), implementations could opt for `YEET`ing an error. If implementations abort immediately, this could be similar to the normal method. However, if they have exceptions, this could be used in conjunction with [`HANDLE`](#ext-handle) to create a custom error framework.
 
 Examples:
@@ -1045,7 +1045,7 @@ YEET "oops" # => crash with the error message "oops"
 	: OUTPUT +++"unable to double " number ":" _
 ```
 
-### `USE(string)`: Import other Knight files {#ext-use}
+### `USE string`: Import other Knight files {#ext-use}
 In Knight, there is no way to import files whatsoever. This means that every single Knight program will be a single file, which can get unwieldy for larger programs. Implementations may want to implement a `USE` function, which would import files.
 
 A few other ideas:
@@ -1072,7 +1072,7 @@ Examples:
 : CALL greet
 ```
 
-### `$(string, unchanged)`: Run a shell command and return its stdout {#ext-system}
+### `$ string unchanged`: Run a shell command and return its stdout {#ext-system}
 _This function was previously a required function named `` ` ``; it is now an optional extension_
 
 This extension would convert the first argument to a string and run it as a shell command, returning the stdout as a string. The second argument would be the stdin to the function; if it was `NULL`, the subprocess would inherit the stdin of the parent process.
@@ -1082,7 +1082,7 @@ Some other ideas:
 - If the exit status is nonzero, return the integer exit status instead
 - Set a variable called `stderr` to the standard error of the subshell
 
-### `EVAL(string)`: Evaluate a string as Knight code {#ext-eval}
+### `EVAL string`: Evaluate a string as Knight code {#ext-eval}
 _This function was previously a required function; it is now an optional extension_
 
 This function would convert its argument to a string, and then execute it as a Knight string. (Of course, the string should be valid Knight; if it wasn't, it'd be undefined behaviour.)
