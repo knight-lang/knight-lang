@@ -251,7 +251,7 @@ While rare in practice, it is **undefined behaviour** for Knight programs to att
 ### Contexts {#string-contexts}
 (See [here](#evaluation-contexts) for more details on contexts.)
 
-- **integer**: (This is roughly equivalent to C's `atoi`). To convert a string to an integer, the following is done: (1) strip all leading [whitespace](#whitespace), (2) an optional `+` or `-` may occur (3) take as many ascii digits as possible, stopping at the first non-digit or end of string. Interpret those digits as a string literal, negating it if `-` occurred. If no digits are found, return zero. In regex terms, this is `/^\s*([-+?\d*)/`. Note that if the resulting integer is out of bounds for what the integer type can handle, it is **undefined behaviour**.
+- **integer**: (This is roughly equivalent to C's `atoi`). To convert a string to an integer, the following is done: (1) strip all leading [whitespace](#whitespace), (2) an optional `+` or `-` may occur (3) take as many ascii digits as possible, stopping at the first non-digit or end of string. Interpret those digits as a string literal, negating it if `-` occurred. If no digits are found, return zero. In regex terms, this is `/^\s*([-+]?\d*)/`. Note that if the resulting integer is out of bounds for what the integer type can handle, it is **undefined behaviour**.
 - **string**: In string contexts, the string itself is returned.
 - **boolean**: In boolean contexts, only empty strings are `false`. All other strings (ie nonempty) are `true`, including things like `"0"`.
 - **list**: In list contexts, the characters of the string should be returned, with each element of the list being a string containing just that character. (For example, `DUMP +@"abc"` prints `["a", "b", "c"]`.)
