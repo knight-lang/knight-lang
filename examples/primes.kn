@@ -1,0 +1,50 @@
+# Prints out all the prime numbers from 2 to a number given to stdin. This file
+# uses the Sieve of Eratosthenes algorithm to generate primes.
+
+#
+# Read the maximum number from stdin, converting it to an integer.
+#
+; OUTPUT "upper bound?\"
+; = max + 0 PROMPT
+
+#
+# Generate a list of all numbers from [0, max)
+#
+; = all @ # `@` is the empty list
+; WHILE > max all
+	: = all + all (, LENGTH all)
+
+#
+# Delete multiples out of the list
+#
+; = current_number 2 # Start at 2 as it's the first prime
+; WHILE (> max current_number)
+	; = current_multiple current_number
+
+	# Delete all multiples of `max` out. We use the fact that the return value of
+	# `=` is the second argument.
+	; WHILE (> max (= current_multiple + current_multiple current_number))
+		# Replace that duplicate with `0`, which we check for later.
+		: = all (SET all current_multiple 1 (, 0))
+
+	# Increment `current_number`.
+	: = current_number + 1 current_number
+
+#
+# Construct the list of primes
+#
+; = primes @ 
+; = all ]]all # Remove `0` and `1` as they arent primes.
+; WHLIE all
+	# If the first value is nonzero, add it to the list of primes
+	; & (= first [all)
+		: = primes (+ primes ,first)
+
+	# Delete the first element from `all` and start again
+	: = all ]all
+
+#
+# Printout all the primes
+#
+; OUTPUT ++ "the primes from 2-" max " are:"
+: OUTPUT ^ primes " "
