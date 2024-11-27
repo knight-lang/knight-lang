@@ -1269,7 +1269,7 @@ The return value of this function depends on its first argument's type:
 
 #### Examples
 
-```nim  
+```text
 ]"h"      # => ""
 ]"hello"  # => "ello"
 ]"aaaaa"  # => "aaaa"
@@ -2204,7 +2204,9 @@ allowing Knight to be extended with functions written in other languages (e.g.,
 C, Python). This allows developers to create specialized functions that can be
 invoked directly from Knight code.
 
-> [!NOTE] Considerations for implementors
+> [!NOTE]
+>
+> Some considerations for implementors:
 >
 > * Do you only want to allow `X` functions (which would probably be the
 >   simplest, parsing-wise), or also "normal" functions?
