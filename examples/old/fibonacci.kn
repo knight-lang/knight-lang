@@ -1,0 +1,17 @@
+# Recursive naive fibonacci. 
+; = fibonacci BLOCK (
+	IF (< n 2) (
+		: n
+	) (
+		; = n - n 1
+
+		# This uses the fact that Knight evaluates expressions in the order
+		# they're encountered, so the `n` in `- n (; ...)` cannot be clobbered
+		# by the `fibonacci` call.
+		; = n - n (; (= tmp CALL fibonacci) 1)
+		: + tmp CALL fibonacci
+	)
+)
+
+; = n 10
+: OUTPUT CALL fibonacci
