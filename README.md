@@ -6,7 +6,14 @@ Unofficial Tag-line: "Knight: Runs everywhere. Not because it's cross-platform, 
 Checkout the [community](COMMUNITY.md), and join us on discord: https://discord.gg/SE3TjsewDk.
 
 # Implementations
-The following is the list of all languages that I've written it in.
+I've implemented Knight in quite a few languages over the years. Some of the implementations only implement older versions of the spec (eg Knight 1.0, which was before lists); my eventual plan is to upgrade them all. There are three implementations of special note:
+
+- [go](https://github.com/knight-lang/go): The **exemplar** implementation, intentionally written without any fancy tricks or optimizations, and is thoroughly documented. If you don't know how to get started writing a Knight program, take a look at this one!
+- [rust](https://github.com/knight-lang/rust): The **fully-functional** implementation. It has all the suggested extensions (and a few of its own) implemented (`--features=all-extensions`), and **has the ability to check for _all_ forms of undefined behaviour** (`--features=strict-compliance`). If you're not sure if a piece of Knight code is spec compliant, you can run it with `cargo run --no-default-features --features=strict-compliance -- -e ...`!
+- [c](https://github.com/knight-lang/c/tree/master/ast): The **fastest**, currently. When compiled with `-DKN_RECKLESS`, it will assume that every input program is 100% spec-compliant (and won't ever error).
+
+## List
+The following is the list of all languages that I've written it in:
 
 | Language | Version | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
 | -------- |---------|:---------------------:|:----------:|:-----------------:|:-----:| ----- |
@@ -15,7 +22,7 @@ The following is the list of all languages that I've written it in.
 | [C](https://github.com/knight-lang/c/tree/master/ast) | 2.0.1 | X | X | X | X | Fully functional  |
 | [C++](https://github.com/knight-lang/cpp) | 2.0.1 | X | X | X | X | Works with C++17 |
 | [C#](https://github.com/knight-lang/csharp) | 1.0 | X | X | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
-| [Go](https://github.com/knight-lang/go) | 2.0.1 | X |  | X | X | Fully functional, but undocumented. |
+| [Go](https://github.com/knight-lang/go) | 2.1.0 | X | X | X | X | The "exemplar" Knight implementation: Simply made, fully documented. |
 | [Haskell](https://github.com/knight-lang/haskell) | pre-1.0 |   |  | ish | X | Works for an older spec of Knight, needs to be updated. |
 | [Java](https://github.com/knight-lang/java) | 1.0 | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [JavaScript](https://github.com/knight-lang/knight.js) | 1.0 | X | X | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
