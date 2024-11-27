@@ -1,0 +1,29 @@
+# `OUTPUT` normally prints its arguments followed by a newline. However,
+# there's special case: If a string ends in a `\`, then the `\` is removed
+# before printing the string, and the newline isn't printed).
+; OUTPUT "Maximum number? \"
+; = max + 0 PROMPT # `+ 0 <some string>` converts the string to an integer.
+
+# Setup variables
+; = secret + 1 (% RANDOM max) # Add 1 so we go from 1..max, not 0..max-1
+; = guesses 0
+; = guess 0
+
+# While the guess isn't equal to the secret, run the body.
+; WHILE (! ? guess secret) (
+	; OUTPUT ++ "Guess a number from 1-" max ": \"
+	; = guess (+ 0 PROMPT) 
+	; = guesses + guesses 1 
+
+	# Use the fact that `IF` is an expression, not a statement like
+	# in some languages (eg python, javascript, etc).
+	: OUTPUT (
+		IF (< guess secret) (
+			: "Too low!"
+		) (
+			: IF (> guess secret) "Too high!" "Perfect!"
+		)
+	)
+)
+
+: OUTPUT ++ "It took you " guesses " guesses."
