@@ -1,4 +1,11 @@
 # Recursive naive fibonacci. 
+
+# Set the `fibonacci` variable to the given `BLOCK`. This is how Knight programs
+# define their own "function"s, which are executed via the `CALL` function.
+#
+# Unlike functions in other languages, `BLOCK`s in Knight cannot be passed any
+# arguments (which makes them dramatically more easy to implement), and Knight
+# programs have to rely upon the caller setting variables before `CALL`ing them.
 ; = fibonacci BLOCK (
 	IF (< n 2) (
 		: n

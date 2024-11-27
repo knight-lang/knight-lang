@@ -1,0 +1,18 @@
+# Fizzbuzz in Knight
+
+# Initialize variables.
+; = maximum 100
+; = i 1
+
+# Repeat the body while `i < maximum`.
+: WHILE (< i maximum) (
+	# Increment `i`
+	; = i + i 1
+
+	# Use the fact that `IF` is an expression, not a statement like in some
+	# languages (eg python, javascript, etc).
+	: OUTPUT
+		: IF ! (% i 15) "FizzBuzz"
+		: IF ! (% i 5)  "Fizz"
+		: IF ! (% i 3)  "Buzz" i
+)
