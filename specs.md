@@ -1297,7 +1297,7 @@ should be returned.
 Note that, unlike most programming languages, Knight does not have a builtin way
 to "`continue`" or "`break`" from a loop. The only way a `WHILE` stops is once
 its condition becomes false. (However, see the highly optional [Control
-flow](ext-control-flow) extension if you want to attempt adding them in.)
+flow](#ext-control-flow) extension if you want to attempt adding them in.)
 
 Examples:
 
@@ -1793,7 +1793,7 @@ Example:
 : OUTPUT CALL greet{"Hello" "world"}
 ```
 
-### Control Flow {ext-control-flow}
+### <a name="ext-control-flow"></a>Control Flow
 
 Vanilla Knight has absolutely no way to "exit early" from `WHILE` loops. As an
 extension, you could implement `XBREAK` and `XCONTINUE` functions, which would
