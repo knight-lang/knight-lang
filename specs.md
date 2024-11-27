@@ -5,20 +5,20 @@
 ## Table of Contents
 
 * [Overview](#overview)
-  * [Undefined Behaviour](#undefined-behaviour)
+  * [Undefined behaviour](#undefined-behaviour)
 * [Syntax](#syntax)
-  * [Required Encoding](#required-encoding)
+  * [Required encoding](#required-encoding)
   * [Whitespace](#whitespace)
   * [Comments](#comments)
-  * [Integer Literals](#integer-literals)
-  * [String Literals](#string-literals)
+  * [Integer literals](#integer-literals)
+  * [String literals](#string-literals)
   * [Variables](#parsing-variables)
   * [Functions](#parsing-functions)
-  * [Parenthesis Groupings](#parenthesis-groupings)
-  * [Parsing Example](#parsing-example)
+  * [Parenthesis groupings](#parenthesis-groupings)
+  * [Parsing example](#parsing-example)
 * [Types](#types)
-  * [Context Overview](#coercions-overview)
-  * [Evaluation of Types](#evaluation-of-types)
+  * [Context overview](#coercions-overview)
+  * [Evaluation of types](#evaluation-of-types)
   * [Integer](#integer)
   * [String](#string)
   * [Boolean](#boolean)
@@ -26,21 +26,21 @@
   * [List](#list)
   * [Block](#block)
 * [Variables](#variables)
-  * [Variable Evaluation](#variable-evaluation)
+  * [Variable evaluation](#variable-evaluation)
 * [Functions](#functions)
-  * [Evaluation Contexts](#evaluation-contexts)
-  * [Nullary (Arity 0)](#nullary-fns)
-  * [Unary (Arity 1)](#unary-fns)
-  * [Binary (Arity 2)](#binary-fns)
-  * [Ternary (Arity 3)](#ternary-fns)
-  * [Quaternary (Arity 4)](#quaternary-fns)
+  * [Evaluation contexts](#evaluation-contexts)
+  * [Nullary (arity 0)](#nullary-fns)
+  * [Unary (arity 1)](#unary-fns)
+  * [Binary (arity 2)](#binary-fns)
+  * [Ternary (arity 3)](#ternary-fns)
+  * [Quaternary (arity 4)](#quaternary-fns)
 * [Extensions](#extensions)
-  * [Command Line Arguments](#ext-command-line-arguments)
-  * [Handling Undefined Behaviour](#ext-handling-undefined-behaviour)
+  * [Command line arguments](#ext-command-line-arguments)
+  * [Handling undefined behaviour](#ext-handling-undefined-behaviour)
   * [Functions](#ext-functions)
-  * [Syntactic Sugar](#ext-syntactic-sugar)
-  * [Additional Types](#ext-additional-types)
-  * [Changing Functionality](#ext-changing-functionality)
+  * [Syntactic sugar](#ext-syntactic-sugar)
+  * [Additional types](#ext-additional-types)
+  * [Changing functionality](#ext-changing-functionality)
   * [Extensibility](#ext-extensibility)
 
 # <a name="overview"></a>Overview
@@ -51,7 +51,7 @@ different way of doing things, the Knight specs may leave some things up to the
 implementation. This allows each language to implement Knight in the most
 idiomatic way possible.
 
-## <a name="undefined-behavior"></a>Undefined Behaviour
+## <a name="undefined-behavior"></a>Undefined behaviour
 
 Yes, Knight has undefined behaviour, which is almost universally considered a
 bad idea (tm)—it makes a programmer's life harder but compiler implementation
@@ -106,7 +106,7 @@ a 4) (OUTPUT (+ "a=" a))`, etc. Any additional tokens after this first
 expression (i.e. anything other than [whitespace](#whitespace) and
 [comments](#comments)) is **undefined behaviour**.
 
-## <a name="required-encoding"></a>Required Encoding
+## <a name="required-encoding"></a>Required encoding
 
 To make Knight implementable in most languages, only the following subset of
 ASCII characters is required to be supported. Implementations may support a
@@ -167,7 +167,7 @@ non-Knight-encoding characters in comments).
 
 For those familiar with regex, comments are `/#[^\n]*(\n|$)/`.
 
-## <a name="integer-literals"></a>Integer Literals
+## <a name="integer-literals"></a>Integer literals
 
 [Integer](#integer) literals are simply a sequence of ASCII digits (i.e. `0`
 (`0x30`) through `9` (`0x39`)). Leading `0`s do not indicate octal integers
@@ -186,7 +186,7 @@ It is **undefined behaviour** for an integer literals to be larger than the
 
 For those familiar with regex, integers are `/[0-9]+/`.
 
-## <a name="string-literals"></a>String Literals
+## <a name="string-literals"></a>String literals
 
 [String](#string) literals in Knight begin with with either a single quote
 (`0x27`, i.e. `'`) or a double quote (`0x22`, i.e. `"`). All characters are
@@ -258,23 +258,15 @@ an argument for '+'`.
 The list of required functions are as follows. Implementations may define
 additional symbolic or keyword-based functions if desired.
 
-* Arity `0`: [`TRUE`](#fn-true), [`FALSE`](#fn-false), [`NULL`](#fn-null),
-             [`@`](#fn-empty-list), [`PROMPT`](#fn-prompt),
-             [`RANDOM`](#fn-random)
-* Arity `1`: [`:`](#fn-noop), [`BLOCK`](#fn-block), [`CALL`](#fn-call),
-             [`QUIT`](#fn-quit), [`DUMP`](#fn-dump), [`OUTPUT`](#fn-output),
-             [`LENGTH`](#fn-length), [`!`](#fn-not), [`~`](#fn-negate),
-             [`ASCII`](#fn-ascii), [`,`](#fn-box), [`[`](#fn-head),
-             [`]`](#fn-tail)
-* Arity `2`: [`+`](#fn-add), [`-`](#fn-subtract), [`*`](#fn-multiply),
-             [`/`](#fn-divide), [`%`](#fn-remainder), [`^`](#fn-power),
-             [`<`](#fn-less-than), [`>`](#fn-greater-than), [`?`](#fn-equals),
-             [`&`](#fn-and), [`|`](#fn-or), [`;`](#fn-then), [`=`](#fn-assign),
-             [`WHILE`](#fn-while)
-* Arity `3`: [`IF`](#fn-if), [`GET`](#fn-get)
-* Arity `4`: [`SET`](#fn-set)
+| **Arity** | **Functions** |
+|:---------:|---------------|
+| 0 | [`TRUE`](#fn-true), [`FALSE`](#fn-false), [`NULL`](#fn-null), [`@`](#fn-empty-list), [`PROMPT`](#fn-prompt), [`RANDOM`](#fn-random) |
+| 1 | [`:`](#fn-noop), [`BLOCK`](#fn-block), [`CALL`](#fn-call), [`QUIT`](#fn-quit), [`DUMP`](#fn-dump), [`OUTPUT`](#fn-output), [`LENGTH`](#fn-length), [`!`](#fn-not), [`~`](#fn-negate), [`ASCII`](#fn-ascii), [`,`](#fn-box), [`[`](#fn-head), [`]`](#fn-tail) |
+| 2 | [`+`](#fn-add), [`-`](#fn-subtract), [`*`](#fn-multiply), [`/`](#fn-divide), [`%`](#fn-remainder), [`^`](#fn-power), [`<`](#fn-less-than), [`>`](#fn-greater-than), [`?`](#fn-equals), [`&`](#fn-and), [`\|`](#fn-or), [`;`](#fn-then), [`=`](#fn-assign), [`WHILE`](#fn-while) |
+| 3 | [`IF`](#fn-if), [`GET`](#fn-get) |
+| 4 | [`SET`](#fn-set) |
 
-### <a name="literal-functions"></a>Literal Functions
+### <a name="literal-functions"></a>Literal functions
 
 Short note on the `TRUE`/`FALSE`/`NULL`/`@` functions: As they are functions
 that take no arguments and simply return a value (true, false, null, and an
@@ -282,13 +274,13 @@ empty list, respectively), they can be instead interpreted as literals. That is,
 there's no functional difference between parsing `TRUE` as a function that
 returns `true` when executed and parsing `TRUE` simply as the true value.
 
-### <a name="implementation-defined-functions"></a>Implementation-Defined Functions
+### <a name="implementation-defined-functions"></a>Implementation-defined functions
 
 Implementations may define their own functions, as long as they start with an
 upper-case letter or a symbol. Note that the `X` function name is explicitly
 reserved for extensions. See [Extensions](#extensions) for more details.
 
-## <a name="parenthesis-groupings"></a>Parenthesis Groupings
+## <a name="parenthesis-groupings"></a>Parenthesis groupings
 
 Because all Knight is a polish-notation language with only fixed-arity functions
 (see [Functions](#functions)), grouping is not at all required to make valid
@@ -319,7 +311,7 @@ OUTPUT (*) a 2 # illegal, not enclosing a single expression
 OUTPUT ((*) a 2) # illegal, the `(*)` isn't a single expression
 ```
 
-## <a name="parsing-example"></a>Parsing Example
+## <a name="parsing-example"></a>Parsing example
 
 Here's an example of a simple guessing game, and how it should be parsed:
 
@@ -360,7 +352,7 @@ arguments from one type to another. As such, every type but Block have the
 
 All types in Knight are **immutable**, including strings and lists.
 
-## <a name="coercions-overview"></a>Context Overview
+## <a name="coercions-overview"></a>Context overview
 
 Many functions in Knight have contexts defined on them: They will automatically
 coerce their arguments from one type to another. For example,
@@ -379,7 +371,7 @@ behaviour**.
 | [Boolean](#boolean) (false/true)  | `0`/`1` | `"false"`/`"true"` | _itself_ | empty list/boxed `TRUE` |
 | [List](#list)        | Length of list      | list [joined](#fn-power) by newline | nonempty? | _itself_ |
 
-## <a name="evaluation-of-types"></a>Evaluation of Types
+## <a name="evaluation-of-types"></a>Evaluation of types
 
 All builtin types in Knight (i.e. Integer, String, Boolean, Null, and List) when
 evaluated, should return themselves. This is in contrast to variables and
@@ -391,7 +383,7 @@ In Knight, only integral numbers exist—all functions which might return
 non-integral numbers are simply truncated (look at each functions' respective
 definitions for details on what exactly truncation means in each case).
 
-### <a name="integer-bounds"></a>Minimum Required Bounds
+### <a name="integer-bounds"></a>Minimum required bounds
 
 All implementations must be able to represent all integers within the range
 `-2147483648 .. 2147483647`, inclusive on both sides. (These are the bounds for
@@ -515,7 +507,7 @@ result.)
   (i.e. nonempty) lists return true.
 * **list**: In list contexts, the list itself is simply returned.
 
-### <a name="list-literals"></a>List Literals
+### <a name="list-literals"></a>List literals
 
 Due to Knight's fixed-arity syntax, it's impossible to have list literals
 (although you could definitely add them as an extension if you wanted). There's
@@ -578,7 +570,7 @@ characters long, however they may choose to support longer. As is described in
 the [variable parsing](#parsing-variables) section, names must conform to the
 regex `/[a-z_][a-z0-9_]*/`.
 
-## <a name="variable-evaluation"></a>Variable Evaluation
+## <a name="variable-evaluation"></a>Variable evaluation
 
 When evaluated, the variable must return the value previously assigned to it,
 unevaluated. That is, if you say had `= foo BLOCK (QUIT 1)` beforehand and later
@@ -616,7 +608,7 @@ As mentioned before, any operators which would return an integer outside of the
 implementation-supported integer range, the return value is undefined. (i.e.
 integer overflow is an undefined operation.)
 
-## <a name="evaluation-contexts"></a>Evaluation Contexts
+## <a name="evaluation-contexts"></a>Evaluation contexts
 
 Certain functions impose certain contexts on their arguments, coercing other
 types to the required type. (See each type's coercion contexts for their exact
@@ -634,7 +626,7 @@ semantics.) The following are the contexts used within this document:
 * `unchanged`: The argument must be evaluated, and is passed unchanged.
 * `unevaluated`: The argument must not be evaluated at all before being passed.
 
-## <a name="nullary-fns"></a>Nullary (Arity 0)
+## <a name="nullary-fns"></a>Nullary (arity 0)
 
 ### <a name="fn-true"></a>`TRUE`
 
@@ -1005,7 +997,7 @@ Examples:
 ]@        # => undefined, empty list.
 ```
 
-## <a name="binary-fns"></a> Binary (Arity 2)
+## <a name="binary-fns"></a> Binary (arity 2)
 
 ### <a name="fn-add"></a> `+ unchanged coerced`
 
@@ -1324,7 +1316,7 @@ Examples:
  "no digit was found"
 ```
 
-## <a name="ternary-fns"></a> Ternary (Arity 3)
+## <a name="ternary-fns"></a> Ternary (arity 3)
 
 ### <a name="fn-if"></a> `IF boolean unevaluated unevaluated`
 
@@ -1384,7 +1376,7 @@ GET (+@12345) ~1 1 # => undefined, negative start
 GET (+@12345) 1 ~1 # => undefined, negative length
 ```
 
-## <a name="quaternary-fns"></a> Quaternary (Arity 4)
+## <a name="quaternary-fns"></a> Quaternary (arity 4)
 
 ### <a name="fn-set"></a> `SET unchanged integer integer coerced`
 
@@ -1438,7 +1430,7 @@ Note that, asides from the `X` function, Knight reserves the right to use any
 upper case letter or symbol as a function name in future revisions of the
 specifications. (However, I don't see that happening.)
 
-## <a name="ext-command-line-arguments"></a> Command Line Arguments
+## <a name="ext-command-line-arguments"></a> Command line arguments
 
 While not strictly required, (because not every implementation language can
 access command-line arguments—such as Knight itself), there is a standardized
@@ -1474,7 +1466,7 @@ all the command line arguments. A wrapper script might look like:
 cat <(echo "$*") /dev/stdin | ./knight
 ```
 
-## <a name="ext-handling-undefined-behaviour"></a> Handling Undefined Behaviour
+## <a name="ext-handling-undefined-behaviour"></a> Handling undefined behaviour
 
 The Knight specs have a lot of undefined behaviour that leaves a lot up to
 implementations. However, this means that writing Knight programs has a lot of
@@ -1656,7 +1648,7 @@ should be equivalent to
 : OUTPUT + "a*4=" (* a 4)
 ```
 
-## <a name="ext-syntactic-sugar"></a> Syntactic Sugar
+## <a name="ext-syntactic-sugar"></a> Syntactic sugar
 
 These extensions provide syntactic sugar for some common idioms in Knight.
 
@@ -1680,7 +1672,7 @@ Example:
 OUTPUT `{greeting}, {name}, aged {age}!\nHow are you?`
 ```
 
-### <a name="ext-list-literal"></a> `{ ... }`: List Literal
+### <a name="ext-list-literal"></a> `{ ... }`: List literals
 
 As you're probably aware, Knight doesn't have list literals: Instead you must
 use `,` to build up lists or `+@` only with strings and small integers.
@@ -1698,7 +1690,7 @@ Example:
 ? +,1,"a" {1 "a"} # => true
 ```
 
-## <a name="ext-additional-types"></a> Additional Types
+## <a name="ext-additional-types"></a> Additional types
 
 These extensions are additional types implementations could define.
 
@@ -1758,12 +1750,12 @@ Some considerations:
 * Add inheritance
 * Add multiple inheritance
 
-## <a name="ext-changing-functionality"></a> Changing Functionality
+## <a name="ext-changing-functionality"></a> Changing functionality
 
 Unlike most other extensions, these may require significant modifications to a
 base vanilla implementation.
 
-### <a name="ext-local-variables"></a> Local Variables
+### <a name="ext-local-variables"></a> Local variables
 
 In vanilla Knight, all variables are global: This means that if any `BLOCK`
 modifies a variable, it will affect any other block relying upon that.
@@ -1793,7 +1785,7 @@ Example:
 : OUTPUT CALL greet{"Hello" "world"}
 ```
 
-### <a name="ext-control-flow"></a>Control Flow
+### <a name="ext-control-flow"></a>Control flow
 
 Vanilla Knight has absolutely no way to "exit early" from `WHILE` loops. As an
 extension, you could implement `XBREAK` and `XCONTINUE` functions, which would
