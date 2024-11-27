@@ -15,38 +15,38 @@ I've implemented Knight in quite a few languages over the years. Some of the imp
 ## List
 The following is the list of all languages that I've written it in:
 
-| Language | Version | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
-| -------- |---------|:---------------------:|:----------:|:-----------------:|:-----:| ----- |
-| [AWK](https://github.com/knight-lang/awk) | 2.0.1 | X | X | X | X | Unfortunately, MacOS's awk segfaults on `DUMP PROMPT` sometimes. Other than that, it works. |
-| [Assembly (x86)](https://github.com/knight-lang/asm) | 1.0 |   |   | X | X | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
-| [C](https://github.com/knight-lang/c/tree/master/ast) | 2.0.1 | X | X | X | X | Fully functional  |
-| [C++](https://github.com/knight-lang/cpp) | 2.0.1 | X | X | X | X | Works with C++17 |
-| [C#](https://github.com/knight-lang/csharp) | 1.0 | X | X | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
-| [Go](https://github.com/knight-lang/go) | 2.1.0 | X | X | X | X | The "exemplar" Knight implementation: Simply made, fully documented. |
+| Language | Version | 100% Spec Conformance | Documented | Notes |
+| -------- |---------|:---------------------:|:----------:|-------|
+| [AWK](https://github.com/knight-lang/awk) | 2.0.1 | X | X | Unfortunately, MacOS's awk segfaults on `DUMP PROMPT` sometimes. Other than that, it works. |
+| [Assembly (x86)](https://github.com/knight-lang/asm) | 1.0 |   |   | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
+| [C](https://github.com/knight-lang/c/tree/master/ast) | 2.0.1 | X | X | Fully functional  |
+| [C++](https://github.com/knight-lang/cpp) | 2.0.1 | X | X | Works with C++17 |
+| [C#](https://github.com/knight-lang/csharp) | 1.0 | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
+| [Go](https://github.com/knight-lang/go) | 2.1.0 | X | X | The "exemplar" Knight implementation: Simply made, fully documented. |
 | [Haskell](https://github.com/knight-lang/haskell) | pre-1.0 |   |  | ish | X | Works for an older spec of Knight, needs to be updated. |
-| [Java](https://github.com/knight-lang/java) | 1.0 | X |   | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
-| [JavaScript](https://github.com/knight-lang/knight.js) | 1.0 | X | X | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
-| [Knight](https://github.com/knight-lang/knight-lang/blob/master/examples/knight.kn) | 2.0.1 |   |   | X | X | Yes, this is a Knight interpreter, written in Knight. |
-| [Kotlin](https://github.com/knight-lang/kotlin) | 1.0 | X | X | X | X | Fully funcitonal, and barring `` ` ``, can be compiled to native. |
-| [Perl](https://github.com/knight-lang/perl) | 1.1 | X | X | X | X | Fully Functional on at least v5.18. |
-| [PHP](https://github.com/knight-lang/php) | 1.0 | X | X | X | X | Fully Functional, with type annotations. |
-| [POSIX-Compliant SH](https://github.com/knight-lang/shell/blob/master/knight.sh) | 1.0 |   |   | X | X | Mostly works, but has some bug fixes that need to be done. It could definitely use some TL&C, though. |
-| [Python](https://github.com/knight-lang/python) | 1.0 | X | X | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
-| [Raku](https://github.com/knight-lang/raku) | 1.1 | X | X | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
-| [Ruby](https://github.com/knight-lang/ruby) | 1.0 | X |   | X | X | A hacky version currently exists; a more sophisticated one is being worked on. |
-| [Rust](https://github.com/knight-lang/rust) | 2.0.1 | X |   | X | X | Captures _all_ UB if you enable `strict-compliance`. Also has most extensions |
-| [ZSH](https://github.com/knight-lang/zsh) | 2.0.1 | X | X | X | X | |
+| [Java](https://github.com/knight-lang/java) | 1.0 | X |   | Simple version without any documentation. It can be cleaned up slightly though. |
+| [JavaScript](https://github.com/knight-lang/knight.js) | 1.0 | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
+| [Knight](https://github.com/knight-lang/knight-lang/blob/master/examples/knight.kn) | 2.0.1 |   |   | Yes, this is a Knight interpreter, written in Knight. |
+| [Kotlin](https://github.com/knight-lang/kotlin) | 1.0 | X | X | Fully funcitonal, and barring `` ` ``, can be compiled to native. |
+| [Perl](https://github.com/knight-lang/perl) | 1.1 | X | X | Fully Functional on at least v5.18. |
+| [PHP](https://github.com/knight-lang/php) | 1.0 | X | X | Fully Functional, with type annotations. |
+| [POSIX-Compliant SH](https://github.com/knight-lang/shell/blob/master/knight.sh) | 1.0 |   |   | Mostly works, but has some bug fixes that need to be done. It could definitely use some TL&C, though. |
+| [Python](https://github.com/knight-lang/python) | 1.0 | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
+| [Raku](https://github.com/knight-lang/raku) | 1.1 | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
+| [Ruby](https://github.com/knight-lang/ruby) | 1.0 | X |   | A hacky version currently exists; a more sophisticated one is being worked on. |
+| [Rust](https://github.com/knight-lang/rust) | 2.0.1 | X |   | Captures _all_ UB if you enable `strict-compliance`. Also has most extensions |
+| [ZSH](https://github.com/knight-lang/zsh) | 2.0.1 | X | X | |
 
 ## Personal Languages
 I love language design, and have written quite a few programming languages. I generally try to get the languages fleshed out enough so that I can write a fully compliant Knight interpreter in it.
 
 | Language | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
 | -------- |:---------------------:|:----------:|:-----------------:|:-----:| ----- |
-| [Brick](https://github.com/sampersand/Brick/tree/master/examples) | X |   | X | X |  |
-| [Squire](https://github.com/sampersand/squire/tree/master/examples/knight) | X | | X | X | |
+| [Brick](https://github.com/sampersand/Brick/tree/master/examples) | X |   |  |
+| [Squire](https://github.com/sampersand/squire/tree/master/examples/knight) | X | | |
 | Quest | | | | X | Implemented in quest 1, so not entirely working. |
 | Stick | | | | X | |
-| Lance | | | X | X | Few bugs left to workout |
+| Lance | | | Few bugs left to workout |
 | Mercenary | | | | | |
 
 ## Future
