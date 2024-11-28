@@ -1,0 +1,230 @@
+require 'optparse'
+require_relative 'sections'
+
+module Kn
+  class Options
+    attr_reader :sections
+
+    def initialize(args)
+      setup_op!
+      @opts.parse! args
+      # @sections = Sections::REQUIRED.dup
+      @functions = []
+    end
+
+    private def setup_op!
+      opts = @opts = OptParse.new(nil, 32, '  ')
+      opts.program_name = 'test-kn'
+      opts.banner.concat ' [executable=./knight]'
+      opts.version = '3.0'
+
+      opts.on '-f', '--function[=FN,...]', 'Tests FUNCTIONs. W/O tests defaults', Array do |args|
+        args &&= args.map(&Section::ALL)
+        @sections |= args.map || Section::
+      # opts.on '-s', '--section[=SECTION,...]', 'Test SECTIONs. w/o tests defaults', Array do |args|
+      #   @sections |= args || Sections::REQUIRED
+      # end
+      # opts.on '-S', '--disable-section[=SECTION,...]', 'Test SECTIONs. w/o disables all', Array do |args|
+      #   @sections &= args || Sections::REQUIRED
+      # end
+      opts.on
+    end
+  end
+end
+__END__
+
+OptParse.new do
+  self.version = '3.0'
+  banner.concat ' [executable=./knight]'
+
+  on '-s', '--section[=SECTION,...]', 'Test the given sections; test all w/o args', Array do |secs|
+    sections.enable(*secs)
+  rescue Sections::UnknownSection => err
+    abort err
+  end
+
+  on '-S', '--disable-section[=SECTION,...]', 'Disable the given sections; disable all w/o args', Array do |secs|
+    sections.disable(*secs)
+  rescue Sections::UnknownSection => err
+    abort err
+  end
+
+  on '-z', '--sanitize[=SAN,...]', 'Also test the SANS; test all w/o args', Array do |san|
+    if san
+      $tester.sanitizations.concat san.map(&:to_sym)
+    else
+      $tester.sanitizations = Kn::Test::Tester::ALL_SANITIZATIONS.dup
+    end
+  end
+
+  on '--[no-]verbose', 'Print out each test before it is run' do |verb|
+    $tester.verbose = verb
+  end
+
+  on '-f', '--force', "Run the executable even if it's not executable", Array do |san|
+    force = true
+  end
+
+  on '-Z', '--dont-sanitize[=SAN,...]', 'Do not test SANS; disables all without args', Array do |san|
+    if san
+      $tester.sanitizations -= san.map(&:to_sym)
+    else
+      $tester.sanitizations.clear
+    end
+  end
+
+  on_tail <<~EOS
+
+  Sections:
+    The following is a list of section shorthands. You can also name sections
+    directly, such as `--sections=TRUE,+,*`.
+    - all             everything excluding extensions
+    - function        nullary, unary, binary, ternary, and quaternary.
+                      Functions can be given as shorthand, eg T works for TRUE.
+      - nullary       TRUE, FALSE, NULL, @, PROMPT, and RANDOM
+      - unary         :, BLOCK, CALL, QUIT, OUTPUT, DUMP, LENGTH, !, ~,
+                      ASCII, `,`, [, and ] (use `box` when referring to `,`)
+      - binary        +, -, *, /, %, ^, <, >, ?, &, |, ;, and WHILE
+      - ternary       GET and IF
+      - quaternary    SET
+    - types           block, boolean, integer, list, null, and string
+    - syntax          encoding, whitespace, comment, integer-literal,
+                      string-literal, parse-variable and parse-function
+    - variable        <variable details>
+    - extensions      currently just eval and system
+
+  Sanitization:
+      (Note: Sanitizers expect a nonzero exit code to indicate a program failure).
+
+      The following sanitizations are enabled by default:
+      - zero_division         Division or modulo by zero.
+      - invalid_types         Either attempted assignment to a nonvariable, or passing
+                              one of `+-*/%^<>[]AGS` a type undefined for the function.
+      - argument_count        A function is called with too few arguments. (eg `+ 1`.)
+      - undefined_variables   Fetching the value of an unassigned variale.
+
+      Additionally, these sanitizations may be enabled via `--sanitize`:
+      - strict_types          The return value of `BLOCK` is passed to a function
+                              which doesn't have set semantics for it.
+      - overflow              Integer under/overflow, or too large integer literals, or strings
+                              contain too large a type.
+      - invalid_values        A function is called with a valid type, but which has an
+                              invalid value. (e.g. `* "hi" ~1`)
+      #- io_errors             Problems arising during input/output operations.
+      #- strict_compliance     Misc. undefined behaviour that's hard to verify.
+  EOS
+
+  order! do |executable|
+    $tester.executable = executable
+  end
+
+  parse!
+end
+__END__
+# require_relative 'tester'
+# require_relative 'spec'
+# require_relative 'sections'
+
+$tester = Kn::Test::Tester.new executable: File.join(Dir.pwd, 'knight')
+sections = Sections.new
+force = false
+
+OptParse.new.instance_exec do
+  self.version = '1.0'
+  banner.concat ' [executable=./knight]'
+
+  on '-s', '--section[=SECTION,...]', 'Test the given sections; test all w/o args', Array do |secs|
+    sections.enable(*secs)
+  rescue Sections::UnknownSection => err
+    abort err
+  end
+
+  on '-S', '--disable-section[=SECTION,...]', 'Disable the given sections; disable all w/o args', Array do |secs|
+    sections.disable(*secs)
+  rescue Sections::UnknownSection => err
+    abort err
+  end
+
+  on '-z', '--sanitize[=SAN,...]', 'Also test the SANS; test all w/o args', Array do |san|
+    if san
+      $tester.sanitizations.concat san.map(&:to_sym)
+    else
+      $tester.sanitizations = Kn::Test::Tester::ALL_SANITIZATIONS.dup
+    end
+  end
+
+  on '--[no-]verbose', 'Print out each test before it is run' do |verb|
+    $tester.verbose = verb
+  end
+
+  on '-f', '--force', "Run the executable even if it's not executable", Array do |san|
+    force = true
+  end
+
+  on '-Z', '--dont-sanitize[=SAN,...]', 'Do not test SANS; disables all without args', Array do |san|
+    if san
+      $tester.sanitizations -= san.map(&:to_sym)
+    else
+      $tester.sanitizations.clear
+    end
+  end
+
+  on_tail <<~EOS
+
+  Sections:
+    The following is a list of section shorthands. You can also name sections
+    directly, such as `--sections=TRUE,+,*`.
+    - all             everything excluding extensions
+    - function        nullary, unary, binary, ternary, and quaternary.
+                      Functions can be given as shorthand, eg T works for TRUE.
+      - nullary       TRUE, FALSE, NULL, @, PROMPT, and RANDOM
+      - unary         :, BLOCK, CALL, QUIT, OUTPUT, DUMP, LENGTH, !, ~,
+                      ASCII, `,`, [, and ] (use `box` when referring to `,`)
+      - binary        +, -, *, /, %, ^, <, >, ?, &, |, ;, and WHILE
+      - ternary       GET and IF
+      - quaternary    SET
+    - types           block, boolean, integer, list, null, and string
+    - syntax          encoding, whitespace, comment, integer-literal,
+                      string-literal, parse-variable and parse-function
+    - variable        <variable details>
+    - extensions      currently just eval and system
+
+  Sanitization:
+      (Note: Sanitizers expect a nonzero exit code to indicate a program failure).
+
+      The following sanitizations are enabled by default:
+      - zero_division         Division or modulo by zero.
+      - invalid_types         Either attempted assignment to a nonvariable, or passing
+                              one of `+-*/%^<>[]AGS` a type undefined for the function.
+      - argument_count        A function is called with too few arguments. (eg `+ 1`.)
+      - undefined_variables   Fetching the value of an unassigned variale.
+
+      Additionally, these sanitizations may be enabled via `--sanitize`:
+      - strict_types          The return value of `BLOCK` is passed to a function
+                              which doesn't have set semantics for it.
+      - overflow              Integer under/overflow, or too large integer literals, or strings
+                              contain too large a type.
+      - invalid_values        A function is called with a valid type, but which has an
+                              invalid value. (e.g. `* "hi" ~1`)
+      #- io_errors             Problems arising during input/output operations.
+      #- strict_compliance     Misc. undefined behaviour that's hard to verify.
+  EOS
+
+  order! do |executable|
+    $tester.executable = executable
+  end
+
+  parse!
+end
+
+if !force && !File.executable?($tester.executable)
+  abort <<~EOS
+    Ruby didn't detect the given program as executable.
+    If you're positive that it's executable, rerun with the `--force` flag.
+
+    Executable: #{$tester.executable}
+  EOS
+end
+
+require 'minitest/autorun' # only after we confirmed we don't have a usage error
+sections.require
