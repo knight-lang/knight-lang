@@ -2,6 +2,6 @@
 require_relative 'options'
 
 options = Kn::Options.new($*)
-p options.sections
+p options.functions
 
-
+def section()

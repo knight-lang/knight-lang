@@ -1,14 +1,14 @@
 require 'optparse'
-require_relative 'sections'
+require_relative 'functions'
 
 module Kn
   class Options
-    attr_reader :sections
+    attr_reader :functions
 
     def initialize(args)
       setup_op!
       @opts.parse! args
-      # @sections = Sections::REQUIRED.dup
+      # @functions = Sections::REQUIRED.dup
       @functions = []
     end
 
@@ -19,15 +19,16 @@ module Kn
       opts.version = '3.0'
 
       opts.on '-f', '--function[=FN,...]', 'Tests FUNCTIONs. W/O tests defaults', Array do |args|
-        args &&= args.map(&Section::ALL)
-        @sections |= args.map || Section::
+        @functions |= args&.map { Functions.lookup(_1) } || Functions::ALL
+      end
+
       # opts.on '-s', '--section[=SECTION,...]', 'Test SECTIONs. w/o tests defaults', Array do |args|
-      #   @sections |= args || Sections::REQUIRED
+      #   @functions |= args || Sections::REQUIRED
       # end
       # opts.on '-S', '--disable-section[=SECTION,...]', 'Test SECTIONs. w/o disables all', Array do |args|
-      #   @sections &= args || Sections::REQUIRED
+      #   @functions &= args || Sections::REQUIRED
       # end
-      opts.on
+      # opts.on
     end
   end
 end

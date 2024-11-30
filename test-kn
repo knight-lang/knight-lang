@@ -31,4 +31,4 @@ script_dir=$(dirname -- "$0" && printf x) || {
 }
 
 script_dir=${script_dir%?x}
-exec ruby "$script_dir/tests/entrypoint.rb" "$@"
+exec ruby "$script_dir/test/run-tests" "$@"

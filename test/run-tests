@@ -14,12 +14,14 @@ OptParse.new.instance_exec do
 	banner.concat ' [executable=./knight]'
 
 	on '-s', '--section[=SECTION,...]', 'Test the given sections; test all w/o args', Array do |secs|
+		secs == [] && secs = [:box] # `-s,` hack
 		sections.enable(*secs)
 	rescue Sections::UnknownSection => err
 		abort err
 	end
 
 	on '-S', '--disable-section[=SECTION,...]', 'Disable the given sections; disable all w/o args', Array do |secs|
+		secs == [] && secs = [:box] # `-s,` hack
 		sections.disable(*secs)
 	rescue Sections::UnknownSection => err
 		abort err
@@ -106,5 +108,6 @@ if !force && !File.executable?($tester.executable)
 	EOS
 end
 
-require 'minitest/autorun' # only after we confirmed we don't have a usage error
+# require 'minitest/autorun' # only after we confirmed we don't have a usage error
+# require_relative 'spec'
 sections.require

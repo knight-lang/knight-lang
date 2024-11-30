@@ -4,7 +4,7 @@ module Kn
   class Functions
     class Function
       attr_reader :name, :path
-      def initialize(name:, path:)
+      def initialize(name, path)
         @name = name
         @path = File.join('unit', *path.split('/'))
       end
@@ -15,7 +15,12 @@ module Kn
       def inspect = @name.inspect
     end
 
-    
+    def self.lookup(name) =
+      ALL[name]
+
+    ALL = Set.new([
+      Function::new('@', 'nullary/emptylist'),
+    ])
   end
 end
 __END__

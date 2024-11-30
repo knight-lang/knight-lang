@@ -1,18 +1,19 @@
 require_relative '../../shared'
 
+
 section ',' do
   it 'converts normal arguments to a list of just that' do
-    assert_result [0],  %|,0|
-    assert_result [1],  %|,1|
-    assert_result [1234],  %|,1234|
-    assert_result [-1234],  %|,~1234|
+    expect_result [0],  %|,0|
+    expect_result [1],  %|,1|
+    expect_result [1234],  %|,1234|
+    expect_result [-1234],  %|,~1234|
 
-    assert_result [""], %|,""|
-    assert_result ["hello"], %|,"hello"|
+    expect_result [""], %|,""|
+    expect_result ["hello"], %|,"hello"|
 
-    assert_result [true], %|,TRUE|
-    assert_result [false], %|,FALSE|
-    assert_result [:null], %|,NULL|
+    expect_result [true], %|,TRUE|
+    expect_result [false], %|,FALSE|
+    expect_result [:null], %|,NULL|
   end
 
   it 'also converts lists to just a list of that' do
