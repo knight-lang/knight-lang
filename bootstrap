@@ -1,0 +1,190 @@
+#!/bin/bash
+
+## Provides a nice interface for running `examples/knight.kn`.
+# Even though `examples/knight.kn` fully implements the Knight specifications,
+# it requires an interpreter to run, which is what all the different
+# implementations supply. To make it easy to execute "knight in knight", this
+# file is provided as a way to cleanly execute `examples/knight.kn`.
+#
+# Note that `bootstrap` will actually read all `-f`s itself, instead of
+# deferring them to `examples/knight.kn`: This is because the Knight specs don't
+# provide a way for Knight programs to access the file system, and thus this
+# shim must do it.
+#
+# `examples/knight.kn` itself accepts programs in a "HEREDOC" format: it reads
+# a single line from stdin, and then will read lines until it sees the exact
+# same line again. This program does this for you, so you don't need to think
+# about it. (The janky hack is required because the Knight specs don't support
+# command-line arguments, so no `-e`, and because `knight.kn` should be able to
+# support `PROMPT`, so we couldn't read to the very end either.)
+##
+
+# Safety first!
+set -ufC
+
+# The name of the script: used in `die` and `usage` messages
+readonly scriptname=${0##*/}
+
+# Used later on
+readonly newline='
+'
+
+# Print out a message with `$scriptname:` prepended before it, then exit.
+die () {
+	fmt="%s: $1\\n"
+	shift
+	printf "$fmt" "$scriptname" "$@"
+	exit 1
+}
+
+# Print out the usage
+usage () { cat; } <<USAGE
+usage: $scriptname [-i interpreter] [-k knight.kn] (-e expr | -f filename)
+options:
+	-h   prints out help and exits. (also aliased as --help)
+	-i   Specify the interpret to use. If omitted, "\$KNIGHT_INTERPRETER" is
+	     used. If that's unset or empty, defaults to "./knight".
+	-k   Specify where "knight.kn" can be found. Most users won't need this,
+	     as the script usually deduces based on where bootstrap's located.
+	-e   (required by the Knight spec) The expression to execute.
+	-f   (required by the Knight spec) Same as '-e "\$(cat \$filename)"'
+USAGE
+
+################################################################################
+#                            Command-line Arguments                            #
+################################################################################
+
+## Initial arguments
+interpreter=
+knight_kn=
+unset expression # knight.kn has error messages for empty expressions
+
+while [ $# -ne 0 ]; do
+	case $1 in
+	-h|--help) usage; exit ;;
+
+	-i*)
+		interpreter=${1#-i}
+		if [ -z "$interpreter" ]; then
+			[ $# = 1 ] && die '%s needs an option' $1
+			interpreter=$2
+			shift
+		fi ;;
+
+	-k*)
+		knight_kn=${1#-k}
+		if [ -z "$knight_kn" ]; then
+			[ $# = 1 ] && die '%s needs an option' $1
+			knight_kn=$2
+			shift
+		fi ;;
+
+	-e*)
+		expression=${1#-e}
+		if [ -z "$expression" ]; then
+			[ $# = 1 ] && die '%s needs an option' $1
+			expression=$2
+			shift
+		fi ;;
+
+	-f*)
+		filename=${1#-f}
+		if [ -z "$filename" ]; then
+			[ $# = 1 ] && die '%s needs an option' $1
+			filename=$2
+			shift
+		fi
+
+		expression=$(cat -- "$filename" && printf x) || \
+			die "cannot read file: %s" "$filename"
+		# Ensure we give to Knight the exact expression, including
+		# any trailing newlines.
+		expression=${expression%?x} ;;
+	*)
+		die 'unknown option: %s' "$1";
+	esac
+	shift
+done
+
+# Default the interpreter if it's not found.
+[ -z "$interpreter" ] && interpreter=${KNIGHT_INTERPRETER:-$PWD/knight}
+
+[ -z "${expression+1}" ] && die 'no expression or file provided'
+
+# If it's missing, default it.
+if [ -z "$knight_kn" ]; then
+	# In case the dirname starts with a `-` or ends in a newline, for some reason...
+	knight_root_dir=$(dirname -- "$0" && printf x) || {
+		printf >&2 '%s: cannot get enclosing directory of %s' "$scriptname" "$0"
+		exit 1
+	}
+	knight_root_dir=${knight_root_dir%?x}
+
+	# Ensure that `knight.kn` actually exists
+	knight_kn=$knight_root_dir/examples/knight.kn
+	if [ ! -f "$knight_kn" ]; then
+		printf >&2 "%s: knight.kn doesn't exist at expected location: %s" \
+			"$scriptname" "$0"
+		exit 1
+	fi
+fi
+
+if [ 1 ]; then
+	knight_kn=$(cat -- "${knight_kn}")
+fi
+
+################################################################################
+#                            Find Unique EOF Marker                            #
+################################################################################
+
+# Because people calling this script might be nesting multiple Knight invocatio-
+# ns themselves, this finds a unique string that can be used as the "heredoc"
+# and is guaranteed not to already exist in the code.
+iter=0
+while
+	# Use an `X` at the start to make it less likely that we'll get a match,
+	# as `examples/knight.kn` doesn't used `X`.
+	unique_string=X_END_OF_KNIGHT_PROGRAM_$iter
+	case $expression in
+	*"${newline}$unique_string${newline}"*) true ;;
+	*) false
+	esac
+do
+	iter=$((iter + 1))
+done
+
+################################################################################
+#                             Execute the Program                              #
+################################################################################
+
+# Because the only way to feed `knight.kn` user input is via `PROMPT`, we have
+# to give it stdin from
+# Since we also need to take input from stdin for `PROMPT`, we need to use a
+# call to `cat` to print out the program and then `-`, which means `stdin`.
+# set -x
+fifo=${TMPDIR%/}/knight_bootstrap-$(date +%s)
+mkfifo "$fifo" || return 1
+set -x
+(cat <<PROGRAM; cat /dev/stdin;) </dev/stdin >"$fifo" &
+$unique_string
+$expression
+$unique_string
+PROGRAM
+pid=$!
+set +x
+ruby -ne 'p gets' <"$fifo"
+# ruby -e 'x=gets; 0 while gets...x; p $stdin.read' <"$fifo"
+# ruby -e 'x=gets; 0 while p(gets) != x; p $stdin.read' <"$fifo"
+exit
+$interpreter -f "$knight_kn" <"$fifo"
+exit=$?
+set -x
+rm "$fifo"
+wait $pid
+exit $exit
+# $interpreter -f "$knight_kn" < <(cat /dev/fd/3 - 3<<PROGRAM
+# $unique_string
+# $expression
+# $unique_string
+# PROGRAM
+# )
