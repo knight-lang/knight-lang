@@ -46,10 +46,11 @@ usage () { cat; } <<USAGE
 usage: $scriptname [-i interpreter] [-k knight.kn] (-e expr | -f filename)
 options:
 	-h   prints out help and exits.
-	-i   Specify the interpret to use. If omitted, "\$KNIGHT_INTERPRETER" is
+	-i   Specify the interpret to use. If omitted, "\$KNIGHT" is
 	     used. If that's unset or empty, defaults to "./knight".
 	-k   Specify where "knight.kn" can be found. Most users won't need this,
 	     as the script usually deduces based on where bootstrap's located.
+	-g   enable globbing for the interpreter.
 	-e   (required by the Knight spec) The program to execute.
 	-f   (required by the Knight spec) Same as '-e "\$(cat \$filename)"'
 USAGE
@@ -59,12 +60,14 @@ USAGE
 ################################################################################
 
 ## Initial arguments
-interpreter=${KNIGHT_INTERPRETER:-./knight}
+interpreter=${KNIGHT:-./knight}
 knight_kn=
+glob=
 unset program # `unset` instead of empty string so we can tell if it was set.
 
-while getopts 'hi:f:k:e:' flag; do
+while getopts 'hgi:f:k:e:' flag; do
 	case $flag in
+	g) glob=1 ;;
 	h) usage; exit ;;
 	i) interpreter=$OPTARG ;;
 	k) knight_kn=$OPTARG ;;
@@ -88,7 +91,7 @@ done
 [ -z "${program+1}" ] && die 'one of -e or -f must be given'
 
 # Default the interpreter if it's not already found.
-[ -z "$interpreter" ] && interpreter=${KNIGHT_INTERPRETER:-./knight}
+[ -z "$interpreter" ] && interpreter=${KNIGHT:-./knight}
 
 # Find the knight.kn path, which is what's going to happen the vast majority of
 # the time. In that case, it's relative to this program.
@@ -131,10 +134,15 @@ done
 ################################################################################
 #                             Execute the Program                              #
 ################################################################################
-
-"$interpreter" -f "$knight_kn" < <(cat <<PROGRAM; cat 2>&-
+exec < <(cat <<PROGRAM; cat 2>&-
 $unique_string
 $program
 $unique_string
 PROGRAM
 )
+
+if [ -z "$glob" ]; then
+	"$interpreter" -f "$knight_kn"
+else
+	$interpreter -f "$knight_kn"
+fi
