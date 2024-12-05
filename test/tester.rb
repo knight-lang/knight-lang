@@ -109,7 +109,7 @@ module Kn::Test
               exe = [*Array(@executable), '-e', expr]
               puts "executing: #{exe.inspect} (stdin=#{stdin.inspect})" if $VERBOSE
               system(*exe, out: out_write, 
-                **{in: in_read}.compact,
+                in: in_read || :close,
                 err: err_write)
               $?
             end
