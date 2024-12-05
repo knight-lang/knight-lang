@@ -1,0 +1,451 @@
+; = newline '
+' # no escapes, so we need a newline literal
+
+###########################
+#     Value functions     #
+###########################
+
+; = type_integer 'i' #0
+; = type_string 's' #1
+; = type_boolean 'b' #2
+; = type_null 'n' #3
+; = type_list 'l' #4
+; = type_variable 'v' #5
+; = type_ast 'a' #5
+
+; = is_runnable BLOCK (
+	: | (? type_variable [value) (? type_ast [value)
+)
+
+; = to_string BLOCK (
+	; & CALL is_runnable : = value CALL run
+	: IF ? type_list [value
+		; = sep newline
+		: CALL join_list
+	: +""[]value
+)
+
+; = _join_list_stack @
+; = join_list BLOCK (
+	; = args []value
+	; = tmp ""
+	; & args
+		; = _join_list_stack + ,args _join_list_stack
+		; = value [args
+		; = tmp CALL to_string
+		; = args ][_join_list_stack
+		; = _join_list_stack + ,args ]_join_list_stack
+		; WHILE args
+			; = value [args
+			; = tmp ++ tmp sep CALL to_string
+			; = args ][_join_list_stack
+			: = _join_list_stack + ,args ]_join_list_stack
+		: = _join_list_stack ]_join_list_stack
+	: tmp
+)
+
+
+
+; = to_integer BLOCK (
+	; & CALL is_runnable : = value CALL run
+	: +0[]value # `[]value` will unbox the second element of `value`.
+)
+
+; = to_boolean BLOCK (
+	; & CALL is_runnable : = value CALL run
+	: !![]value # `[]value` will unbox the second element of `value`.
+)
+
+; = to_list BLOCK (
+	; & CALL is_runnable : = value CALL run
+	: IF ? type_list [value
+		: []value
+	; = tmp +@[]value
+	; = tmp2 @
+	; WHILE tmp
+		; = tmp2 + tmp2 , +,[value [tmp
+		: = tmp ]tmp
+	: tmp2
+)
+
+; = _dump_stack @
+; = dump_value BLOCK (
+	: IF !? type_list [value
+		: DUMP []value
+	; = dump_args []value
+	; OUTPUT "[\"
+	; & dump_args
+		; = _dump_stack + ,dump_args _dump_stack
+		; = value [dump_args
+		; CALL dump_value
+		; = dump_args ][_dump_stack
+		; = _dump_stack + ,dump_args ]_dump_stack
+
+		; WHILE dump_args
+			; OUTPUT ", \"
+			; = value [dump_args
+			; CALL dump_value
+			; = dump_args ][_dump_stack
+			: = _dump_stack + ,dump_args ]_dump_stack
+		: = _dump_stack ]_dump_stack
+	: OUTPUT "]\"
+)
+
+###########################
+#    Parsing functions    #
+###########################
+; = variable_names @
+
+; = iseof BLOCK (
+	: ? stream_index LENGTH stream
+)
+
+; = peek BLOCK (
+	: = chr IF CALL iseof '' GET stream stream_index 1
+)
+
+; = advance BLOCK (
+	: = stream_index + stream_index 1
+)
+
+; = isdigit BLOCK (
+	: & (< '/' chr) (> ':' chr)
+)
+
+; = iswhitespace BLOCK (
+	: | (? chr newline)
+	  | (? chr ASCII 13) # carrige return
+	  | (? chr ' ')
+	  | (? chr '	') # tab
+	  | (? chr '(')
+	  | (? chr ')')
+	    (? chr ':')
+)
+
+; = islower BLOCK (
+ 	: | (& (< '`' chr) (> '{' chr)) (? '_' chr)
+)
+
+; = isupper BLOCK (
+	: | & (< '@' chr) (> '[' chr) (? '_' chr)
+)
+
+; = take_while BLOCK (
+	; = result ''
+	; WHILE & (CALL peek) (CALL block)
+		; = result + result chr
+		: CALL advance
+	: result
+)
+
+; = strip_whitespace_and_comments BLOCK (
+	; = block iswhitespace
+	; CALL take_while
+	: & ? '#' (CALL peek)
+		; = block BLOCK !?chr newline
+		; CALL take_while
+		: CALL strip_whitespace_and_comments
+)
+
+; = parse_integer BLOCK (
+	; = block isdigit
+	: + ,type_integer , (+ 0 CALL take_while)
+)
+
+; = parse_variable BLOCK (
+	# parse variable name out
+	; = block BLOCK | CALL islower CALL isdigit
+	; = variable_name CALL take_while
+	# find the index of `variable_name`, if it exists.
+	; = i 0
+	; = found FALSE
+	; WHILE & !found < i variable_names
+		: IF (? variable_name [GET variable_names i 1)
+			: = found TRUE
+		: = i + i 1
+	# if we didn't find it, make it.
+	; & !found
+		# no need to update `i` here, 'cause it's at the right spot
+		: = variable_names + variable_names ,variable_name
+	# create the resulting type
+	: + ,type_variable ,i
+)
+; = parse_string BLOCK (
+	; = quote chr
+	; CALL advance
+	; = block BLOCK !?chr quote
+	; = string CALL take_while
+	; & (CALL iseof)
+		; OUTPUT ++ 'unterminated quote: ' quote string
+		: QUIT 1
+	; CALL advance # remove trailing quote, if one exists
+	: + ,type_string ,string
+)
+
+; = string_contains BLOCK (
+	; WHILE & string !?chr [string
+		: = string ]string
+	: string # it'll be nonempty if we found found `chr`.
+)
+
+; = parse_function_stack @
+; = parse_function BLOCK (
+	; = name chr
+	; = block isupper
+	# if we didn't take any upper case letters, then simply advance the stream.
+	; | CALL take_while CALL advance
+
+	: IF ? name 'T' : +,type_boolean ,TRUE
+	: IF ? name 'F' : +,type_boolean ,FALSE
+	: IF ? name 'N' : +,type_null ,NULL
+	: IF ? name '@' : +,type_list ,@
+
+	; = function +,type_ast ,CALL lookup_function
+
+	; WHILE < (-LENGTH function 2) ([[]function)
+		# There's no concern about `parse` clobbering `function`, because we 
+		# evaluate `function` before we call `parse`, and then assign back to `function`.
+		: = function + function ,CALL parse
+	: function
+)
+
+; = parse BLOCK (
+	; CALL strip_whitespace_and_comments
+	; & CALL iseof 
+		; OUTPUT 'end of stream encountered when a token was expected.'
+		: QUIT 1
+	: IF CALL isdigit
+		: CALL parse_integer
+	: IF CALL islower
+		: CALL parse_variable
+	: IF | (? chr '"') (? chr "'")
+		: CALL parse_string
+	: CALL parse_function
+)
+
+###########################
+#    Runtime functions    #
+###########################
+; = next_arg BLOCK
+	; = value [args
+	; = args ]args
+	: value
+
+; = run_next_arg BLOCK
+	; CALL next_arg
+	: CALL run
+
+; = next_integer BLOCK ; CALL next_arg : CALL to_integer
+; = next_string BLOCK ; CALL next_arg : CALL to_string
+; = next_boolean BLOCK ; CALL next_arg : CALL to_boolean
+; = next_list BLOCK ; CALL next_arg : CALL to_list
+
+# Looks up a function. The returned function is a block that expects that `args` are filled.
+; = tmpstack @
+; = lookup_function BLOCK (
+	: IF (? name 'P') : +,0 ,BLOCK
+		: +,type_string ,PROMPT
+
+	: IF (? name 'R') : +,0 ,BLOCK
+		: +,type_integer ,RANDOM
+
+	: IF (? name 'B') : +,1 ,BLOCK
+		: CALL next_arg
+
+	: IF (? name 'C') : +,1 ,BLOCK
+		; CALL run_next_arg
+		: CALL run
+
+	: IF (? name 'Q') : +,1 ,BLOCK
+		: QUIT CALL next_integer
+
+	: IF (? name '!') : +,1 ,BLOCK
+		: +,type_boolean ,!CALL next_boolean
+
+	: IF (? name '~') : +,1 ,BLOCK
+		: +,type_integer ,~CALL next_integer
+
+	: IF (? name 'L') : +,1 ,BLOCK
+		: +,type_integer ,LENGTH CALL next_list
+
+	: IF (? name 'D') : +,1 ,BLOCK
+		; CALL run_next_arg
+		; = tmp value
+		; CALL dump_value
+		: = value tmp
+
+	: IF (? name 'O') : +,1 ,BLOCK
+		; OUTPUT CALL next_string # the interpreter should handle output for us.
+		: +,type_null ,NULL
+
+	: IF (? name 'A') : +,1 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_integer [value : +,type_string  ,ASCII []value
+		: IF ? type_string  [value : +,type_integer ,ASCII []value
+		; OUTPUT +'bad type for `A`: ' [value QUIT 1
+
+	: IF (? name ',') : +,1 ,BLOCK
+		: +,type_list ,,CALL run_next_arg
+
+	: IF (? name '[') : +,1 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_string [value  : +,type_string  ,([[]value)
+		: IF ? type_list [value    : [[]value
+		; OUTPUT +'bad type for `[`: ' [value QUIT 1
+
+	: IF (? name ']') : +,1 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_string [value  : +,type_string  ,(][]value)
+		: IF ? type_list [value    : +,type_list    ,(][]value)
+		; OUTPUT +'bad type for `]`: ' [value QUIT 1
+
+	: IF (? name '+') : +,2 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_integer [value : +,type_integer ,(+ []value CALL next_integer)
+		: IF ? type_string [value  : +,type_string  ,(+ []value CALL next_string)
+		: IF ? type_list [value    : +,type_list    ,(+ []value CALL next_list)
+		; OUTPUT +'bad type for `+`: ' [value QUIT 1
+
+	: IF (? name '-') : +,2 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_integer [value : +,type_integer ,(- []value CALL next_integer)
+		; OUTPUT +'bad type for `-`: ' [value QUIT 1
+
+	: IF (? name '*') : +,2 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_integer [value : +,type_integer ,(* []value CALL next_integer)
+		: IF ? type_string [value  : +,type_string  ,(* []value CALL next_integer)
+		: IF ? type_list [value    : +,type_list    ,(* []value CALL next_integer)
+		; OUTPUT +'bad type for `*`: ' [value QUIT 1
+
+	: IF (? name '%') : +,2 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_integer [value : +,type_integer ,(% []value CALL next_integer)
+		; OUTPUT +'bad type for `%`: ' [value QUIT 1
+
+	: IF (? name '/') : +,2 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_integer [value : +,type_integer ,(/ []value CALL next_integer)
+		; OUTPUT +'bad type for `/`: ' [value QUIT 1
+
+	: IF (? name '^') : +,2 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_integer [value : +,type_integer ,(^ []value CALL next_integer)
+		: IF ? type_list [value
+			; = tmpstack + ,value tmpstack
+			; = sep CALL next_string
+			; = value [tmpstack
+			; = tmpstack ]tmpstack
+			: +,type_string ,CALL join_list
+		; OUTPUT +'bad type for `^`: ' [value QUIT 1
+
+	: IF (? name '?') : +,2 ,BLOCK
+		; CALL next_arg
+		: +,type_boolean ,(? CALL run CALL run_next_arg)
+
+	: IF (? name '<') : +,2 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_integer [value : +,type_boolean ,(< []value CALL next_integer)
+		: IF ? type_string [value  : +,type_boolean ,(< []value CALL next_string)
+		: IF ? type_list [value    : +,type_boolean ,(< []value CALL next_list)
+		: IF ? type_boolean [value : +,type_boolean ,(< []value CALL next_boolean)
+		; OUTPUT +'bad type for `<`: ' [value QUIT 1
+
+	: IF (? name '>') : +,2 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_integer [value : +,type_boolean ,(> []value CALL next_integer)
+		: IF ? type_string [value  : +,type_boolean ,(> []value CALL next_string)
+		: IF ? type_list [value    : +,type_boolean ,(> []value CALL next_list)
+		: IF ? type_boolean [value : +,type_boolean ,(> []value CALL next_boolean)
+		; OUTPUT +'bad type for `>`: ' [value QUIT 1
+
+	: IF (? name '&') : +,2 ,BLOCK
+		: IF CALL next_boolean
+			: CALL run_next_arg
+		: value # `next_boolean` sets `value` as well.
+
+	: IF (? name '|') : +,2 ,BLOCK
+		: IF !CALL next_boolean
+			: CALL run_next_arg
+		: value # `next_boolean` sets `value` as well.
+
+	: IF (? name ';') : +,2 ,BLOCK
+		; CALL run_next_arg
+		#; DUMP args
+		: CALL run_next_arg
+
+	: IF (? name '=') : +,2 ,BLOCK
+		; = value []args
+		; CALL run # need to do this incase the subexpression changes variables.
+		; = variables SET variables [][args 1 ,value
+		: value
+
+	: IF (? name 'W') : +,2 ,BLOCK
+		; WHILE (; = value [args CALL to_boolean)
+			; = value []args
+			: CALL run
+		: + ,type_null ,NULL
+
+	: IF (? name 'I') : +,3 ,BLOCK
+		: IF CALL next_boolean
+			: CALL run_next_arg
+		; CALL next_arg
+		: CALL run_next_arg
+
+	: IF (? name 'G') : +,3 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_list [value
+			: +,type_list ,GET []value CALL next_integer CALL next_integer
+		: IF ? type_string [value
+			: +,type_string ,GET []value CALL next_integer CALL next_integer
+		; OUTPUT +'bad type for `G`: ' [value QUIT 1
+
+	: IF (? name 'S') : +,4 ,BLOCK
+		; CALL run_next_arg
+		: IF ? type_list [value
+			: +,type_list ,SET []value CALL next_integer CALL next_integer CALL next_list
+		: IF ? type_string [value
+			: +,type_string ,SET []value CALL next_integer CALL next_integer CALL next_string
+		; OUTPUT +'bad type for `S`: ' [value QUIT 1
+
+	; OUTPUT ++ 'unknown function `' name '`.'
+	: QUIT 1
+)
+
+# Runs the value. note that it assigns the return value to `value` as well.
+; = args_stack @
+; = args @
+; = run BLOCK (
+	: IF !CALL is_runnable
+		: value
+	: IF ? type_variable	[value
+		: = value 
+			| ([GET variables []value 1)
+				; OUTPUT +'undefined variable: ' GET variable_names []value 1
+				: QUIT 1
+
+	; = args_stack + ,args args_stack
+	; = args ]]value
+	; = value CALL [][]value
+	; = args [args_stack
+	; = args_stack ]args_stack
+	: value
+)
+
+; = play BLOCK (
+	; = stream_index 0
+	; = value CALL parse
+	; = variables *,NULL LENGTH variable_names
+	: CALL run
+)
+
+# NOTE:
+# Below is _technically_ not a completely legal knight implementation: It strips
+# out `\r`s if they're the second-to-last character in a line. However, if you
+# embed the source code directly into the `stream` literal, it will parse `\r`s
+# correctly.
+; = stream ""
+; = end_of_stream_marker PROMPT 
+; WHILE !? end_of_stream_marker (= tmp PROMPT)
+	: = stream ++ stream newline tmp
+: CALL play
