@@ -17,25 +17,25 @@ The following is the list of all languages that I've written it in:
 
 | Language | Version | 100% Spec Conformance | Documented | Notes |
 | -------- |---------|:---------------------:|:----------:|-------|
+| [Go](https://github.com/knight-lang/go) | (pre-)3.0 | X | X | The "exemplar" Knight implementation: Simply made, fully documented. |
+| [Rust](https://github.com/knight-lang/rust) | (pre-)3.0 | X |   | Captures _all_ UB if you enable `strict-compliance`. Also has most extensions |
 | [AWK](https://github.com/knight-lang/awk) | 2.0.1 | X | X | Unfortunately, MacOS's awk segfaults on `DUMP PROMPT` sometimes. Other than that, it works. |
-| [Assembly (x86)](https://github.com/knight-lang/asm) | 1.0 |   |   | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
 | [C](https://github.com/knight-lang/c/tree/master/ast) | 2.0.1 | X | X | Fully functional  |
 | [C++](https://github.com/knight-lang/cpp) | 2.0.1 | X | X | Works with C++17 |
+| [Knight](https://github.com/knight-lang/knight-lang/blob/master/examples/knight.kn) | 2.0.1 |   |   | Yes, this is a Knight interpreter, written in Knight. |
+| [POSIX-Compliant SH](https://github.com/knight-lang/shell) | 2.0.1 | X | X | 100% Spec complaint. Requires POSIX-2017 compliance at a minimum, but might be 2008-compliant (I haven't tested). |
+| [ZSH](https://github.com/knight-lang/zsh) | 2.0.1 | X | X | |
+| [Perl](https://github.com/knight-lang/perl) | 1.1 | X | X | Fully Functional on at least v5.18. |
+| [Raku](https://github.com/knight-lang/raku) | 1.1 | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
+| [Assembly (x86)](https://github.com/knight-lang/asm) | 1.0 |   |   | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
 | [C#](https://github.com/knight-lang/csharp) | 1.0 | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
-| [Go](https://github.com/knight-lang/go) | 2.1.0 | X | X | The "exemplar" Knight implementation: Simply made, fully documented. |
-| [Haskell](https://github.com/knight-lang/haskell) | pre-1.0 |   |  | ish | X | Works for an older spec of Knight, needs to be updated. |
 | [Java](https://github.com/knight-lang/java) | 1.0 | X |   | Simple version without any documentation. It can be cleaned up slightly though. |
 | [JavaScript](https://github.com/knight-lang/knight.js) | 1.0 | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
-| [Knight](https://github.com/knight-lang/knight-lang/blob/master/examples/knight.kn) | 2.0.1 |   |   | Yes, this is a Knight interpreter, written in Knight. |
 | [Kotlin](https://github.com/knight-lang/kotlin) | 1.0 | X | X | Fully funcitonal, and barring `` ` ``, can be compiled to native. |
-| [Perl](https://github.com/knight-lang/perl) | 1.1 | X | X | Fully Functional on at least v5.18. |
 | [PHP](https://github.com/knight-lang/php) | 1.0 | X | X | Fully Functional, with type annotations. |
-| [POSIX-Compliant SH](https://github.com/knight-lang/shell) | 2.0.1 | X | X | 100% Spec complaint. Requires POSIX-2017 compliance at a minimum, but might be 2008-compliant (I haven't tested). |
 | [Python](https://github.com/knight-lang/python) | 1.0 | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
-| [Raku](https://github.com/knight-lang/raku) | 1.1 | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
 | [Ruby](https://github.com/knight-lang/ruby) | 1.0 | X |   | A hacky version currently exists; a more sophisticated one is being worked on. |
-| [Rust](https://github.com/knight-lang/rust) | 2.0.1 | X |   | Captures _all_ UB if you enable `strict-compliance`. Also has most extensions |
-| [ZSH](https://github.com/knight-lang/zsh) | 2.0.1 | X | X | |
+| [Haskell](https://github.com/knight-lang/haskell) | pre-1.0 |   |  | ish | X | Works for an older spec of Knight, needs to be updated. |
 
 ## Personal Languages
 I love language design, and have written quite a few programming languages. I generally try to get the languages fleshed out enough so that I can write a fully compliant Knight interpreter in it.
