@@ -558,13 +558,13 @@ Converts the argument to an integer, then negates it. Note that this is numeric 
 
 Examples:
 ```knight
-~38         # => -38
-~0          # => 0
-~(- 1 2)    # => 1
-~~5         # => 5
-~TRUE       # => -1
-~,123       # => -1
-~2147483648 #=> undefined (max integer is 2147483647)
+~38               # => -38
+~0                # => 0
+~(- 1 2)          # => 1
+~~5               # => 5
+~TRUE             # => -1
+~,123             # => -1
+~(-~2147483647 1) #=> undefined (max integer is 2147483647)
 ```
 
 ### `ASCII unchanged` {#fn-ascii}

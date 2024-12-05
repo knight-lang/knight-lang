@@ -97,7 +97,6 @@ if [ -z "$knight_kn" ]; then
 	# some bizarre reason.
 	knight_root_dir=$(dirname -- "$0" && printf x) || {
 		die 'cannot get enclosing directory of: %s' "$0"
-		exit 1
 	}
 	knight_root_dir=${knight_root_dir%?x}
 
@@ -105,7 +104,6 @@ if [ -z "$knight_kn" ]; then
 	knight_kn=$knight_root_dir/examples/knight.kn
 	if [ ! -f "$knight_kn" ]; then
 		die "the default knight.kn doesn't exist: %s" "$knight_kn"
-		exit 1
 	fi
 fi
 
