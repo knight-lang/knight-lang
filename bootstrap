@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# (This program is nearly 100% POSIX-compliant, except the very last line where
+# we execute the program. Maybe one day the `< <(cat ...)` can be reworked to
+# be POSIX-compliant.)
+
 ## Provides a nice interface for running `examples/knight.kn`.
 # Even though `examples/knight.kn` fully implements the Knight specifications,
 # it requires an interpreter to run, which is what all the different
@@ -41,12 +45,12 @@ die () {
 usage () { cat; } <<USAGE
 usage: $scriptname [-i interpreter] [-k knight.kn] (-e expr | -f filename)
 options:
-	-h   prints out help and exits. (also aliased as --help)
+	-h   prints out help and exits.
 	-i   Specify the interpret to use. If omitted, "\$KNIGHT_INTERPRETER" is
 	     used. If that's unset or empty, defaults to "./knight".
 	-k   Specify where "knight.kn" can be found. Most users won't need this,
 	     as the script usually deduces based on where bootstrap's located.
-	-e   (required by the Knight spec) The expression to execute.
+	-e   (required by the Knight spec) The program to execute.
 	-f   (required by the Knight spec) Same as '-e "\$(cat \$filename)"'
 USAGE
 
@@ -55,67 +59,44 @@ USAGE
 ################################################################################
 
 ## Initial arguments
-interpreter=
+interpreter=${KNIGHT_INTERPRETER:-./knight}
 knight_kn=
-unset expression # knight.kn has error messages for empty expressions
+unset program # `unset` instead of empty string so we can tell if it was set.
 
-while [ $# -ne 0 ]; do
-	case $1 in
-	-h|--help) usage; exit ;;
-
-	-i*)
-		interpreter=${1#-i}
-		if [ -z "$interpreter" ]; then
-			[ $# = 1 ] && die '%s needs an option' $1
-			interpreter=$2
-			shift
-		fi ;;
-
-	-k*)
-		knight_kn=${1#-k}
-		if [ -z "$knight_kn" ]; then
-			[ $# = 1 ] && die '%s needs an option' $1
-			knight_kn=$2
-			shift
-		fi ;;
-
-	-e*)
-		expression=${1#-e}
-		if [ -z "$expression" ]; then
-			[ $# = 1 ] && die '%s needs an option' $1
-			expression=$2
-			shift
-		fi ;;
-
-	-f*)
-		filename=${1#-f}
-		if [ -z "$filename" ]; then
-			[ $# = 1 ] && die '%s needs an option' $1
-			filename=$2
-			shift
-		fi
-
-		expression=$(cat -- "$filename" && printf x) || \
-			die "cannot read file: %s" "$filename"
-		# Ensure we give to Knight the exact expression, including
+while getopts 'hi:f:k:e:' flag; do
+	case $flag in
+	h) usage; exit ;;
+	i) interpreter=$OPTARG ;;
+	k) knight_kn=$OPTARG ;;
+	e) program=$OPTARG ;;
+	f)
+		program=$(cat -- "$OPTARG" && printf x) || \
+			die "cannot read file: %s" "$OPTARG"
+		# Ensure we give to Knight the exact program, including
 		# any trailing newlines.
-		expression=${expression%?x} ;;
-	*)
-		die 'unknown option: %s' "$1";
+		program=${program%?x} ;;
 	esac
-	shift
 done
 
-# Default the interpreter if it's not found.
-[ -z "$interpreter" ] && interpreter=${KNIGHT_INTERPRETER:-$PWD/knight}
+################################################################################
+#                              Validate Arguments                              #
+################################################################################
 
-[ -z "${expression+1}" ] && die 'no expression or file provided'
+# Since we don't want to do any manipulations of `program` so that `knight.kn`
+# receives the entire program, we check for whether or not `program` is set, not
+# if it's empty.
+[ -z "${program+1}" ] && die 'one of -e or -f must be given'
 
-# If it's missing, default it.
+# Default the interpreter if it's not already found.
+[ -z "$interpreter" ] && interpreter=${KNIGHT_INTERPRETER:-./knight}
+
+# Find the knight.kn path, which is what's going to happen the vast majority of
+# the time. In that case, it's relative to this program.
 if [ -z "$knight_kn" ]; then
-	# In case the dirname starts with a `-` or ends in a newline, for some reason...
+	# We gotta do this trick in case the directory ends in a newline for
+	# some bizarre reason.
 	knight_root_dir=$(dirname -- "$0" && printf x) || {
-		printf >&2 '%s: cannot get enclosing directory of %s' "$scriptname" "$0"
+		die 'cannot get enclosing directory of: %s' "$0"
 		exit 1
 	}
 	knight_root_dir=${knight_root_dir%?x}
@@ -123,8 +104,7 @@ if [ -z "$knight_kn" ]; then
 	# Ensure that `knight.kn` actually exists
 	knight_kn=$knight_root_dir/examples/knight.kn
 	if [ ! -f "$knight_kn" ]; then
-		printf >&2 "%s: knight.kn doesn't exist at expected location: %s" \
-			"$scriptname" "$0"
+		die "the default knight.kn doesn't exist: %s" "$knight_kn"
 		exit 1
 	fi
 fi
@@ -141,8 +121,9 @@ while
 	# Use an `X` at the start to make it less likely that we'll get a match,
 	# as `examples/knight.kn` doesn't used `X`.
 	unique_string=X_END_OF_KNIGHT_PROGRAM_$iter
-	case $expression in
-	*"${newline}$unique_string${newline}"*) true ;;
+
+	case $program in
+	*"${newline}${unique_string}${newline}"*) true ;;
 	*) false
 	esac
 do
@@ -153,9 +134,9 @@ done
 #                             Execute the Program                              #
 ################################################################################
 
-"$interpreter" -f "$knight_kn" < <(cat /dev/fd/3 - 3<<PROGRAM 2>/dev/null
+"$interpreter" -f "$knight_kn" < <(cat <<PROGRAM; cat 2>&-
 $unique_string
-$expression
+$program
 $unique_string
 PROGRAM
 )
