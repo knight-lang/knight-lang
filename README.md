@@ -22,6 +22,7 @@ The following is the list of all languages that I've written it in:
 | [AWK](https://github.com/knight-lang/awk) | 2.0.1 | X | X | Unfortunately, MacOS's awk segfaults on `DUMP PROMPT` sometimes. Other than that, it works. |
 | [C](https://github.com/knight-lang/c/tree/master/ast) | 2.0.1 | X | X | Fully functional  |
 | [C++](https://github.com/knight-lang/cpp) | 2.0.1 | X | X | Works with C++17 |
+| [JavaScript](https://github.com/knight-lang/knight.js) | 2.1.0 | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
 | [Knight](https://github.com/knight-lang/knight-lang/blob/master/examples/knight.kn) | 2.0.1 |   |   | Yes, this is a Knight interpreter, written in Knight. |
 | [POSIX-Compliant SH](https://github.com/knight-lang/shell) | 2.0.1 | X | X | 100% Spec complaint. Requires POSIX-2017 compliance at a minimum, but might be 2008-compliant (I haven't tested). |
 | [ZSH](https://github.com/knight-lang/zsh) | 2.0.1 | X | X | |
@@ -30,7 +31,6 @@ The following is the list of all languages that I've written it in:
 | [Assembly (x86)](https://github.com/knight-lang/asm) | 1.0 |   |   | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
 | [C#](https://github.com/knight-lang/csharp) | 1.0 | X | X | Simple version without any documentation. It can be cleaned up slightly though. |
 | [Java](https://github.com/knight-lang/java) | 1.0 | X |   | Simple version without any documentation. It can be cleaned up slightly though. |
-| [JavaScript](https://github.com/knight-lang/knight.js) | 1.0 | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
 | [Kotlin](https://github.com/knight-lang/kotlin) | 1.0 | X | X | Fully funcitonal, and barring `` ` ``, can be compiled to native. |
 | [PHP](https://github.com/knight-lang/php) | 1.0 | X | X | Fully Functional, with type annotations. |
 | [Python](https://github.com/knight-lang/python) | 1.0 | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
