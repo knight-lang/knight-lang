@@ -25,6 +25,7 @@ The following is the list of all languages that I've written it in:
 | [JavaScript](https://github.com/knight-lang/javascript) | 2.1.0 | X | X | Fully Functional, although it requires Node.js for the OS-related functions. |
 | [Knight](https://github.com/knight-lang/knight-lang/blob/master/examples/knight.kn) | 2.0.1 |   |   | Yes, this is a Knight interpreter, written in Knight. |
 | [POSIX-Compliant SH](https://github.com/knight-lang/shell) | 2.0.1 | X | X | 100% Spec complaint. Requires POSIX-2017 compliance at a minimum, but might be 2008-compliant (I haven't tested). |
+| [Ruby](https://github.com/knight-lang/ruby/blob/master/monkey-patching) | 2.0.1 | X |   | A super janky monkey-patched version exists :-). I might work on a "cleaner" version later.|
 | [ZSH](https://github.com/knight-lang/zsh) | 2.0.1 | X | X | |
 | [Perl](https://github.com/knight-lang/perl) | 1.1 | X | X | Fully Functional on at least v5.18. |
 | [Raku](https://github.com/knight-lang/raku) | 1.1 | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
@@ -34,7 +35,6 @@ The following is the list of all languages that I've written it in:
 | [Kotlin](https://github.com/knight-lang/kotlin) | 1.0 | X | X | Fully funcitonal, and barring `` ` ``, can be compiled to native. |
 | [PHP](https://github.com/knight-lang/php) | 1.0 | X | X | Fully Functional, with type annotations. |
 | [Python](https://github.com/knight-lang/python) | 1.0 | X | X | Fully Functional, though `setrecursionlimit` is needed to ensure "FizzBuzz in Knight in Python" works. |
-| [Ruby](https://github.com/knight-lang/ruby) | 1.0 | X |   | A hacky version currently exists; a more sophisticated one is being worked on. |
 | [Haskell](https://github.com/knight-lang/haskell) | pre-1.0 |   |  | ish | X | Works for an older spec of Knight, needs to be updated. |
 
 ## Personal Languages
