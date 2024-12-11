@@ -21,7 +21,9 @@ die () {
 
 # Print out the usage
 shortusage () { cat; } <<SHORT_USAGE
-usage: $scriptname [-och] [-n count] [--] args-for-bootstrap ...
+usage: $scriptname [-ocvs] [-n count] [-k path] -e expr [--] [interpreter ...]
+       $scriptname [-ocvs] [-n count] [-k path] -f path [--] [interpreter ...]
+       $scriptname -h
 SHORT_USAGE
 
 usage () { cat; } <<USAGE
@@ -29,10 +31,9 @@ NAME
 	$scriptname - time scripts/bootstrap.sh
 
 SYNOPSIS
-usage: $scriptname [-ocvsh] [-k path] -e expr [--] [interpreter ...]
-       $scriptname [-vh] [-k path] -f path [--] [interpreter ...]
-
-	$scriptname [-ocvsh] [-n count] [-k knight] [--] args-for-bootstrap ...
+	$scriptname [-ocvs] [-n count] [-k path] -e expr [--] [interpreter ...]
+	$scriptname [-ocvs] [-n count] [-k path] -f path [--] [interpreter ...]
+	$scriptname -h ...
 
 DESCRIPTION
 	Wrapper around 'bootstrap.sh' that executes it \`count\` times and
@@ -41,23 +42,25 @@ DESCRIPTION
 	return statuses by it are
 
 OPTIONS
-	-h   Print out this message and exit.
-	-n   Specify the amount of times to iterate. Defaults to 50.
-	-o   Don't surpress the stdout of knight programs.
-	-c   Continue even if a Knight implementation fails.
-	-s   Ensure 'count' successful results happen. Implies '-c'
-	-v   Print out each iteration as it happens.
-	-k
-	-h   print out this message and exit.
-	-v   print the final command and its stdin before executing it
-	-e   the program to execute. Mutually exclusive with '-f'
-	-f   the path to execute. Mutually exclusive with '-e'
-	-k   sets the path to "knight.kn", overwriting the default \$KNIGHT_KN.
+    -h        Print out this message and exit.
+    -n INT    Specify the amount of times to iterate. Defaults to 50.
+    -o        Don't surpress the stdout of knight programs.
+    -c        Continue even if a Knight implementation fails.
+    -s        Ensure 'count' successful results happen. Implies '-c'
+    -v        Print out each iteration as it happens.
+
+the following are the same as bootstrap.kn
+
+    -k PATH   sets the path to "knight.kn", overwriting the default \$KNIGHT_KN.
+    -e VALUE  the knight program itself. Mutually exclusive with '-f'
+    -f PATH   the path to the knight program. Mutually exclusive with '-e'
 
 
 ENVIRONMENT
-	\$SHELL   If set, this script is re-executed with \$SHELL, as its time
-	         mechanism might be different. (e.g. I like zsh's :-P).
+    \$SHELL   If set, this script is re-executed with \$SHELL, as its time
+              mechanism might be different. (e.g. I like zsh's :-P).
+    \$KNIGHT_KN   If set, used as the path to 'knight.kn'. See bootstrap-kn for
+                  more details
 USAGE
 
 quiet=1
@@ -66,7 +69,10 @@ count=50
 verbose=
 require_success=
 
-while getopts ':hovcsn:' flag; do
+# Forwarded to knight-kn
+unset expr file knight_kn
+
+while getopts ':hovcsn:k:e:f:' flag; do
 	case $flag in
 	h) usage; exit ;;
 	o) quiet= ;;
@@ -77,18 +83,39 @@ while getopts ':hovcsn:' flag; do
 		case $OPTARG in
 			*[!0-9]*) die 'count expects an integer'
 		esac
-		count=$OPTARG
-		;;
+		count=$OPTARG ;;
+	k) knight_kn=$OPTARG ;;
+	[ef])
+		if [ -n "${expr+1}" ] || [ -n "${file+1}" ]; then
+			die 'exactly one of -e or -f should be given'
+		fi
+
+		if [ $flag = e ]; then
+			expr=$OPTARG
+		else
+			file=$OPTARG
+		fi ;;
 	:) die 'missing required argument for -%s' "$OPTARG"  ;;
-	?) break ;;
+	?) die 'unknown argument: -%s' "$OPTARG" ;;
 	esac
 done
+
+set -e
 
 ## Delete the parsed arguments
 [ -n "${ZSH_VERSION-}" ] && : $((OPTIND+=1)) # Bug with zsh?
 shift $((OPTIND - 2))
 
-set -e
+# Add in `bootstrap`'s arguments
+set -- ${expr+-e"$expr"} ${file+-f"$file"} ${knight_kn+-k"$knight_kn"} -- "$@"
+
+# Add bootstrap itself in
+enclosing_dir=$(dirname -- "$0" && printf x)
+set -- "${enclosing_dir%?x}/bootstrap-kn" "$@"
+
+################################################################################
+#                             Make the Script Shim                             #
+################################################################################
 
 timescript=$(mktemp)
 
@@ -96,10 +123,9 @@ timescript=$(mktemp)
 cleanup () { rm -f "$timescript"; }
 trap cleanup EXIT
 for signal in HUP INT QUIT TERM; do
-    # shellcheck disable=SC2064
-    trap "cleanup || :; trap - $signal EXIT; kill -s $signal $$" "$signal"
+	# shellcheck disable=SC2064
+	trap "cleanup || :; trap - $signal EXIT; kill -s $signal $$" "$signal"
 done
-
 
 # If the script's quiet, have it redirect its stdout to `/dev/null`
 [ -n "$quiet" ] && echo 'exec >/dev/null' >>$timescript
@@ -107,6 +133,7 @@ done
 # If we're aborting on error, add the `abort` function, and export this script's
 # name for the error message
 if [ -n "$abort" ]; then
+	export __TIMEKN_SCRIPT_NAME="$scriptname"
 	cat <<'SHELL' >>$timescript
 abort () {
 	status=$?
@@ -115,7 +142,6 @@ abort () {
 	exit $status
 }
 SHELL
-	export __TIMEKN_SCRIPT_NAME="$scriptname"
 fi
 
 # Output the meat of the program into the script. Note that we've already done
@@ -129,12 +155,12 @@ do
 done
 SHELL
 
-# Get the path to the bootstrap function
-enclosing_dir=$(dirname -- "$0" && printf x)
-bootstrap=${enclosing_dir%?x}/bootstrap-kn
+################################################################################
+#                             Run the Shim Script                              #
+################################################################################
 
 # Populate the command that `time` will use
-set -- "$timescript" "$bootstrap" "$@"
+set -- "$timescript" "$@"
 
 # If `time` is not a builtin shell construct, ensure `--` is the first arg.
 # (This is needed because in shells like bash or zsh, `time` is a keyword which

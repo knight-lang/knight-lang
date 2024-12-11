@@ -60,8 +60,8 @@ DESCRIPTION
 OPTIONS
 	-h   print out this message and exit.
 	-v   print the final command and its stdin before executing it
-	-e   the program to execute. Mutually exclusive with '-f'
-	-f   the path to execute. Mutually exclusive with '-e'
+	-e   the knight program itself. Mutually exclusive with '-f'
+	-f   the path to the knight program. Mutually exclusive with '-e'
 	-k   sets the path to "knight.kn", overwriting the default \$KNIGHT_KN.
 
 ENVIRONMENT
@@ -88,10 +88,10 @@ while getopts ':hvf:k:e:' flag; do
 	k) knight_kn=$OPTARG ;;
 
 	e)
-		[ -n "${program+1}" ] && die 'only one of -e or -f may be given'
+		[ -n "${program+1}" ] && die 'exactly one of -e or -f should be given'
 		program=$OPTARG ;;
 	f)
-		[ -n "${program+1}" ] && die 'only one of -e or -f may be given'
+		[ -n "${program+1}" ] && die 'exactly one of -e or -f should be given'
 
 		# Ensure we give to Knight the exact program, including
 		# any trailing newlines.
