@@ -23,10 +23,10 @@
 # support `PROMPT`, so we couldn't read to the very end either.)
 ##
 
-[ -n "${KNIGHTLANG_DEBUG_XTRACE-}" ] && set -x
+[ -n "${KNIGHT_XTRACE-}" ] && set -o xtrace
 
 # Safety first!
-set -ufC
+set -uf
 
 # The name of the script: used in `die` and `usage` messages
 readonly scriptname="${0##*/}"
@@ -42,33 +42,36 @@ die () {
 
 # Print out the usage
 shortusage () { cat; } <<SHORT_USAGE
-usage: $scriptname [-h] [-v] [-k path] -e expr [--] [interpreter ...]
-       $scriptname [-h] [-v] [-k path] -f path [--] [interpreter ...]
+usage: $scriptname [-vh] [-k path] -e expr [--] [interpreter ...]
+       $scriptname [-vh] [-k path] -f path [--] [interpreter ...]
 SHORT_USAGE
 longusage () { cat; } <<LONG_USAGE
 NAME
 	$scriptname
 
 SYNOPSIS
-	$scriptname [-h] [-v] [-k path] -e expr [--] [interpreter ...]
-	$scriptname [-h] [-v] [-k path] -f path [--] [interpreter ...]
+	$scriptname [-vh] [-k path] -e expr [--] [interpreter ...]
+	$scriptname [-vh] [-k path] -f path [--] [interpreter ...]
 
 OPTIONS
-	-h   print out help and exit
+	-h   print out this message and exit.
 	-v   print the final command and its stdin before executing it
 	-e   the program to execute. Mutually exclusive with '-f'
 	-f   the path to execute. Mutually exclusive with '-e'
 	-k   sets the path to "knight.kn", overwriting the default \$KNIGHT_KN.
 
 ENVIRONMENT
-	\$KNIGHT            Interpreter to use when 'interpreter' isn't supplied.
-	                   DEFAULT: ./knight
+	\$KNIGHT          Interpreter to use when 'interpreter' isn't supplied.
+	                 DEFAULT: ./knight
 
-	\$KNIGHT_KN         Path to 'knight.kn' when -k is not supplied.
-	                   DEFAULT: \$KNIIGHT_ROOT/examples/knight.kn
+	\$KNIGHT_KN       Path to 'knight.kn' when -k is not supplied.
+	                 DEFAULT: \$KNIIGHT_ROOT/examples/knight.kn
 
-	\$KNIGHT_LANG_ROOT  Root directory for knight. Used to default \$KNIGHT_KN.
-	                   DEFAULT: directory containing this script.
+	\$KNIGHT_ROOTDIR  Root directory for knight. Used to default \$KNIGHT_KN.
+	                 DEFAULT: directory containing this script.
+
+	\$KNIGHT_XTRACE   If nonempty, enables XTRACE at program start. Used for
+	                 debugging knight scripts themselves.
 LONG_USAGE
 
 ################################################################################
@@ -119,20 +122,20 @@ shift $((OPTIND - 1))
 # Find the knight.kn path, which is what's going to happen the vast majority of
 # the time. In that case, it's relative to this program.
 if [ -z "$knight_kn" ]; then
-	if [ -z "${KNIGHTLANG_DIR-}" ]; then
+	if [ -z "${KNIGHT_ROOTDIR-}" ]; then
 		# We gotta do this trick in case the directory ends in a newline
 		# for some bizarre reason.
 		{
-			KNIGHTLANG_DIR=$(dirname -- "$0" && printf x) &&
-			KNIGHTLANG_DIR=$(dirname -- "${KNIGHTLANG_DIR%?x}" && printf x);
+			KNIGHT_ROOTDIR=$(dirname -- "$0" && printf x) &&
+			KNIGHT_ROOTDIR=$(dirname -- "${KNIGHT_ROOTDIR%?x}" && printf x);
 		} || {
 			die 'cannot get enclosing directory of: %s' "$0"
 		}
-		KNIGHTLANG_DIR=${KNIGHTLANG_DIR%?x}
+		KNIGHT_ROOTDIR=${KNIGHT_ROOTDIR%?x}
 	fi
 
 	# Ensure that `knight.kn` actually exists
-	knight_kn=$KNIGHTLANG_DIR/examples/knight.kn
+	knight_kn=$KNIGHT_ROOTDIR/examples/knight.kn
 	if [ ! -f "$knight_kn" ]; then
 		die "the default knight.kn doesn't exist: %s" "$knight_kn"
 	fi
