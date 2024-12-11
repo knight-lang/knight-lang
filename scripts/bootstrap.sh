@@ -40,16 +40,18 @@ die () {
 
 # Print out the usage
 shortusage () { cat; } <<SHORT_USAGE
-usage: $scriptname [-vh] [-k path] -e expr [--] [interpreter ...]
-       $scriptname [-vh] [-k path] -f path [--] [interpreter ...]
+usage: $scriptname [-v] [-k path] -e expr [--] [interpreter ...]
+       $scriptname [-v] [-k path] -f path [--] [interpreter ...]
+       $scriptname -h ...
 SHORT_USAGE
 longusage () { cat; } <<LONG_USAGE
 NAME
-	$scriptname
+	$scriptname - execute examples/knight.kn
 
 SYNOPSIS
-	$scriptname [-vh] [-k path] -e expr [--] [interpreter ...]
-	$scriptname [-vh] [-k path] -f path [--] [interpreter ...]
+	$scriptname [-v] [-k path] -e expr [--] [interpreter ...]
+	$scriptname [-v] [-k path] -f path [--] [interpreter ...]
+	$scriptname -h ...
 
 DESCRIPTION
 	Helper script that allows 'examples/knight.kn' to be executed, as it

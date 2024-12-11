@@ -5,13 +5,6 @@ if [ -z "$__TIMEKN_HAS_BEEN_RUN" ] && [ -n "$SHELL" ]; then
 	__TIMEKN_HAS_BEEN_RUN=1 exec "$SHELL" -- "$0" "$@"
 fi
 
-# Support `KNIGHT_TRACE`, which is used for debugging knight-lang scripts.
-if [ "${KNIGHT_TRACE:=0}" -ne 0 ]; then
-	export KNIGHT_TRACE="$((KNIGHT_TRACE - 1))"
-	_xtrace=1
-	set -x
-fi
-
 # Safety first!
 set -uf
 
@@ -33,10 +26,13 @@ SHORT_USAGE
 
 usage () { cat; } <<USAGE
 NAME
-	$scriptname
+	$scriptname - time scripts/bootstrap.sh
 
 SYNOPSIS
-	$scriptname [-ocCh] [-n count] [--] args-for-bootstrap ...
+usage: $scriptname [-ocvsh] [-k path] -e expr [--] [interpreter ...]
+       $scriptname [-vh] [-k path] -f path [--] [interpreter ...]
+
+	$scriptname [-ocvsh] [-n count] [-k knight] [--] args-for-bootstrap ...
 
 DESCRIPTION
 	Wrapper around 'bootstrap.sh' that executes it \`count\` times and
@@ -50,24 +46,33 @@ OPTIONS
 	-o   Don't surpress the stdout of knight programs.
 	-c   Continue even if a Knight implementation fails.
 	-s   Ensure 'count' successful results happen. Implies '-c'
+	-v   Print out each iteration as it happens.
+	-k
+	-h   print out this message and exit.
+	-v   print the final command and its stdin before executing it
+	-e   the program to execute. Mutually exclusive with '-f'
+	-f   the path to execute. Mutually exclusive with '-e'
+	-k   sets the path to "knight.kn", overwriting the default \$KNIGHT_KN.
+
 
 ENVIRONMENT
 	\$SHELL   If set, this script is re-executed with \$SHELL, as its time
 	         mechanism might be different. (e.g. I like zsh's :-P).
-	\$KNIGHT_TRACE  If set,
 USAGE
 
 quiet=1
 abort=1
 count=50
+verbose=
 require_success=
 
-while getopts ':hocsn:' flag; do
+while getopts ':hovcsn:' flag; do
 	case $flag in
 	h) usage; exit ;;
 	o) quiet= ;;
 	c) abort= ;;
 	s) abort= require_success=1 ;;
+	v) verbose=1 ;;
 	n)
 		case $OPTARG in
 			*[!0-9]*) die 'count expects an integer'
@@ -95,15 +100,6 @@ for signal in HUP INT QUIT TERM; do
     trap "cleanup || :; trap - $signal EXIT; kill -s $signal $$" "$signal"
 done
 
-# If `KNIGHT_TRACE` is enabled, then add it to the shell file.
-[ "${KNIGHT_TRACE}" -ne 0 ] && cat <<'SHELL' >>$timescript
-if [ "${KNIGHT_TRACE:-0}" -ne 0 ]
-then
-	KNIGHT_TRACE="$((KNIGHT_TRACE - 1))"
-	export KNIGHT_TRACE
-	set -x
-fi
-SHELL
 
 # If the script's quiet, have it redirect its stdout to `/dev/null`
 [ -n "$quiet" ] && echo 'exec >/dev/null' >>$timescript
@@ -128,6 +124,7 @@ cat <<SHELL >>$timescript
 i=0
 while [ \$((i+=1)) -le $count ]
 do
+	${verbose:+printf >&2 'starting iteration % 3d/%d\n' \$i $count}
 	"\$@" ${abort:+|| abort \$i} ${require_success:+|| i=\$((i-1))}
 done
 SHELL
@@ -135,8 +132,6 @@ SHELL
 # Get the path to the bootstrap function
 enclosing_dir=$(dirname -- "$0" && printf x)
 bootstrap=${enclosing_dir%?x}/bootstrap.sh
-
-[ -n "${_xtrace-}" ] && cat "$timescript"
 
 # Populate the command that `time` will use
 set -- "$timescript" "$bootstrap" "$@"

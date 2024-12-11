@@ -20,5 +20,5 @@
 	)
 )
 
-; = n 10
+; = n 15
 : OUTPUT CALL fibonacci
