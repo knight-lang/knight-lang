@@ -1,0 +1,71 @@
+.TH man 1 "11 Dec 2024" "1.0" "bootstrap.sh man page"
+.LO 7
+.SH NAME
+.Op Fl -
+bootstrap.sh \- execute "knight in knight"
+.
+.SH SYNOPSIS
+.
+.SY bootstrap.sh
+.RB [ \-v ]
+.RB [ \-k\~\c
+.IR path ]
+.B -e expr
+.RB [ \-\- ]
+.RB [\c
+.IR interpreter .\|.\|.\&]
+.YS
+.
+.SY bootstrap.sh
+.RB [ \-v ]
+.RB [ \-k\~\c
+.IR path ]
+.B -f path
+.RB [ \-\- ]
+.RB [\c
+.IR interpreter .\|.\|.\&]
+.YS
+.
+.SY bootstrap.sh
+.B \-h
+.YS
+
+.SH DESCRIPTION
+Helper script that allows 'examples/knight.kn' to be executed, as it requires a valid Knight implementation to run on top of.
+
+.SH OPTIONS
+The Ruby interpreter accepts the following command-line options (switches).
+They are quite similar to those of
+.It Fl -copyright
+Prints the copyright notice, and quits immediately without running any
+script.
+.Pp
+.It Fl -version
+Prints the version of the Ruby interpreter, and quits immediately without
+running any script.
+.Pp
+.It Fl 0 Ns Op Ar octal
+(The digit
+.Dq zero . )
+Specifies the input record separator
+.Pf ( Li "$/" )
+
+
+OPTIONS
+	-h   print out this message and exit.
+	-v   print the final command and its stdin before executing it
+	-e   the program to execute. Mutually exclusive with '-f'
+	-f   the path to execute. Mutually exclusive with '-e'
+	-k   sets the path to "knight.kn", overwriting the default \$KNIGHT_KN.
+
+nuseradd [USERNAME]
+.SH DESCRIPTION
+nuseradd is high level shell program for adding users to LDAP server.  On Debian, administrators should usually use nuseradd.debian(8) instead.
+.SH OPTIONS
+The nuseradd does not take any options. However, you can supply username.
+.SH SEE ALSO
+useradd(8), passwd(5), nuseradd.debian(8)
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Vivek Gite (vivek@nixcraft.net.in)

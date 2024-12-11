@@ -1,0 +1,30 @@
+.TH man 1 "11 Dec 2024" "1.0" "bootstrap.sh man page"
+.LO 7
+.SH NAME
+timekn.sh \- time how long bootstrap.sh takes
+.SH SYNOPSIS
+.SY timekn.sh
+.RB [ \-h ]
+.RB [ \-ocC ]
+.RB [ \-n\~\c
+.IR count ]
+[args for boostrap .\|.\|.]
+\".RI [ .\|.\|. ]
+.Bnuseradd [USERNAME]
+.SH DESCRIPTION
+nuseradd is high level shell program for adding users to LDAP server.  On Debian, administrators should usually use nuseradd.debian(8) instead.
+.SH OPTIONS
+The nuseradd does not take any options. However, you can supply username.
+.SH SEE ALSO
+useradd(8), passwd(5), nuseradd.debian(8)
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Vivek Gite (vivek@nixcraft.net.in)
+
+\"
+\"	-h   Print out this message and exit.
+\"	-n   Specify the amount of times to iterate. Defaults to 50.
+\"	-o   Don't surpress the stdout of knight programs.
+\"	-c   Continue even if a Knight implementation fails.
+\"	-s   Ensure 'count' successful results happen. Implies '-c'
