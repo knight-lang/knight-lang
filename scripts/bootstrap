@@ -29,47 +29,60 @@
 set -ufC
 
 # The name of the script: used in `die` and `usage` messages
-readonly scriptname=${0##*/}
+readonly scriptname="${0##*/}"
 
 # Print out a message with `$scriptname:` prepended before it, then exit.
 die () {
 	fmt="%s: $1\\n"
 	shift
+	# shellcheck disable=SC2059
 	printf >&2 "$fmt" "$scriptname" "$@"
 	exit 1
 }
 
 # Print out the usage
-usage () { cat; } <<USAGE
-usage: $scriptname [-vh] [-k path] -e expr [--] [interpreter]
-       $scriptname [-vh] [-k path] -f filename [--] [interpreter]
-options:
+shortusage () { cat; } <<SHORT_USAGE
+usage: $scriptname [-h] [-v] [-k path] -e expr [--] [interpreter ...]
+       $scriptname [-h] [-v] [-k path] -f path [--] [interpreter ...]
+SHORT_USAGE
+longusage () { cat; } <<LONG_USAGE
+NAME
+	$scriptname
+
+SYNOPSIS
+	$scriptname [-h] [-v] [-k path] -e expr [--] [interpreter ...]
+	$scriptname [-h] [-v] [-k path] -f path [--] [interpreter ...]
+
+OPTIONS
 	-h   print out help and exit
 	-v   print the final command and its stdin before executing it
 	-e   the program to execute. Mutually exclusive with '-f'
-	-f   the file to execute. Mutually exclusive with '-e'
-	-k   ovewrite the default "knight.kn" location. Most users won't need
-	     this, as it's automatically deduced based on \$KNIGHTLANG_DIR (and
-	     if that's unset, teh directory containing this script.)
-env vars:
-	\$KNIGHT            The default implementation when an interpreter isn't
-	                    supplied. Defaults to ./knight
-	\$KNIGHTLANG_DIR    The root directory for Knight. Defaults to the
-	                    directory containing this file
-USAGE
+	-f   the path to execute. Mutually exclusive with '-e'
+	-k   sets the path to "knight.kn", overwriting the default \$KNIGHT_KN.
+
+ENVIRONMENT
+	\$KNIGHT            Interpreter to use when 'interpreter' isn't supplied.
+	                   DEFAULT: ./knight
+
+	\$KNIGHT_KN         Path to 'knight.kn' when -k is not supplied.
+	                   DEFAULT: \$KNIIGHT_ROOT/examples/knight.kn
+
+	\$KNIGHT_LANG_ROOT  Root directory for knight. Used to default \$KNIGHT_KN.
+	                   DEFAULT: directory containing this script.
+LONG_USAGE
 
 ################################################################################
 #                            Command-line Arguments                            #
 ################################################################################
 
 ## Initial arguments
-knight_kn=
+knight_kn=${KNIGHT_KN:-}
 verbose=
 unset program # `unset` instead of empty string so we can tell if it was set.
 
 while getopts ':hvf:k:e:' flag; do
 	case $flag in
-	h) usage; exit ;;
+	h) longusage; exit ;;
 	v) verbose=1 ;;
 	k) knight_kn=$OPTARG ;;
 
@@ -101,7 +114,7 @@ shift $((OPTIND - 1))
 # Since we don't want to do any manipulations of `program` so that `knight.kn`
 # receives the entire program, we check for whether or not `program` is set, not
 # if it's empty.
-[ -z "${program+1}" ] && die 'exactly one of -e or -f must be given'
+[ -z "${program+1}" ] && { shortusage >&2; exit 1; }
 
 # Find the knight.kn path, which is what's going to happen the vast majority of
 # the time. In that case, it's relative to this program.
@@ -152,9 +165,10 @@ $program
 $unique_string
 " # Has to be on its own line
 
+# TODO: make this posix-compliant
 exec < <(printf %s "$program"; cat 2>&-)
 
-if [ -n $verbose ]; then
+if [ -n "$verbose" ]; then
 	cat <<END >&2
 ==PROGRAM=================
 $program==END OF PROGRAM=================
