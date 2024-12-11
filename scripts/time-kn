@@ -28,18 +28,19 @@ SHORT_USAGE
 
 usage () { cat; } <<USAGE
 NAME
-	$scriptname - time scripts/bootstrap.sh
+    $scriptname - time scripts/bootstrap.sh
 
 SYNOPSIS
-	$scriptname [-ocvs] [-n count] [-k path] -e expr [--] [interpreter ...]
-	$scriptname [-ocvs] [-n count] [-k path] -f path [--] [interpreter ...]
-	$scriptname -h ...
+    $scriptname [-ocvs] [-n count] [-k path] -e expr [--] [interpreter ...]
+    $scriptname [-ocvs] [-n count] [-k path] -[f path] [--] [interpreter ...]
+    $scriptname -h ...
 
 DESCRIPTION
 	Wrapper around 'bootstrap.sh' that executes it \`count\` times and
 	prints the execution duration. Used to time Knight implementations. By
 	default, the output of 'bootstrap.sh' is surpressed, and any non-zero
-	return statuses by it are
+	return statuses by it are. If no arguments are passed, defaults to the
+	fibonacci program.
 
 OPTIONS
     -h        Print out this message and exit.
@@ -106,12 +107,20 @@ set -e
 [ -n "${ZSH_VERSION-}" ] && : $((OPTIND+=1)) # Bug with zsh?
 shift $((OPTIND - 2))
 
+enclosing_dir=$(dirname -- "$0" && printf x)
+enclosing_dir=${enclosing_dir%?x}
+
+# If neither -e nor -f were given, use fibonacci
+if [ -z "${expr+1}" ] && [ -z "${file+2}" ]; then
+	rootdir=$(dirname -- "$enclosing_dir" && printf x)
+	file=${rootdir%?x}/examples/fibonacci.kn
+fi
+
 # Add in `bootstrap`'s arguments
 set -- ${expr+-e"$expr"} ${file+-f"$file"} ${knight_kn+-k"$knight_kn"} -- "$@"
 
 # Add bootstrap itself in
-enclosing_dir=$(dirname -- "$0" && printf x)
-set -- "${enclosing_dir%?x}/bootstrap-kn" "$@"
+set -- "$enclosing_dir/bootstrap-kn" "$@"
 
 ################################################################################
 #                             Make the Script Shim                             #
