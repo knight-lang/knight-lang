@@ -23,8 +23,8 @@
 # support `PROMPT`, so we couldn't read to the very end either.)
 ##
 
-if [ "${KNIGHT_XTRACE:-0}" -ne 0 ]; then
-	export KNIGHT_XTRACE="$((KNIGHT_XTRACE - 1))"
+if [ "${KNIGHT_TRACE:-0}" -ne 0 ]; then
+	export KNIGHT_TRACE="$((KNIGHT_TRACE - 1))"
 	set -x
 fi
 
@@ -68,12 +68,12 @@ ENVIRONMENT
 	                 DEFAULT: ./knight
 
 	\$KNIGHT_KN       Path to 'knight.kn' when -k is not supplied.
-	                 DEFAULT: \$KNIIGHT_ROOT/examples/knight.kn
+	                 DEFAULT: \$KNIIGHT_ROOTDIR/examples/knight.kn
 
 	\$KNIGHT_ROOTDIR  Root directory for knight. Used to default \$KNIGHT_KN.
 	                 DEFAULT: directory containing this script.
 
-	\$KNIGHT_XTRACE   If nonempty, enables XTRACE at program start. Used for
+	\$KNIGHT_TRACE    If nonempty, enables XTRACE at program start. Used for
 	                 debugging knight scripts themselves.
 LONG_USAGE
 
@@ -130,6 +130,7 @@ if [ -z "$knight_kn" ]; then
 		# for some bizarre reason.
 		{
 			KNIGHT_ROOTDIR=$(dirname -- "$0" && printf x) &&
+			KNIGHT_ROOTDIR=$(realpath -- "${KNIGHT_ROOTDIR%?x}" && printf x)
 			KNIGHT_ROOTDIR=$(dirname -- "${KNIGHT_ROOTDIR%?x}" && printf x);
 		} || {
 			die 'cannot get enclosing directory of: %s' "$0"

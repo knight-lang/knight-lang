@@ -1,16 +1,15 @@
 #!/bin/sh
 
-# Support zsh if that's what's wanted
-if [ "$SHELL" = /bin/zsh ] && [ ! $__TIMEKN_HAS_BEEN_RUN ]; then
-	export __TIMEKN_HAS_BEEN_RUN=1
-	exec /bin/zsh -- "$0" "$@"
+# Support the user's preferred shell, which allows for timing mechanisms
+if [ ! "$__TIMEKN_HAS_BEEN_RUN" ] && [ -n "$SHELL" ]; then
+	__TIMEKN_HAS_BEEN_RUN=1 exec "$SHELL" -- "$0" "$@"
 fi
 
-if [ "${KNIGHT_XTRACE:-0}" -ne 0 ]; then
-	export KNIGHT_XTRACE="$((KNIGHT_XTRACE - 1))"
+# Support `KNIGHT_TRACE`, which is used for debugging knight-lang scripts.
+if [ "${KNIGHT_TRACE:=0}" -ne 0 ]; then
+	export KNIGHT_TRACE="$((KNIGHT_TRACE - 1))"
 	set -x
 fi
-
 
 # Safety first!
 set -uf
@@ -27,6 +26,10 @@ die () {
 }
 
 # Print out the usage
+shortusage () { cat; } <<SHORT_USAGE
+usage: $scriptname [-och] [-n count] [--] args-for-bootstrap ...
+SHORT_USAGE
+
 usage () { cat; } <<USAGE
 usage: $scriptname [-och] [-n count] [--] [args for bootstrap]
 options:
@@ -57,48 +60,67 @@ while getopts ':hocn:' flag; do
 done
 
 ## Delete the parsed arguments
-shift $((OPTIND - 1))
+[ -n "${ZSH_VERSION-}" ] && : $((OPTIND+=1)) # Bug with zsh?
+shift $((OPTIND - 2))
 
-[ $quiet ] && quiet='exec >/dev/null'
-[ $abort ] && abort='|| {
-	status=$?
-	printf >&2 '\''%s: execution #%d failed with status %d\n'\'' \
-		"$__TIMEKN_SCRIPT_NAME" $i $status
-	exit $?
-}'
+set -e
 
-timescript=$(mktemp) || die 'unable to create temporary file to time'
+timescript=$(mktemp)
 trap 'rm -f "$timescript"' EXIT INT
+chmod u+x "$timescript"
 
-chmod u+x "$timescript"  || die 'unable to make temporary file executable: %s' "$timescript"
-cat <<SHELL >$timescript || die 'unable to write to temporary file: %s' "$timescript"
-#!/bin/sh
-if [ "\${KNIGHT_XTRACE:-0}" -ne 0 ]
+# If `KNIGHT_TRACE` is enabled, then add it to the shell file.
+[ "${KNIGHT_TRACE}" -ne 0 ] && cat <<'SHELL' >>$timescript
+if [ "${KNIGHT_TRACE:-0}" -ne 0 ]
 then
-	KNIGHT_XTRACE="\$((KNIGHT_XTRACE - 1))"
-	export KNIGHT_XTRACE
+	KNIGHT_TRACE="$((KNIGHT_TRACE - 1))"
+	export KNIGHT_TRACE
 	set -x
 fi
+SHELL
 
-$quiet
+# If the script's quiet, have it redirect its stdout to `/dev/null`
+[ -n "$quiet" ] && echo 'exec >/dev/null' >>$timescript
 
+# If we're aborting on error, add the `abort` function, and export this script's
+# name for the error message
+if [ -n "$abort" ]; then
+	cat <<'SHELL' >>$timescript
+abort () {
+	status=$?
+	printf >&2 '%s: execution #%d failed with status %d\n' \
+		"$__TIMEKN_SCRIPT_NAME" $1 $status
+	exit $status
+}
+SHELL
+	export __TIMEKN_SCRIPT_NAME="$scriptname"
+fi
+
+# Output the meat of the program into the script. Note that we've already done
+# validation for `count` when it was assigned, so no need to quote it.
+cat <<SHELL >>$timescript
 i=0
 while [ \$((i+=1)) -le $count ]
 do
-	"\$__TIMEKN_BOOTSTRAP" "\$@" $abort
+	"\$@" ${abort:+|| abort \$i}
 done
 SHELL
 
+# Get the path to the bootstrap function
+if [ -n "${KNIGHT_ROOTDIR-}" ]; then
+	bootstrap=$KNIGHT_ROOTDIR/scripts/bootstrap
+else
+	enclosing_dir=$(dirname -- "$0" && printf x)
+	bootstrap=${enclosing_dir%?x}/bootstrap
+fi
 
-export KNIGHT_LANG_ROOT="$(dirname -- "$0")"
-export KNIGHT_LANG_ROOT="$(dirname -- "$KNIGHT_LANG_ROOT")"
+# Populate the command that `time` will use
+set -- "$timescript" "$bootstrap" "$@"
 
-export __TIMEKN_SCRIPT_NAME="$scriptname"
-export __TIMEKN_BOOTSTRAP="$KNIGHT_LANG_ROOT/scripts/bootstrap"
-
-echo "$__TIMEKN_BOOTSTRAP"
-set -- "$timescript" "$@"
-# If `time` is not a builtin shell construct, ensure `--` is passed.
+# If `time` is not a builtin shell construct, ensure `--` is the first arg.
+# (This is needed because in shells like bash or zsh, `time` is a keyword which
+# doesn't support leading `--`s, whereas in dash `time` is the POSIX-required
+# `time` program)
 [ "$(command -v time)" != time ] && set -- -- "$@"
 
-time "$timescript" "$@"
+time /bin/sh "$@"
