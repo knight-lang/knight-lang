@@ -23,7 +23,10 @@
 # support `PROMPT`, so we couldn't read to the very end either.)
 ##
 
-[ -n "${KNIGHT_XTRACE-}" ] && set -o xtrace
+if [ "${KNIGHT_XTRACE:-0}" -ne 0 ]; then
+	export KNIGHT_XTRACE="$((KNIGHT_XTRACE - 1))"
+	set -x
+fi
 
 # Safety first!
 set -uf

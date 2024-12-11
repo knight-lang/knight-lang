@@ -6,11 +6,17 @@ if [ "$SHELL" = /bin/zsh ] && [ ! $__TIMEKN_HAS_BEEN_RUN ]; then
 	exec /bin/zsh -- "$0" "$@"
 fi
 
+if [ "${KNIGHT_XTRACE:-0}" -ne 0 ]; then
+	export KNIGHT_XTRACE="$((KNIGHT_XTRACE - 1))"
+	set -x
+fi
+
+
 # Safety first!
-set -ufC
+set -uf
 
 # The name of the script: used in `die` and `usage` messages
-readonly scriptname=${0##*/}
+readonly scriptname="${0##*/}"
 
 # Print out a message with `$scriptname:` prepended before it, then exit.
 die () {
@@ -22,74 +28,77 @@ die () {
 
 # Print out the usage
 usage () { cat; } <<USAGE
-usage: $scriptname [-ocvh] [-k path] [-n count] -e expr [--] [interpreter ...]
-       $scriptname [-ocvh] [-k path] [-n count] [-f file] [--] [interpreter ...]
+usage: $scriptname [-och] [-n count] [--] [args for bootstrap]
 options:
 	-h   print out help and exit
 	-n   the amount of times to iterate; defaults to 50
 	-o   if supplied, stdout of the program isn't surpressed
 	-c   if supplied, continues even if a program exits.
-	-v   print the final command and its stdin before executing it
-	-e   the program to execute. Mutually exclusive with '-f'
-	-f   the path to execute. Mutually exclusive with '-e'. default: KN_
-	-k   sets the path to "knight.kn", overwriting the default \$KNIGHT_KN.
-	     if that's unset, teh directory containing this script.)
 USAGE
 
 quiet=1
 abort=1
 count=50
-verbose=
-file= expr=
 
-while getopts ':hvf:k:e:' flag; do
+while getopts ':hocn:' flag; do
 	case $flag in
 	h) usage; exit ;;
 	o) quiet= ;;
 	c) abort= ;;
 	n)
-		case $OPTARG in (*[!0-9]*) die 'count expects an integer' ;esac
-		count=$OPTARG ;;
-	v) verbose=1 ;;
-	k)
-		export KNIGHT_KN=$OPTARG ;;
-
-	e) expr=$OPTARG ;;
-	f) file=$OPTARG ;;
-	:)  die 'missing required argument for -%s' "$OPTARG"  ;;
-	\?) die 'unknown option: -%s' "$OPTARG" ;;
-
-	?) exit 1
+		case $OPTARG in
+			*[!0-9]*) die 'count expects an integer'
+		esac
+		count=$OPTARG
+		;;
+	:) die 'missing required argument for -%s' "$OPTARG"  ;;
+	?) break ;;
 	esac
 done
 
+## Delete the parsed arguments
 shift $((OPTIND - 1))
 
-# exec 1>&3
-[ $quiet ] && quiet='>/dev/null'
-[ $abort ] && abort='|| { s=$?; echo >&2 "execution #$i failed with status $s"; exit $s; }'
+[ $quiet ] && quiet='exec >/dev/null'
+[ $abort ] && abort='|| {
+	status=$?
+	printf >&2 '\''%s: execution #%d failed with status %d\n'\'' \
+		"$__TIMEKN_SCRIPT_NAME" $i $status
+	exit $?
+}'
 
 timescript=$(mktemp) || die 'unable to create temporary file to time'
-trap 'rm -f "$timescript"' EXIT # TODO: other traps
-trap '{ rm -f "$timescript"; exit 0; }' INT  # TODO: other traps
+trap 'rm -f "$timescript"' EXIT INT
 
-chmod u+x "$timescript"   || die 'unable to make temporary file (%s) executable' "$timescript"
-cat <<SHELL >|$timescript || die 'unable to write to temporary file (%s)' "$timescript"
+chmod u+x "$timescript"  || die 'unable to make temporary file executable: %s' "$timescript"
+cat <<SHELL >$timescript || die 'unable to write to temporary file: %s' "$timescript"
 #!/bin/sh
-[ -n "\${KNIGHTLANG_DEBUG_XTRACE-}" ] && set -x
-i=1
-while [ \$i -le "$count" ]; do
-	\$KNIGHT_LANG_ROOT/bootstrap ${verbose:+-v} "\$@" $quiet $abort
-	i=\$((i + 1))
+if [ "\${KNIGHT_XTRACE:-0}" -ne 0 ]
+then
+	KNIGHT_XTRACE="\$((KNIGHT_XTRACE - 1))"
+	export KNIGHT_XTRACE
+	set -x
+fi
+
+$quiet
+
+i=0
+while [ \$((i+=1)) -le $count ]
+do
+	"\$__TIMEKN_BOOTSTRAP" "\$@" $abort
 done
 SHELL
 
+
 export KNIGHT_LANG_ROOT="$(dirname -- "$0")"
+export KNIGHT_LANG_ROOT="$(dirname -- "$KNIGHT_LANG_ROOT")"
 
-set -- -- "$@"
+export __TIMEKN_SCRIPT_NAME="$scriptname"
+export __TIMEKN_BOOTSTRAP="$KNIGHT_LANG_ROOT/scripts/bootstrap"
 
-[ $expr ] && set -- -e "$expr" "$@"
-[ $file ] && set -- -f "$file" "$@"
+echo "$__TIMEKN_BOOTSTRAP"
+set -- "$timescript" "$@"
+# If `time` is not a builtin shell construct, ensure `--` is passed.
+[ "$(command -v time)" != time ] && set -- -- "$@"
 
-[ "$(command -v time)" != time ] && set -- -- "$@" # ie not a standard shell construct
 time "$timescript" "$@"
