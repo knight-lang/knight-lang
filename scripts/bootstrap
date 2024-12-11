@@ -87,10 +87,10 @@ while getopts ':hvf:k:e:' flag; do
 	k) knight_kn=$OPTARG ;;
 
 	e)
-		[ -n "${program+1}" ] && die 'exactly one of -e or -f must be given'
+		[ -n "${program+1}" ] && die 'only one of -e or -f may be given'
 		program=$OPTARG ;;
 	f)
-		[ -n "${program+1}" ] && die 'exactly one of -e or -f must be given'
+		[ -n "${program+1}" ] && die 'only one of -e or -f may be given'
 
 		# Ensure we give to Knight the exact program, including
 		# any trailing newlines.

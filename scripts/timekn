@@ -16,26 +16,33 @@ readonly scriptname=${0##*/}
 die () {
 	fmt="%s: $1\\n"
 	shift
-	printf "$fmt" "$scriptname" "$@"
+	printf >&2 "$fmt" "$scriptname" "$@"
 	exit 1
 }
 
-# `sh` compliant, except it needs `time` as a builtin
-[ "$(command -v time)" = time ] || die 'cannot time, as `time` is not a builtin'
-
 # Print out the usage
 usage () { cat; } <<USAGE
-usage: $scriptname [-n count] [-o] [-c] [...]
-	-n    the amount of times to iterate; defaults to 50
-	-o    if supplied, stdout of the program isn't surpressed
-	-c    if supplied, continues even if a program exits.
+usage: $scriptname [-ocvh] [-k path] [-n count] -e expr [--] [interpreter ...]
+       $scriptname [-ocvh] [-k path] [-n count] [-f file] [--] [interpreter ...]
+options:
+	-h   print out help and exit
+	-n   the amount of times to iterate; defaults to 50
+	-o   if supplied, stdout of the program isn't surpressed
+	-c   if supplied, continues even if a program exits.
+	-v   print the final command and its stdin before executing it
+	-e   the program to execute. Mutually exclusive with '-f'
+	-f   the path to execute. Mutually exclusive with '-e'. default: KN_
+	-k   sets the path to "knight.kn", overwriting the default \$KNIGHT_KN.
+	     if that's unset, teh directory containing this script.)
 USAGE
 
 quiet=1
 abort=1
 count=50
+verbose=
+file= expr=
 
-while getopts 'hocn:' flag; do
+while getopts ':hvf:k:e:' flag; do
 	case $flag in
 	h) usage; exit ;;
 	o) quiet= ;;
@@ -43,6 +50,15 @@ while getopts 'hocn:' flag; do
 	n)
 		case $OPTARG in (*[!0-9]*) die 'count expects an integer' ;esac
 		count=$OPTARG ;;
+	v) verbose=1 ;;
+	k)
+		export KNIGHT_KN=$OPTARG ;;
+
+	e) expr=$OPTARG ;;
+	f) file=$OPTARG ;;
+	:)  die 'missing required argument for -%s' "$OPTARG"  ;;
+	\?) die 'unknown option: -%s' "$OPTARG" ;;
+
 	?) exit 1
 	esac
 done
@@ -53,22 +69,27 @@ shift $((OPTIND - 1))
 [ $quiet ] && quiet='>/dev/null'
 [ $abort ] && abort='|| { s=$?; echo >&2 "execution #$i failed with status $s"; exit $s; }'
 
-file=$(mktemp) || die 'unable to create temporary file to time'
-trap 'rm -f "$file"' EXIT # TODO: other traps
-trap '{ rm -f "$file"; exit 0; }' INT  # TODO: other traps
+timescript=$(mktemp) || die 'unable to create temporary file to time'
+trap 'rm -f "$timescript"' EXIT # TODO: other traps
+trap '{ rm -f "$timescript"; exit 0; }' INT  # TODO: other traps
 
-chmod u+x "$file"   || die 'unable to make temporary file (%s) executable' "$file"
-cat <<SHELL >|$file || die 'unable to write to temporary file (%s)' "$file"
+chmod u+x "$timescript"   || die 'unable to make temporary file (%s) executable' "$timescript"
+cat <<SHELL >|$timescript || die 'unable to write to temporary file (%s)' "$timescript"
 #!/bin/sh
+[ -n "\${KNIGHTLANG_DEBUG_XTRACE-}" ] && set -x
 i=1
 while [ \$i -le "$count" ]; do
-	\$KNIGHT_DIR/bootstrap "\$@" $quiet $abort
+	\$KNIGHT_LANG_ROOT/bootstrap ${verbose:+-v} "\$@" $quiet $abort
 	i=\$((i + 1))
 done
 SHELL
 
-export KNIGHT_DIR="$(dirname -- "$0")"
-cat $file
-set -- "$file" "$@"
+export KNIGHT_LANG_ROOT="$(dirname -- "$0")"
+
+set -- -- "$@"
+
+[ $expr ] && set -- -e "$expr" "$@"
+[ $file ] && set -- -f "$file" "$@"
+
 [ "$(command -v time)" != time ] && set -- -- "$@" # ie not a standard shell construct
-time "$@"
+time "$timescript" "$@"
