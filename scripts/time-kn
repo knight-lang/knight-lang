@@ -131,7 +131,7 @@ SHELL
 
 # Get the path to the bootstrap function
 enclosing_dir=$(dirname -- "$0" && printf x)
-bootstrap=${enclosing_dir%?x}/bootstrap.sh
+bootstrap=${enclosing_dir%?x}/bootstrap-kn
 
 # Populate the command that `time` will use
 set -- "$timescript" "$bootstrap" "$@"
