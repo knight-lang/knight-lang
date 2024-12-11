@@ -1,0 +1,74 @@
+#!/bin/sh
+
+# Support zsh if that's what's wanted
+if [ "$SHELL" = /bin/zsh ] && [ ! $__TIMEKN_HAS_BEEN_RUN ]; then
+	export __TIMEKN_HAS_BEEN_RUN=1
+	exec /bin/zsh -- "$0" "$@"
+fi
+
+# Safety first!
+set -ufC
+
+# The name of the script: used in `die` and `usage` messages
+readonly scriptname=${0##*/}
+
+# Print out a message with `$scriptname:` prepended before it, then exit.
+die () {
+	fmt="%s: $1\\n"
+	shift
+	printf "$fmt" "$scriptname" "$@"
+	exit 1
+}
+
+# `sh` compliant, except it needs `time` as a builtin
+[ "$(command -v time)" = time ] || die 'cannot time, as `time` is not a builtin'
+
+# Print out the usage
+usage () { cat; } <<USAGE
+usage: $scriptname [-n count] [-o] [-c] [...]
+	-n    the amount of times to iterate; defaults to 50
+	-o    if supplied, stdout of the program isn't surpressed
+	-c    if supplied, continues even if a program exits.
+USAGE
+
+quiet=1
+abort=1
+count=50
+
+while getopts 'hocn:' flag; do
+	case $flag in
+	h) usage; exit ;;
+	o) quiet= ;;
+	c) abort= ;;
+	n)
+		case $OPTARG in (*[!0-9]*) die 'count expects an integer' ;esac
+		count=$OPTARG ;;
+	?) exit 1
+	esac
+done
+
+shift $((OPTIND - 1))
+
+# exec 1>&3
+[ $quiet ] && quiet='>/dev/null'
+[ $abort ] && abort='|| { s=$?; echo >&2 "execution #$i failed with status $s"; exit $s; }'
+
+file=$(mktemp) || die 'unable to create temporary file to time'
+trap 'rm -f "$file"' EXIT # TODO: other traps
+trap '{ rm -f "$file"; exit 0; }' INT  # TODO: other traps
+
+chmod u+x "$file"   || die 'unable to make temporary file (%s) executable' "$file"
+cat <<SHELL >|$file || die 'unable to write to temporary file (%s)' "$file"
+#!/bin/sh
+i=1
+while [ \$i -le "$count" ]; do
+	\$KNIGHT_DIR/bootstrap "\$@" $quiet $abort
+	i=\$((i + 1))
+done
+SHELL
+
+export KNIGHT_DIR="$(dirname -- "$0")"
+cat $file
+set -- "$file" "$@"
+[ "$(command -v time)" != time ] && set -- -- "$@" # ie not a standard shell construct
+time "$@"

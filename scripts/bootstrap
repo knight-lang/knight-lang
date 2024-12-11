@@ -23,37 +23,39 @@
 # support `PROMPT`, so we couldn't read to the very end either.)
 ##
 
+[ -n "${KNIGHTLANG_DEBUG_XTRACE-}" ] && set -x
+
 # Safety first!
 set -ufC
 
 # The name of the script: used in `die` and `usage` messages
 readonly scriptname=${0##*/}
 
-# Used later on
-readonly newline='
-'
-
 # Print out a message with `$scriptname:` prepended before it, then exit.
 die () {
 	fmt="%s: $1\\n"
 	shift
-	printf "$fmt" "$scriptname" "$@"
+	printf >&2 "$fmt" "$scriptname" "$@"
 	exit 1
 }
 
 # Print out the usage
 usage () { cat; } <<USAGE
-usage: $scriptname [-i interpreter] [-k knight.kn] (-e expr | -f filename)
+usage: $scriptname [-vh] [-k path] -e expr [--] [interpreter]
+       $scriptname [-vh] [-k path] -f filename [--] [interpreter]
 options:
-	-h   prints out help and exits.
-	-i   Specify the interpret to use. If omitted, "\$KNIGHT" is
-	     used. If that's unset or empty, defaults to "./knight".
-	-k   Specify where "knight.kn" can be found. Most users won't need this,
-	     as the script usually deduces based on where bootstrap's located.
-	-g   enable globbing for the interpreter.
-	-e   (required by the Knight spec) The program to execute.
-	-f   (required by the Knight spec) Same as '-e "\$(cat \$filename)"'
-	-v   print out the command before it's executed.
+	-h   print out help and exit
+	-v   print the final command and its stdin before executing it
+	-e   the program to execute. Mutually exclusive with '-f'
+	-f   the file to execute. Mutually exclusive with '-e'
+	-k   ovewrite the default "knight.kn" location. Most users won't need
+	     this, as it's automatically deduced based on \$KNIGHTLANG_DIR (and
+	     if that's unset, teh directory containing this script.)
+env vars:
+	\$KNIGHT            The default implementation when an interpreter isn't
+	                    supplied. Defaults to ./knight
+	\$KNIGHTLANG_DIR    The root directory for Knight. Defaults to the
+	                    directory containing this file
 USAGE
 
 ################################################################################
@@ -61,28 +63,36 @@ USAGE
 ################################################################################
 
 ## Initial arguments
-interpreter=${KNIGHT:-./knight}
 knight_kn=
-glob=
 verbose=
 unset program # `unset` instead of empty string so we can tell if it was set.
 
-while getopts 'hgvi:f:k:e:' flag; do
+while getopts ':hvf:k:e:' flag; do
 	case $flag in
-	v) verbose=1 ;;
-	g) glob=1 ;;
 	h) usage; exit ;;
-	i) interpreter=$OPTARG ;;
+	v) verbose=1 ;;
 	k) knight_kn=$OPTARG ;;
-	e) program=$OPTARG ;;
+
+	e)
+		[ -n "${program+1}" ] && die 'exactly one of -e or -f must be given'
+		program=$OPTARG ;;
 	f)
-		program=$(cat -- "$OPTARG" && printf x) || \
-			die "cannot read file: %s" "$OPTARG"
+		[ -n "${program+1}" ] && die 'exactly one of -e or -f must be given'
+
 		# Ensure we give to Knight the exact program, including
 		# any trailing newlines.
+		program=$(cat -- "$OPTARG" && printf x) || \
+			die "cannot read file: %s" "$OPTARG"
 		program=${program%?x} ;;
+	:)  die 'missing required argument for -%s' "$OPTARG"  ;;
+	\?) die 'unknown option: -%s' "$OPTARG" ;;
 	esac
 done
+
+shift $((OPTIND - 1))
+
+# Default interpreter
+[ $# -eq 0 ] && set -- "${KNIGHT:-./knight}"
 
 ################################################################################
 #                              Validate Arguments                              #
@@ -91,23 +101,25 @@ done
 # Since we don't want to do any manipulations of `program` so that `knight.kn`
 # receives the entire program, we check for whether or not `program` is set, not
 # if it's empty.
-[ -z "${program+1}" ] && die 'one of -e or -f must be given'
-
-# Default the interpreter if it's not already found.
-[ -z "$interpreter" ] && interpreter=${KNIGHT:-./knight}
+[ -z "${program+1}" ] && die 'exactly one of -e or -f must be given'
 
 # Find the knight.kn path, which is what's going to happen the vast majority of
 # the time. In that case, it's relative to this program.
 if [ -z "$knight_kn" ]; then
-	# We gotta do this trick in case the directory ends in a newline for
-	# some bizarre reason.
-	knight_root_dir=$(dirname -- "$0" && printf x) || {
-		die 'cannot get enclosing directory of: %s' "$0"
-	}
-	knight_root_dir=${knight_root_dir%?x}
+	if [ -z "${KNIGHTLANG_DIR-}" ]; then
+		# We gotta do this trick in case the directory ends in a newline
+		# for some bizarre reason.
+		{
+			KNIGHTLANG_DIR=$(dirname -- "$0" && printf x) &&
+			KNIGHTLANG_DIR=$(dirname -- "${KNIGHTLANG_DIR%?x}" && printf x);
+		} || {
+			die 'cannot get enclosing directory of: %s' "$0"
+		}
+		KNIGHTLANG_DIR=${KNIGHTLANG_DIR%?x}
+	fi
 
 	# Ensure that `knight.kn` actually exists
-	knight_kn=$knight_root_dir/examples/knight.kn
+	knight_kn=$KNIGHTLANG_DIR/examples/knight.kn
 	if [ ! -f "$knight_kn" ]; then
 		die "the default knight.kn doesn't exist: %s" "$knight_kn"
 	fi
@@ -121,15 +133,13 @@ fi
 # ns themselves, this finds a unique string that can be used as the "heredoc"
 # and is guaranteed not to already exist in the code.
 iter=0
+newline='
+'
 while
 	# Use an `X` at the start to make it less likely that we'll get a match,
 	# as `examples/knight.kn` doesn't used `X`.
 	unique_string=X_END_OF_KNIGHT_PROGRAM_$iter
-
-	case $program in
-	*"${newline}${unique_string}${newline}"*) true ;;
-	*) false
-	esac
+	! case $program in *"$newline$unique_string$newline"*) false; esac
 do
 	iter=$((iter + 1))
 done
@@ -137,18 +147,21 @@ done
 ################################################################################
 #                             Execute the Program                              #
 ################################################################################
-exec < <(cat <<PROGRAM; cat 2>&-
-$unique_string
+program="$unique_string
 $program
 $unique_string
-PROGRAM
-)
+" # Has to be on its own line
 
-PS4= # so `set -x` doesn't print out the leading `+`
-if [ -z "$glob" ]; then
-	[ $verbose ] && set -x
-	"$interpreter" -f "$knight_kn"
-else
-	[ $verbose ] && set -x
-	$interpreter -f "$knight_kn"
+exec < <(printf %s "$program"; cat 2>&-)
+
+if [ -n $verbose ]; then
+	cat <<END >&2
+==PROGRAM=================
+$program==END OF PROGRAM=================
+
+END
+	PS4= # so `set -x` doesn't print out the leading `+`
+	set -x
 fi
+
+"$@" -f "$knight_kn"
