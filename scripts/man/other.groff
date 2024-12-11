@@ -1,0 +1,58 @@
+.\"Ruby is copyrighted by Yukihiro Matsumoto <matz@netlab.jp>.
+.TH man 1 "11 Dec 2024" "1.0" "bootstrap.sh man page"
+.Os UNIX
+.\".Sh NAME
+.\".Nm ruby
+.\".Nd Interpreted object-oriented scripting language
+.Sh SYNOPSIS
+.Nm
+.Op Fl -copyright
+.Op Fl -version
+.Op Fl SUacdlnpswvy
+.Op Fl 0 Ns Op Ar octal
+.Op Fl C Ar directory
+.Op Fl E Ar external Ns Op : Ns Ar internal
+.Op Fl F Ns Op Ar pattern
+.Op Fl I Ar directory
+.Op Fl K Ns Op Ar c
+.Op Fl T Ns Op Ar level
+.Op Fl W Ns Op Ar level
+.Op Fl e Ar command
+.Op Fl i Ns Op Ar extension
+.Op Fl r Ar library
+.Op Fl x Ns Op Ar directory
+.Op Fl - Ns Bro Cm enable Ns | Ns Cm disable Brc Ns - Ns Ar FEATURE
+.Op Fl -dump Ns = Ns Ar target
+.Op Fl -verbose
+.Op Fl -
+.Op Ar program_file
+.Op Ar argument ...
+.Sh DESCRIPTION
+yas
+.El
+.Pp
+
+.Sh OPTIONS
+The Ruby interpreter accepts the following command-line options (switches).
+They are quite similar to those of
+.Xr perl 1 .
+.Bl -tag -width "1234567890123" -compact
+.Pp
+.It Fl -copyright
+Prints the copyright notice, and quits immediately without running any
+script.
+.Pp
+.It Fl -version
+Prints the version of the Ruby interpreter, and quits immediately without
+running any script.
+.Pp
+.It Fl 0 Ns Op Ar octal
+(The digit
+.Dq zero . )
+Specifies the input record separator
+.Pf ( Li "$/" )
+as an octal number. If no digit is given, the null character is taken
+as the separator.  Other switches may follow the digits.
+.Fl 00
+turns Ruby into paragraph mode.
+.Fl 0777

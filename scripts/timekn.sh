@@ -50,6 +50,11 @@ OPTIONS
 	-o   Don't surpress the stdout of knight programs.
 	-c   Continue even if a Knight implementation fails.
 	-s   Ensure 'count' successful results happen. Implies '-c'
+
+ENVIRONMENT
+	\$SHELL   If set, this script is re-executed with \$SHELL, as its time
+	         mechanism might be different. (e.g. I like zsh's :-P).
+	\$KNIGHT_TRACE  If set,
 USAGE
 
 quiet=1
@@ -90,8 +95,6 @@ for signal in HUP INT QUIT TERM; do
     trap "cleanup || :; trap - $signal EXIT; kill -s $signal $$" "$signal"
 done
 
-chmod u+x "$timescript"
-
 # If `KNIGHT_TRACE` is enabled, then add it to the shell file.
 [ "${KNIGHT_TRACE}" -ne 0 ] && cat <<'SHELL' >>$timescript
 if [ "${KNIGHT_TRACE:-0}" -ne 0 ]
@@ -121,7 +124,6 @@ fi
 
 # Output the meat of the program into the script. Note that we've already done
 # validation for `count` when it was assigned, so no need to quote it.
-[ -n "$require_success" ] &&
 cat <<SHELL >>$timescript
 i=0
 while [ \$((i+=1)) -le $count ]
@@ -131,12 +133,8 @@ done
 SHELL
 
 # Get the path to the bootstrap function
-if [ -n "${KNIGHT_ROOTDIR-}" ]; then
-	bootstrap=$KNIGHT_ROOTDIR/scripts/bootstrap.sh
-else
-	enclosing_dir=$(dirname -- "$0" && printf x)
-	bootstrap=${enclosing_dir%?x}/bootstrap.sh
-fi
+enclosing_dir=$(dirname -- "$0" && printf x)
+bootstrap=${enclosing_dir%?x}/bootstrap.sh
 
 [ -n "${_xtrace-}" ] && cat "$timescript"
 
@@ -151,4 +149,4 @@ set -- "$timescript" "$bootstrap" "$@"
 
 # Use `/bin/sh` instead of $SHELL to ensure we're executing the POSIX-compliant
 # timescript program with a POSIX-compliant shell.
-time -p /bin/sh "$@"
+time /bin/sh "$@"

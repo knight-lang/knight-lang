@@ -23,11 +23,6 @@
 # support `PROMPT`, so we couldn't read to the very end either.)
 ##
 
-if [ "${KNIGHT_TRACE:-0}" -ne 0 ]; then
-	export KNIGHT_TRACE="$((KNIGHT_TRACE - 1))"
-	set -x
-fi
-
 # Safety first!
 set -uf
 
@@ -72,13 +67,7 @@ ENVIRONMENT
 	                 DEFAULT: ./knight
 
 	\$KNIGHT_KN       Path to 'knight.kn' when -k is not supplied.
-	                 DEFAULT: \$KNIIGHT_ROOTDIR/examples/knight.kn
-
-	\$KNIGHT_ROOTDIR  Root directory for knight. Used to default \$KNIGHT_KN.
-	                 DEFAULT: directory containing this script.
-
-	\$KNIGHT_TRACE    If nonempty, enables XTRACE at program start. Used for
-	                 debugging knight scripts themselves.
+	                 DEFAULT: <parent of dir of script>/examples/knight.kn
 LONG_USAGE
 
 ################################################################################
@@ -129,25 +118,18 @@ shift $((OPTIND - 1))
 # Find the knight.kn path, which is what's going to happen the vast majority of
 # the time. In that case, it's relative to this program.
 if [ -z "$knight_kn" ]; then
-	if [ -z "${KNIGHT_ROOTDIR-}" ]; then
-		# We gotta do this trick in case the directory ends in a newline
-		# for some bizarre reason.
-		{
-			KNIGHT_ROOTDIR=$(dirname -- "$0" && printf x) &&
-			KNIGHT_ROOTDIR=$(realpath -- "${KNIGHT_ROOTDIR%?x}" && printf x)
-			KNIGHT_ROOTDIR=$(dirname -- "${KNIGHT_ROOTDIR%?x}" && printf x);
-		} || {
-			die 'cannot get enclosing directory of: %s' "$0"
-		}
-		KNIGHT_ROOTDIR=${KNIGHT_ROOTDIR%?x}
-	fi
+	# We gotta do this trick in case the directory ends in a newline
+	# for some bizarre reason.
+	kn_rootdir=$(realpath -- "${0%?x}" && printf x) && \
+		kn_rootdir=$(dirname -- "${kn_rootdir?%x}" && printf x) && \
+		kn_rootdir=$(dirname -- "${kn_rootdir%?x}" && printf x) || \
+			die 'cannot get enclosing directory of %s' "$0"
 
-	# Ensure that `knight.kn` actually exists
-	knight_kn=$KNIGHT_ROOTDIR/examples/knight.kn
-	if [ ! -f "$knight_kn" ]; then
-		die "the default knight.kn doesn't exist: %s" "$knight_kn"
-	fi
+	knight_kn=${kn_rootdir%?x}/examples/knight.kn
 fi
+
+# Ensure that `knight.kn` actually exists
+[ ! -f "$knight_kn" ] && die "knight.kn doesn't exist: %s" "$knight_kn"
 
 ################################################################################
 #                            Find Unique EOF Marker                            #
