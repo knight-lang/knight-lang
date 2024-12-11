@@ -56,6 +56,10 @@ SYNOPSIS
 	$scriptname [-vh] [-k path] -e expr [--] [interpreter ...]
 	$scriptname [-vh] [-k path] -f path [--] [interpreter ...]
 
+DESCRIPTION
+	Helper script that allows 'examples/knight.kn' to be executed, as it
+	requires a valid Knight implementation to run on top of.
+
 OPTIONS
 	-h   print out this message and exit.
 	-v   print the final command and its stdin before executing it

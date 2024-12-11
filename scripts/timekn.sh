@@ -1,13 +1,14 @@
 #!/bin/sh
 
 # Support the user's preferred shell, which allows for timing mechanisms
-if [ ! "$__TIMEKN_HAS_BEEN_RUN" ] && [ -n "$SHELL" ]; then
+if [ -z "$__TIMEKN_HAS_BEEN_RUN" ] && [ -n "$SHELL" ]; then
 	__TIMEKN_HAS_BEEN_RUN=1 exec "$SHELL" -- "$0" "$@"
 fi
 
 # Support `KNIGHT_TRACE`, which is used for debugging knight-lang scripts.
 if [ "${KNIGHT_TRACE:=0}" -ne 0 ]; then
 	export KNIGHT_TRACE="$((KNIGHT_TRACE - 1))"
+	_xtrace=1
 	set -x
 fi
 
@@ -31,23 +32,37 @@ usage: $scriptname [-och] [-n count] [--] args-for-bootstrap ...
 SHORT_USAGE
 
 usage () { cat; } <<USAGE
-usage: $scriptname [-och] [-n count] [--] [args for bootstrap]
-options:
-	-h   print out help and exit
-	-n   the amount of times to iterate; defaults to 50
-	-o   if supplied, stdout of the program isn't surpressed
-	-c   if supplied, continues even if a program exits.
+NAME
+	$scriptname
+
+SYNOPSIS
+	$scriptname [-ocCh] [-n count] [--] args-for-bootstrap ...
+
+DESCRIPTION
+	Wrapper around 'bootstrap.sh' that executes it \`count\` times and
+	prints the execution duration. Used to time Knight implementations. By
+	default, the output of 'bootstrap.sh' is surpressed, and any non-zero
+	return statuses by it are
+
+OPTIONS
+	-h   Print out this message and exit.
+	-n   Specify the amount of times to iterate. Defaults to 50.
+	-o   Don't surpress the stdout of knight programs.
+	-c   Continue even if a Knight implementation fails.
+	-s   Ensure 'count' successful results happen. Implies '-c'
 USAGE
 
 quiet=1
 abort=1
 count=50
+require_success=
 
-while getopts ':hocn:' flag; do
+while getopts ':hocsn:' flag; do
 	case $flag in
 	h) usage; exit ;;
 	o) quiet= ;;
 	c) abort= ;;
+	s) abort= require_success=1 ;;
 	n)
 		case $OPTARG in
 			*[!0-9]*) die 'count expects an integer'
@@ -66,7 +81,15 @@ shift $((OPTIND - 2))
 set -e
 
 timescript=$(mktemp)
-trap 'rm -f "$timescript"' EXIT INT
+
+# Ensure `timescript` is removed when we exit
+cleanup () { rm -f "$timescript"; }
+trap cleanup EXIT
+for signal in HUP INT QUIT TERM; do
+    # shellcheck disable=SC2064
+    trap "cleanup || :; trap - $signal EXIT; kill -s $signal $$" "$signal"
+done
+
 chmod u+x "$timescript"
 
 # If `KNIGHT_TRACE` is enabled, then add it to the shell file.
@@ -98,21 +121,24 @@ fi
 
 # Output the meat of the program into the script. Note that we've already done
 # validation for `count` when it was assigned, so no need to quote it.
+[ -n "$require_success" ] &&
 cat <<SHELL >>$timescript
 i=0
 while [ \$((i+=1)) -le $count ]
 do
-	"\$@" ${abort:+|| abort \$i}
+	"\$@" ${abort:+|| abort \$i} ${require_success:+|| i=\$((i-1))}
 done
 SHELL
 
 # Get the path to the bootstrap function
 if [ -n "${KNIGHT_ROOTDIR-}" ]; then
-	bootstrap=$KNIGHT_ROOTDIR/scripts/bootstrap
+	bootstrap=$KNIGHT_ROOTDIR/scripts/bootstrap.sh
 else
 	enclosing_dir=$(dirname -- "$0" && printf x)
-	bootstrap=${enclosing_dir%?x}/bootstrap
+	bootstrap=${enclosing_dir%?x}/bootstrap.sh
 fi
+
+[ -n "${_xtrace-}" ] && cat "$timescript"
 
 # Populate the command that `time` will use
 set -- "$timescript" "$bootstrap" "$@"
@@ -123,4 +149,6 @@ set -- "$timescript" "$bootstrap" "$@"
 # `time` program)
 [ "$(command -v time)" != time ] && set -- -- "$@"
 
-time /bin/sh "$@"
+# Use `/bin/sh` instead of $SHELL to ensure we're executing the POSIX-compliant
+# timescript program with a POSIX-compliant shell.
+time -p /bin/sh "$@"
