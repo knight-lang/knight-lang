@@ -53,6 +53,7 @@ options:
 	-g   enable globbing for the interpreter.
 	-e   (required by the Knight spec) The program to execute.
 	-f   (required by the Knight spec) Same as '-e "\$(cat \$filename)"'
+	-v   print out the command before it's executed.
 USAGE
 
 ################################################################################
@@ -63,10 +64,12 @@ USAGE
 interpreter=${KNIGHT:-./knight}
 knight_kn=
 glob=
+verbose=
 unset program # `unset` instead of empty string so we can tell if it was set.
 
-while getopts 'hgi:f:k:e:' flag; do
+while getopts 'hgvi:f:k:e:' flag; do
 	case $flag in
+	v) verbose=1 ;;
 	g) glob=1 ;;
 	h) usage; exit ;;
 	i) interpreter=$OPTARG ;;
@@ -141,8 +144,11 @@ $unique_string
 PROGRAM
 )
 
+PS4= # so `set -x` doesn't print out the leading `+`
 if [ -z "$glob" ]; then
+	[ $verbose ] && set -x
 	"$interpreter" -f "$knight_kn"
 else
+	[ $verbose ] && set -x
 	$interpreter -f "$knight_kn"
 fi
