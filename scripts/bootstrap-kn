@@ -107,6 +107,9 @@ shift $((OPTIND - 1))
 
 # Default interpreter
 [ $# -eq 0 ] && set -- "${KNIGHT:-./knight}"
+if ! command -v "$1" >/dev/null 2>&1; then
+	die "cannot bootstrap, as the interpreter isn't executable: %s" "$1"
+fi
 
 ################################################################################
 #                              Validate Arguments                              #

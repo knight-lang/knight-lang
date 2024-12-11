@@ -109,9 +109,16 @@ shift $((OPTIND - 2))
 
 # Have update the TIMEFMT to print out the name of knight, not of the program itself.
 if [ -n "${ZSH_VERSION-}" ]; then
-	eval "__zsh_tmp=\${\${*:-\${KNIGHT:-./knight}}//\%/%%}"
+	eval "TIMEFMT=\${TIMEFMT/\%J/\${\${*:-\${KNIGHT:-./knight}}//\%/%%}}"
 fi
 
+if
+	foo=${KNIGHT:-./knight}
+	bar=${1:-$foo}
+	! command -v "$bar" >/dev/null 2>&1
+then
+	die "cannot bootstrap, as the interpreter isn't executable: %s" "$1"
+fi
 
 enclosing_dir=$(dirname -- "$0" && printf x)
 enclosing_dir=${enclosing_dir%?x}
@@ -124,10 +131,6 @@ fi
 
 # Add in `bootstrap`'s arguments
 set -- ${expr+-e"$expr"} ${file+-f"$file"} ${knight_kn+-k"$knight_kn"} -- "$@"
-
-if [ -n "${ZSH_VERSION-}" ]; then
-	eval "TIMEFMT=\"\${\${:-\$__zsh_tmp\${*:+ }\$*}//\%/%%} %U user %S system %P cpu %*E total\""
-fi
 
 # Add bootstrap itself in
 set -- "$enclosing_dir/bootstrap-kn" "$@"
