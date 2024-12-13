@@ -25,7 +25,7 @@ The following is the list of all languages that I've written it in:
 | [Knight](https://github.com/knight-lang/knight-lang/blob/master/examples/knight.kn) | 2.0.1 |   |   | Yes, this is a Knight interpreter, written in Knight. |
 | [POSIX-Compliant SH](https://github.com/knight-lang/shell) | 2.0.1 | X | X | 100% Spec complaint. Requires POSIX-2017 compliance at a minimum, but might be 2008-compliant (I haven't tested). |
 | [ZSH](https://github.com/knight-lang/zsh) | 2.0.1 | X | X | |
-| [Perl](https://github.com/knight-lang/perl) | 1.1 | X | X | Fully Functional on at least v5.18. |
+| [Perl](https://github.com/knight-lang/perl) | 2.0.1 | X | X | Fully Functional on at least v5.18. |
 | [PHP](https://github.com/knight-lang/php) | 2.0.1 | X | X | Fully Functional, with type annotations. |
 | [Raku](https://github.com/knight-lang/raku) | 1.1 | X | X | Fully Functional, but quite slow. But hey, it was fun to write in. |
 | [Assembly (x86)](https://github.com/knight-lang/asm) | 1.0 |   |   | Functional enough to run the benchmark. A few auxiliary functions (eg `* STRING NUM`) are left. |
