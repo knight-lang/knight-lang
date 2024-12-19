@@ -40,10 +40,10 @@ The following is the list of all languages that I've written it in:
 ## Personal Languages
 I love language design, and have written quite a few programming languages. I generally try to get the languages fleshed out enough so that I can write a fully compliant Knight interpreter in it.
 
-| Language | 100% Spec Conformance | Documented | Mostly Functional | Begun | Notes |
-| -------- |:---------------------:|:----------:|:-----------------:|:-----:| ----- |
-| [Brick](https://github.com/sampersand/Brick/tree/master/examples) | X |   |  |
-| [Squire](https://github.com/sampersand/squire/tree/master/examples/knight) | X | | |
+| Language | 100% Spec Conformance | Documented | Begun | Notes |
+| -------- |:---------------------:|:----------:|:-----:| ----- |
+| [Brick](https://github.com/sampersand/Brick/tree/master/examples) | ? |   |  |
+| [Squire](https://github.com/sampersand/squire/tree/master/knight) | X |   | x | It works! Although it's extremely slow....|
 | Quest | | | | X | Implemented in quest 1, so not entirely working. |
 | Stick | | | | X | |
 | Lance | | | Few bugs left to workout |
