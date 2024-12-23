@@ -47,15 +47,19 @@ Knight is a simple programing language, intentionally designed to be straightfor
 
 Put another way, _writing_ Knight code is meant to be hard, so that writing implementations is easy.
 
-## Undefined Behaviour
-To make interpreters easier to write, and to allow for custom extensions, the Knight specs make _heavy_ use of **undefined behaviour**. [^1]
-[^1]: (Undefined Behaviour is almost universally considered )
+### Undefined Behaviour [#a]
+To make interpreters easier to write, and to allow for custom extensions, the Knight specs make _heavy_ use of undefined behaviour[^1].
+
+[^1]: Undefined Behaviour is almost universally considered a bad idea, as it makes a programmer's life harder, but a compiler/interpreter's job easier. However, since Knight's primary focus _is_ to make writing interpreters easier (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, from [sed](https://github.com/knight-lang/sed), to [JavaScript](https://github.com/knight-lang/javascript), [Kotlin](https://github.com/knight-lang/kotlin) to [POSIX-Compliant sh](https://github.com/knight-lang/shell).
+
+Throughout this document, there will be places where something is described as **undefined behaviour**. If undefined behaviour is ever encountered during the parsing or execution of a Knight program, then the _entire program_ is invalid, and implementations may do what they want (including ignoring the error, throwing exceptions, segfaulting, custom extension behaviour, etc.).
+
+Implementations are free to assume that undefined behaviour will never happen.
+
 <!--
 ## Undefined Behaviour
 To make
-Yes, Knight has undefined behaviour, which is almost universally considered a bad idea (tm)—it makes a programmer's life harder but compiler implementation easier. However, since Knight's primary focus _is_ to make writing compilers easy (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, whether it be sed, Python, Prolog or APL.
 
-Throughout this document, there will be places where something is described as **undefined behaviour**. If undefined behaviour is ever encountered during the parsing or execution of a Knight program, then the entire program is invalid; implementations may do whatever they want (including ignoring the error, segfaulting, custom extension behaviour, etc.).
 
 Some forms of undefined behaviour may be easier to check than others, depending on the implementation language. For example, most implementations should be able to detect a division-by-zero error (e.g. by an exception being thrown). However, it may be more impossible to detect standard out being closed (such as in brainf\*ck). Implementations are encouraged, but not required, to handle easily-checked undefined behaviour.
 
