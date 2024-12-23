@@ -402,7 +402,7 @@ This function must return a (pseudo-) random integer between 0 and—at a minimu
 
 Note that `RANDOM` _should_ return different integers between subsequent calls and program executions, although this isn't strictly verifiable by virtue of how random integers work. Regardless, programs should use a somewhat unique seed for every program run (e.g. a simple `srand(time(NULL)))` is sufficient).
 
-## <a name=unary-fns> Unary (arity 1)
+## <a name=unary-fns></a> Unary (arity 1)
 
 ### <a name=fn-noop></a> `: unchanged`
 A no-op: Simply returns its value unchanged (after executing it of course).
@@ -637,7 +637,7 @@ Examples:
 ]@        # => undefined, empty list.
 ```
 
-## <a name=binary-fns> Binary (arity 2)
+## <a name=binary-fns></a> Binary (arity 2)
 ### <a name=fn-add></a> `+ {integer,list,string} coerced`
 The return value of this function depends on its first argument's type:
 
@@ -655,7 +655,7 @@ Examples:
 + (+@12) ,(+@34) # => [1, 2, [3, 4]]
 ```
 
-### <a name=fn-subtract></a> `- {integer} coerced`
+### <hr> <a name=fn-subtract></a> `- {integer} coerced`
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: The second argument is coerced to an integer, and then subtracted from the first.
@@ -875,7 +875,7 @@ Examples:
 	"no digit was found"
 ```
 
-## <a name=ternary-fns> Ternary (arity 3)
+## <a name=ternary-fns></a> Ternary (arity 3)
 ### <a name=fn-if></a> `IF boolean unevaluated unevaluated`
 If the first argument is truthy, this function will evaluate and return the second argument. However, if it's falsey, it will evaluate and return the third argument.
 
