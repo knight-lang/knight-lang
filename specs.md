@@ -890,7 +890,7 @@ IF FALSE QUIT 1 "!"        # => "!"; it wont quit.
 IF "0" TRUE QUIT 1         # => true
 ```
 
-### `GET unchanged integer integer` {#fn-get}
+### <a name=fn-get> `GET unchanged integer integer`
 The return value of this function depends on its first argument's type:
 
 - **`String`**: Returns a substring starting at the second argument with a length of the third argument. Indexing starts at `0`. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the string.
@@ -920,8 +920,8 @@ GET (+@12345) ~1 1 # => undefined, negative start
 GET (+@12345) 1 ~1 # => undefined, negative length
 ```
 
-## Quaternary (Arity 4) {#quaternary-fns}
-### <a name="fn-set"></a> `SET unchanged integer integer coerced`
+## <a name=quaternary-fns></a> Quaternary (arity 4)
+### <a name=fn-set></a> `SET unchanged integer integer coerced`
 The return value of this function depends on its first argument's type:
 
 - **`String`**: Returns a new string where the substring of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a string. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the string.
