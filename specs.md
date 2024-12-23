@@ -505,29 +505,70 @@ DUMP : + 1 2       #=> 3
 ### <a name=fn-block></a> `BLOCK unevaluated`
 Unlike nearly every other function in Knight, the `BLOCK` function does _not_ execute its argument: Instead, it returns a [Block](#block), that when [`CALL`](#fn-call)ed later on, will actually evaluate the argument. This is the only way for Knight programs to get unevaluated blocks of code, which can be used for delayed execution.
 
-The `BLOCK` function is intended to be used to create user-defined "functions", which can be run via [`CALL`](#fn-call). However, as it simply returns its argument, there's no way to provide arguments to user-defined functions: you must simply use global variables:
-```knight
+The `BLOCK` function is intended to be used to create user-defined "functions". However, there's no way to pass arguments to blocks, and so Knight programs that wish to pass arguments must use global variables. See examples below.
+
+(Implementation Note: For most implementations, `BLOCK` can be implemented as just returning its argument, and `CALL` just executes its argument twice.)
+
+See the [Block type](#block) for exact semantics of how to use `BLOCK`'s return value.
+
+#### See Also
+The [Local Variables](#ext-local-variables) and [Methods](#ext-methods) extensions, for implementations that want to try their hand making `BLOCK`s easier to use.
+
+#### <a name=fn-block-examples></a> Examples
+Blocks defer execution
+```nim
+; = random_0_to_9 BLOCK (RANDOM % 10)
+; OUTPUT CALL random_0_to_9 #=> 3
+: OUTPUT CALL random_0_to_9 #=> 5
+```
+For implementations that support matching `()`, they're useful to ensure `BLOCK`s contain exactly one statement:\
+```nim
+; = get_name BLOCK (
+	; OUTPUT "What is your name?"
+	: PROMPT
+)
+
+# This would fail:
+# ; = get_name BLOCK (
+# 	; OUTPUT "What is your name?"
+# ) # <-- oops, forgot `PROMPT`
+
+: OUTPUT + "Hello, " (CALL get_name)
+
+```
+To pass arguments to blocks, you need to use global variables
+```nim
 ; = max BLOCK
    : IF (< a b) a b
+
 ; = a 3
 ; = b 4
 : OUTPUT + "maximum of a and b is: " (CALL max)
 ```
-See the [Block type](#block) for exact semantics of how to use `BLOCK`'s return value.
-
-### <a name=fn-call></a> `CALL <special>` <!-- nb: todo, {block}? -->
-Just as [`BLOCK`](#fn-block) delays the execution of its argument, `CALL` should "resume execution" of the argument, evaluating as if the `BLOCK` as defined at the call site.
-
-Examples:
-```knight
+Blocks can contain anything, not just functions
+```
 ; = foo BLOCK bar
-; = bar 3
-; OUTPUT CALL foo # => 3
-; = bar 4
+; = true BLOCK TRUE
+; = four BLOCK 4
+
+; = bar (CALL true)
+; OUTPUT CALL foo # => true
+; = bar (CALL four)
 : OUTPUT CALL foo # => 4
 ```
 
+### <a name=fn-call></a> `CALL {block}`
 Calling this function with anything other than [`BLOCK`](#fn-block)'s return value is considered **undefined behaviour**.
+
+The pair to [`BLOCK`](#fn-block), `CALL` evaluates whatever `BLOCK` was given.
+When given a Block, executes the Block's inner value
+
+Just as [`BLOCK`](#fn-block) delays the execution of its argument, `CALL` should "resume execution" of the argument, evaluating as if the `BLOCK` as defined at the call site.
+
+Calling this function with anything other than [`BLOCK`](#fn-block)'s return value is considered **undefined behaviour**.
+
+#### Examples
+See [`BLOCK`'s examples](#fn-block-examples)
 
 ### <a name=fn-quit></a> `QUIT integer`
 Stops the entire Knight program with the given status code.
