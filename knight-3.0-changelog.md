@@ -1,23 +1,18 @@
 # Knight3.0.0 Changelog from Knight2.0.1
 
-# Breaking Changes for Current Implementations
-For currently-conforming implementations, the only breaking changes are:
-- The awkward requirement for `PROMPT` to strip a trailing `\n`, `\r\n`, `\r\r\n`, `\r\r\r\n`, ... has been removed: It now only strips `\n` or `\r\n`.
-- The `` ` `` extension (string interpolation) is now `X"`.
-- The `$` extension is now renamed back-to `` ` ``.
-
 # Tl;DR
-- Breaking Changes (for implementations)
-	- `PROMPT` now only strips trailing `\n`/`\r\n` (not `\n`/`\r\n`/`\r\r\n`/`\r\r\r\n`/...)
+- Breaking Changes (for currently-conforming implementations)
+	- The awkward requirement for `PROMPT` to strip a trailing `\n`, `\r\n`, `\r\r\n`, `\r\r\r\n`, ... has been removed: It now only strips `\n` or `\r\n`.
+	- The `` ` `` extension (string interpolation) is now `X"`.
+	- The `$` extension (execute shell command) is now renamed back to `` ` ``.
+- Making the specs more explicit
 	- `PROMPT` now explicitly says it has to handle lines of `i32::MAX`
 	- Make explicit that `WHILE`'s second argument can be a Block.
 - Relaxing Requirements (for implementations)
 	- Negative integer -> list conversion is UB
 	- Boolean -> list conversion is UB
 	- Only 65535 unique variables need to be supported
-- Extensions
-	- `$` extension (run shell command) has been renamed back to `` ` ``
-	- Old `` ` `` extension (string interpolation/escaping) is now `X"`
+
 
 # Breaking Changes
 ## Changing how `PROMPT` strips newlines (Reverting Knight 2.0.1)
