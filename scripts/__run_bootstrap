@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -euf
+
+if [ -z "${KNIGHT_KN-}" ]; then
+	KNIGHT_KN=$(realpath -- "${0%?x}" && printf x)
+	KNIGHT_KN=$(dirname -- "${KNIGHT_KN?%x}" && printf x)
+	KNIGHT_KN=$(dirname -- "${KNIGHT_KN%?x}" && printf x)
+	KNIGHT_KN=${KNIGHT_KN%?x}/examples/knight.kn
+fi
+
+program=$1
+shift
+
+[ $# = 0 ] && set -- "${KNIGHT:-./knight}"
+
+iter=0
+newline='
+'
+while
+	# Use an `X` at the start to make it less likely that we'll get a match,
+	# as `examples/knight.kn` doesn't used `X`.
+	unique_string=X_END_OF_KNIGHT_PROGRAM_$iter
+	! case $program in *"$newline$unique_string$newline"*) false; esac
+do
+	iter=$((iter + 1))
+done
+
+program="$unique_string
+$program
+$unique_string
+" # Has to be on its own line
+
+# TODO: make this posix-compliant
+exec < <(printf %s "$program"; cat 2>&-)
+
+if [ -n "${__KN_RUN_BOOTSTRAP_VERBOSE-}" ]; then
+	cat <<END >&2
+==PROGRAM=================
+$program==END OF PROGRAM=================
+
+END
+	PS4= # so `set -x` doesn't print out the leading `+`
+	set -x
+fi
+
+exec "$@" -f "$KNIGHT_KN"

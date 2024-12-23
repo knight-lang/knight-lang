@@ -137,43 +137,11 @@ fi
 [ ! -f "$knight_kn" ] && die "knight.kn doesn't exist: %s" "$knight_kn"
 
 ################################################################################
-#                            Find Unique EOF Marker                            #
-################################################################################
-
-# Because people calling this script might be nesting multiple Knight invocatio-
-# ns themselves, this finds a unique string that can be used as the "heredoc"
-# and is guaranteed not to already exist in the code.
-iter=0
-newline='
-'
-while
-	# Use an `X` at the start to make it less likely that we'll get a match,
-	# as `examples/knight.kn` doesn't used `X`.
-	unique_string=X_END_OF_KNIGHT_PROGRAM_$iter
-	! case $program in *"$newline$unique_string$newline"*) false; esac
-do
-	iter=$((iter + 1))
-done
-
-################################################################################
 #                             Execute the Program                              #
 ################################################################################
-program="$unique_string
-$program
-$unique_string
-" # Has to be on its own line
+enclosing_dir=$(dirname -- "$0" && printf x)
+enclosing_dir=${enclosing_dir%?x}
 
-# TODO: make this posix-compliant
-exec < <(printf %s "$program"; cat 2>&-)
-
-if [ -n "$verbose" ]; then
-	cat <<END >&2
-==PROGRAM=================
-$program==END OF PROGRAM=================
-
-END
-	PS4= # so `set -x` doesn't print out the leading `+`
-	set -x
-fi
-
-"$@" -f "$knight_kn"
+KNIGHT_KN="$knight_kn" \
+__KN_RUN_BOOTSTRAP_VERBOSE="$verbose" \
+	"$enclosing_dir/__run_bootstrap" "$program" "$@"
