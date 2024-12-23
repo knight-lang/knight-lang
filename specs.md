@@ -12,6 +12,7 @@
 	- [Functions](#parsing-functions)
 	- [Parenthesis Groupings](#parenthesis-groupings)
 	- [Parsing Example](#parsing-example)
+	- [EBNF](#ebnf)
 * [Types](#types)
 	- [Context Overview](#coercions-overview)
 	- [Integer](#integer)
@@ -37,8 +38,6 @@
 	- [Additional Types](#ext-additional-types)
 	- [Changing Functionality](#ext-changing-functionality)
 	- [Extensibility](#ext-extensibility)
-
-
 
 # Overview
 Knight is a simple programing language, designed with the goal of being easily implementable in nearly any language. Since each language has a slightly different way of doing things, the Knight specs may leave some things up to the implementation. This allows each language to implement Knight in the most idiomatic way possible.
@@ -206,6 +205,51 @@ Here's an example of a simple guessing game, and how it should be parsed:
              └──["wrong!"]
 ```
 
+## EBNF
+If you are familiar with [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form), the following is Knight's EBNF in its entirety:
+```ebnf
+program := expr ;
+
+expr := identifier
+      | integer
+      | string
+      | nullary
+      | unary      expr
+      | binary     expr expr
+      | ternary    expr expr expr
+      | quaternary expr expr expr expr
+      ;
+
+identifier := LOWER , {LOWER | DIGIT} ;
+integer    := DIGIT , {DIGIT} ;
+string     := "'" , {NON_SINGLE} , "'"
+            | '"' , {NON_DOUBLE} , '"'
+            ;
+
+nullary := '@'
+         | ('T' | 'F' | 'N' | 'P' | 'R') , {UPPER}
+         ;
+
+unary := ':' | '!' | '~' | ',' | '[' | ']'
+       | ('B' | 'C' | 'Q' | 'D' | 'O' | 'L' | 'A') , {UPPER}
+       ;
+
+binary  := '+' | '-' | '*' | '/' | '%' | '^'
+         | '<' | '>' | '?' | '&' | '|' | ';' | '='
+         | 'W' , {UPPER} ;
+
+ternary := ('I' | 'G') , {UPPER} ;
+
+quaternary := 'S' , {UPPER} ;
+
+UPPER := [A-Z] | '_' ;
+LOWER := [a-z] | '_' ;
+DIGIT := [0-9] ;
+NON_SINGLE := (? any character except single quote (') *) ;
+NON_DOUBLE := (? any character except double quote (") *) ;
+```
+
+
 # Types
 Knight only has a handful of types: [Integer](#integer), [String](#string), [Boolean](#boolean), [Null](#null), [List](#list), and [Block](#block). All types in Knight are **immutable**, including strings and lists.
 
@@ -232,7 +276,6 @@ The following is a rough overview of all the conversions. See each type's "Coerc
 | [Block](#block)      | **undefined**           | **undefined**                       | **undefined**       | **undefined**    |
 
 ## Evaluation of Types
-
 All builtin types in Knight (i.e. Integer, String, Boolean, Null, and List) when evaluated, should return themselves. This is in contrast to variables and functions, which may return different values each time they're evaluated.
 
 ## Integer
