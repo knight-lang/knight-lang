@@ -417,54 +417,54 @@ Certain functions impose certain contexts on their arguments, coercing other typ
 Some functions also express their arguments via `{...}` (eg `ASCII {string,integer}`). This is just a convenience to see what types are valid at a glance, and should be interpreted as `unchanged`.
 
 ## <a name=nullary-fns></a> Nullary (arity 0)
-### <a name=fn-true></a> `TRUE`
+## <a name=fn-true></a> `TRUE`
 The function `TRUE` returns the true boolean value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `TRUE` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-#### Examples
+### Examples
 ```nim
 DUMP TRUE #=> true
 ```
 
-### <a name=fn-false></a> `FALSE`
+## <a name=fn-false></a> `FALSE`
 The function `FALSE` returns the false boolean value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `FALSE` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-#### Examples
+### Examples
 ```nim
 DUMP FALSE #=> false
 ```
 
-### <a name=fn-null></a> `NULL`
+## <a name=fn-null></a> `NULL`
 The function `NULL` returns the null value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `NULL` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-#### Examples
+### Examples
 ```nim
 DUMP NULL #=> null
 ```
 
-### <a name=fn-empty-list></a> `@`
+## <a name=fn-empty-list></a> `@`
 The function `@` returns the an empty list.
 
 As discussed in the [Literals Functions](#literal-functions) section, `@` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-#### Examples
+### Examples
 ```nim
 DUMP @ #=> []
 ```
 
-### <a name=fn-prompt></a> `PROMPT`
+## <a name=fn-prompt></a> `PROMPT`
 The prompt function reads a line (terminated either by `\n` or end of file being reached, whichever is first) from standard in. Before returning the line, a trailing `\n`/`\r\n` should be removed. If there's nothing left to read from stdin (i.e. end of file was reached before reading anything), `null` should be returned instead. Implementations should be able to read lines of any length, up to the [maximum required size for strings](#string-bounds).
 
 It is considered **undefined behaviour** for there to be a problem reading a line from stdin (e.g, it's closed, permission issues, etc., but _not_ if EOF was reached—see the previous line).
 
 If is considered **undefined behaviour** if the line that's read in contains any characters that [are not supported in Knight](#required-encoding).
 
-#### Examples
+### Examples
 Examples of how `PROMPT` functions (input (with escapes) on the left, result on the right):
 ```
 hello\n           #=> "hello"
@@ -476,7 +476,7 @@ hello<eof>        #=> "hello"
 <eof>             #=> NULL
 ```
 
-### <a name=fn-random></a> `RANDOM`
+## <a name=fn-random></a> `RANDOM`
 This function must return a (pseudo-) random integer between 0 and—at a minimum—32767 (`0x7fff`). Implementations are free to return a larger random integer if they desire; however, all random integers must be zero or positive.
 
 Note that `RANDOM` _should_ return different integers between subsequent calls and program executions, although this isn't strictly verifiable by virtue of how random integers work. Regardless, programs should attempt to use a somewhat unique seed for every program run (e.g. a simple `srand(time(NULL)))` is sufficient).
@@ -494,7 +494,7 @@ A no-op: Simply returns its value unchanged (after executing it).
 
 As discussed in the [Other Whitespace](#other-whitespace) section, `:` may either be interpreted as a function of arity 1 or whitespace. 
 
-#### Examples
+### Examples
 ```nim
 : DUMP + 1 2       #=> 3
 DUMP : + 1 2       #=> 3
