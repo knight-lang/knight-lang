@@ -208,8 +208,7 @@ Here's an example of a simple guessing game, and how it should be parsed:
 ## EBNF
 If you are familiar with [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form), the following is Knight's EBNF in its entirety:
 ```ebnf
-program := expr ;
-
+program := expr ; (* An entire program in Knight is just one expression *)
 expr := identifier
       | integer
       | string
@@ -217,38 +216,44 @@ expr := identifier
       | unary      expr
       | binary     expr expr
       | ternary    expr expr expr
-      | quaternary expr expr expr expr
-      ;
+      | quaternary expr expr expr expr ;
 
+(* Simple values *)
 identifier := LOWER , {LOWER | DIGIT} ;
 integer    := DIGIT , {DIGIT} ;
 string     := "'" , {NON_SINGLE} , "'"
-            | '"' , {NON_DOUBLE} , '"'
-            ;
+            | '"' , {NON_DOUBLE} , '"' ;
 
-nullary := '@'
-         | ('T' | 'F' | 'N' | 'P' | 'R') , {UPPER}
-         ;
+(* Functions *)
+nullary    := "@"
+            | ("T" | "F" | "N" | "P" | "R") , {UPPER} ;
 
-unary := ':' | '!' | '~' | ',' | '[' | ']'
-       | ('B' | 'C' | 'Q' | 'D' | 'O' | 'L' | 'A') , {UPPER}
-       ;
+unary      := ":" | "!" | "~" | "," | "[" | "]"
+            | ("B" | "C" | "Q" | "D" | "O" | "L" | "A") , {UPPER} ;
 
-binary  := '+' | '-' | '*' | '/' | '%' | '^'
-         | '<' | '>' | '?' | '&' | '|' | ';' | '='
-         | 'W' , {UPPER} ;
+binary     := "+" | "-" | "*" | "/" | "%" | "^"
+            | "<" | ">" | "?" | "&" | "|" | ";" | "="
+            | "W" , {UPPER} ;
 
-ternary := ('I' | 'G') , {UPPER} ;
+ternary    := ("I" | "G") , {UPPER} ;
 
-quaternary := 'S' , {UPPER} ;
+quaternary := "S" , {UPPER} ;
 
-UPPER := [A-Z] | '_' ;
-LOWER := [a-z] | '_' ;
-DIGIT := [0-9] ;
-NON_SINGLE := (? any character except single quote (') *) ;
-NON_DOUBLE := (? any character except double quote (") *) ;
+(* Character sequences *)
+UPPER := "_" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H"
+       | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q"
+       | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" ;
+
+LOWER := "_" | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h"
+       | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q"
+       | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+
+DIGIT := "0" | "1" | "2" | "3" | "4"
+       | "5" | "6" | "7" | "8" | "9" ;
+
+NON_SINGLE := ? any character except single quote (') ? ;
+NON_DOUBLE := ? any character except double quote (") ? ;
 ```
-
 
 # Types
 Knight only has a handful of types: [Integer](#integer), [String](#string), [Boolean](#boolean), [Null](#null), [List](#list), and [Block](#block). All types in Knight are **immutable**, including strings and lists.
@@ -401,49 +406,72 @@ As mentioned before, any operators which would return an integer outside of the 
 ## Evaluation Contexts
 Certain functions impose certain contexts on their arguments, coercing other types to the required type. (See each type's coercion contexts for their exact semantics.) The following are the contexts used within this document:
 
-- `string`: The argument must be evaluated, and then converted to a [String](#string).
-- `boolean`: The argument must be evaluated, and then converted to a [Boolean](#boolean).
-- `integer`: The argument must be evaluated, and then converted to an [Integer](#integer).
-- `list`: The argument must be evaluated, and then converted to a [List](#list).
-- `coerced`: The argument must be evaluated, and will then be coerced within the function itself.
-- `unchanged`: The argument must be evaluated, and is passed unchanged.
+- `string`:      The argument must be evaluated, and then converted to a [String](#string).
+- `boolean`:     The argument must be evaluated, and then converted to a [Boolean](#boolean).
+- `integer`:     The argument must be evaluated, and then converted to an [Integer](#integer).
+- `list`:        The argument must be evaluated, and then converted to a [List](#list).
+- `coerced`:     The argument must be evaluated, and will then be coerced within the function itself.
+- `unchanged`:   The argument must be evaluated, and passed unchanged.
 - `unevaluated`: The argument must not be evaluated at all before being passed.
+
+Some functions also express their arguments via `{...}` (eg `ASCII {string,integer}`). This is just a convenience to see what types are valid at a glance, and should be interpreted as `unchanged`.
 
 ## <a name=nullary-fns></a> Nullary (arity 0)
 ### <a name=fn-true></a> `TRUE`
-The function `TRUE` simply returns the true boolean value.
+The function `TRUE` returns the true boolean value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `TRUE` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
+#### Examples
+```nim
+DUMP TRUE #=> true
+```
+
 ### <a name=fn-false></a> `FALSE`
-The function `FALSE` simply returns the false boolean value.
+The function `FALSE` returns the false boolean value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `FALSE` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
+#### Examples
+```nim
+DUMP FALSE #=> false
+```
+
 ### <a name=fn-null></a> `NULL`
-The function `NULL` simply returns the null value.
+The function `NULL` returns the null value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `NULL` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-### <a name=fn-empty-list></a> `@` {#f
-The function `@` simply returns the an empty list. This function exists because there's no easy way to get an empty list (other than `GET ,1 0 0`, which is terrible.)
+#### Examples
+```nim
+DUMP NULL #=> null
+```
+
+### <a name=fn-empty-list></a> `@`
+The function `@` returns the an empty list.
 
 As discussed in the [Literals Functions](#literal-functions) section, `@` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
+#### Examples
+```nim
+DUMP @ #=> []
+```
+
 ### <a name=fn-prompt></a> `PROMPT`
-The prompt function reads a line (terminated either by `\n` or end of file being reached, whichever is first) from standard in. Before returning the line, a trailing `\n` should be removed, and then as many trailing `\r`s as possible should be removed. If there's nothing left in standard in (i.e. end of file was reached before reading anything), `null` should be returned instead.
+The prompt function reads a line (terminated either by `\n` or end of file being reached, whichever is first) from standard in. Before returning the line, a trailing `\n`/`\r\n` should be removed. If there's nothing left to read from stdin (i.e. end of file was reached before reading anything), `null` should be returned instead. Implementations should be able to read lines of any length, up to the [maximum required size for strings](#string-bounds).
 
-If there's a problem reading from stdin (e.g, it's closed, permission issues, etc., but _not_ if EOF was reached—see previous line), it is considered **undefined behaviour**.
+It is considered **undefined behaviour** for there to be a problem reading a line from stdin (e.g, it's closed, permission issues, etc., but _not_ if EOF was reached—see the previous line).
 
-If the line that's read contains any characters that [are not supported in Knight](#required-encoding), it is considered **undefined behaviour**.
+If is considered **undefined behaviour** if the line that's read in contains any characters that [are not supported in Knight](#required-encoding).
 
+#### Examples
 Examples of how `PROMPT` functions (input (with escapes) on the left, result on the right):
 ```
 hello\n           #=> "hello"
 hello\r\n         #=> "hello"
-hello\r\r\r\r\r\n #=> "hello"
+hello\r\r\n       #=> "hello\r"
 hello\rworld\r\n  #=> "hello\rworld"
-hello\r\r\r<eof>  #=> "hello"
+hello\r\r\r<eof>  #=> "hello\r\r\r"
 hello<eof>        #=> "hello"
 <eof>             #=> NULL
 ```
@@ -451,17 +479,31 @@ hello<eof>        #=> "hello"
 ### <a name=fn-random></a> `RANDOM`
 This function must return a (pseudo-) random integer between 0 and—at a minimum—32767 (`0x7fff`). Implementations are free to return a larger random integer if they desire; however, all random integers must be zero or positive.
 
-Note that `RANDOM` _should_ return different integers between subsequent calls and program executions, although this isn't strictly verifiable by virtue of how random integers work. Regardless, programs should use a somewhat unique seed for every program run (e.g. a simple `srand(time(NULL)))` is sufficient).
+Note that `RANDOM` _should_ return different integers between subsequent calls and program executions, although this isn't strictly verifiable by virtue of how random integers work. Regardless, programs should attempt to use a somewhat unique seed for every program run (e.g. a simple `srand(time(NULL)))` is sufficient).
+
+### Examples
+```nim
+DUMP RANDOM        #=> 15503
+DUMP (% RANDOM 10) #=> 9
+```
 
 ## <a name=unary-fns></a> Unary (arity 1)
 
 ### <a name=fn-noop></a> `: unchanged`
-A no-op: Simply returns its value unchanged (after executing it of course).
+A no-op: Simply returns its value unchanged (after executing it).
 
 As discussed in the [Other Whitespace](#other-whitespace) section, `:` may either be interpreted as a function of arity 1 or whitespace. 
 
+#### Examples
+```nim
+: DUMP + 1 2       #=> 3
+DUMP : + 1 2       #=> 3
+: DUMP : + : 1 : 2 #=> 3
+::::::: DUMP + 1 2 #=> 3
+```
+
 ### <a name=fn-block></a> `BLOCK unevaluated`
-Unlike nearly every other function in Knight, the `BLOCK` function does _not_ execute its argument—instead, it returns the argument, unevaluated. This is the only way for Knight programs to get unevaluated blocks of code, which can be used for delayed execution.
+Unlike nearly every other function in Knight, the `BLOCK` function does _not_ execute its argument: Instead, it returns a [Block](#block), that when [`CALL`](#fn-call)ed later on, will actually evaluate the argument. This is the only way for Knight programs to get unevaluated blocks of code, which can be used for delayed execution.
 
 The `BLOCK` function is intended to be used to create user-defined "functions", which can be run via [`CALL`](#fn-call). However, as it simply returns its argument, there's no way to provide arguments to user-defined functions: you must simply use global variables:
 ```knight
