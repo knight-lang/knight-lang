@@ -921,7 +921,7 @@ GET (+@12345) 1 ~1 # => undefined, negative length
 ```
 
 ## Quaternary (Arity 4) {#quaternary-fns}
-### `SET unchanged integer integer coerced` {#fn-set}
+### <a name="fn-set"></a> `SET unchanged integer integer coerced`
 The return value of this function depends on its first argument's type:
 
 - **`String`**: Returns a new string where the substring of the first argument, starting at the second argument with length of the third argument, is replaced by the fourth argument coerced to a string. It is **undefined behaviour** for either the second or third arguments to be negative, or their sum to be larger than the length of the string.
@@ -930,14 +930,15 @@ The return value of this function depends on its first argument's type:
 
 To put it in plainer terms, `SET` is used to replace the substring/sublist at the range `[start, start+length)` with the fourth argument, with it being **undefined behaviour** for any part of the range to not be fully contained within the original list.
 
-Examples:
-```
+#### Examples
+```nim
 SET "" 0 0 "Hello"  # => "Hello"
 SET "abcd" 2 1 "!"  # => "ab!d" (replaces)
 SET "abcd" 2 0 "!"  # => "ab!cd" (inserts before index `2`)
 SET "abcd" 1 2 TRUE # => "atrued" (replaces range)
 SET "abcd" 0 2 @    # => "cd" (deletes range; @ to string is empty)
-
+```
+```nim
 SET @ 0 0 "Hello"        # => list of "H", "e", "l", "l", and "o"
 SET (+@1234) 2 1 ,9      # => list of 1, 2, 9, and 4 (replaces)
 SET (+@1234) 2 0 "!"     # => list of 1, 2, "!", 3, and 4 (inserts before index `2`)
