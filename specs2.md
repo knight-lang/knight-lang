@@ -1,8 +1,8 @@
-# Official Knight Specifications (v2.0.1)
+# Official Knight Specifications (v3.0.0)
 ## Table of Contents
 * [Overview](#overview)
 	- [Undefined Behaviour](#undefined-behaviour)
-* [Syntax](#syntax)
+<!-- * [Syntax](#syntax)
 	- [Required Encoding](#required-encoding)
 	- [Whitespace](#whitespace)
 	- [Comments](#comments)
@@ -38,26 +38,21 @@
 	- [Additional Types](#ext-additional-types)
 	- [Changing Functionality](#ext-changing-functionality)
 	- [Extensibility](#ext-extensibility)
-
+ -->
 # Overview
-Knight is a simple programing language, intentionally designed to be straightforward to implement in nearly any language. To ensure consistency across implementations, the Knight specs describe the _bare minimum_ requirements. However, implementations are allowed (and encouraged) to go beyond these bare minimum requirements, supporting things that might be easy in their host language.
+Knight is a simple programing language, intentionally designed to be straightforward to implement in nearly any language. To ensure consistency across the many different implementations, these specifications describe the _bare minimum_ requirements that must be supported to be a valid Knight interpreter.
 
-(For example, if your language fully supports UTF-8, then you might consider supporting that. Or, if your language has 64 bit integers, maybe support that too?)
+> [!TIP]
+> Implementations are encouraged to support more than the bare minimum, especially if it's easy in the host language. The specs are specifically designed with this in mind, and going "above and beyond" won't cause compatibility issues.
 
 Put another way, _writing_ Knight code is meant to be hard, so that writing implementations is easy.
 
-<!--
-To ensure host languages can implement Knight in an idiomatic way, the Knight specs describe the _bare minimum_ requirements that implementations must support, but implementations are free to go beyond these.
-
-
-To ensure languages can implement Knight in an idiomatic way, the Knight spec deliberately leaves quite a few details up to implementations.
-
- To accommodate these diverse paradigms,
- to be easily implementable in nearly any language. To ensure consistency, but also ease-of-design, across implementations, the Knight specs leave many
-Since each language has a slightly different way of doing things, the Knight specs may leave some things up to the implementation. This allows each language to implement Knight in the most idiomatic way possible. -->
-
 ## Undefined Behaviour
-To make 
+To make interpreters easier to write, and to allow for custom extensions, the Knight specs make _heavy_ use of **undefined behaviour**. [^1]
+[^1]: (Undefined Behaviour is almost universally considered )
+<!--
+## Undefined Behaviour
+To make
 Yes, Knight has undefined behaviour, which is almost universally considered a bad idea (tm)—it makes a programmer's life harder but compiler implementation easier. However, since Knight's primary focus _is_ to make writing compilers easy (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, whether it be sed, Python, Prolog or APL.
 
 Throughout this document, there will be places where something is described as **undefined behaviour**. If undefined behaviour is ever encountered during the parsing or execution of a Knight program, then the entire program is invalid; implementations may do whatever they want (including ignoring the error, segfaulting, custom extension behaviour, etc.).
@@ -275,12 +270,12 @@ Knight only has a handful of types: [Integer](#integer), [String](#string), [Boo
 
 
 
-<!-- Most Knight functions perform coercion between types, so conversions are defined on a lot
+<! -- Most Knight functions perform coercion between types, so conversions are defined on a lot
 
 Knight functions frequently perform coercion, converting their arguments from one type to another. As such, every type but Block have the **integer**, **string**, **boolean**, and **list** coercions defined.
 
 All types in Knight are **immutable**, including strings and lists.
- -->
+ - ->
 ## Context Overview
 Many functions in Knight have contexts defined on them: They will automatically coerce their arguments from one type to another. For example, [`OUTPUT`](#fn-output) always coerces its argument into a string.
 
@@ -607,7 +602,7 @@ QUIT 128   # undefined behaviour
 ### <a name=fn-output></a> `OUTPUT string`
 Writes its argument (converted to a string) to standard out, flushes standard out, and then returns `null`.
 
-Normally, a newline should be written after `string` (which should also flush stdout on most systems). However, if the string ends with a backslash (`\`), the backslash is _not written to stdout_, and trailing newline is suppressed. 
+Normally, a newline should be written after `string` (which should also flush stdout on most systems). However, if the string ends with a backslash (`\`), the backslash is _not written to stdout_, and trailing newline is suppressed.
 
 It is considered **undefined behaviour** if any problems arise when writing to or flushing stdout (e.g. it's closed, permission issues, etc.).
 
@@ -821,7 +816,7 @@ Examples:
 - ~1 4   #=> -5
 ```
 
-### <a name=fn-multiply></a> `* {integer,string,list} coerced` <!-- note: todo, coerced into integer? -->
+### <a name=fn-multiply></a> `* {integer,string,list} coerced` <!- - note: todo, coerced into integer? - ->
 The return value of this function depends on its first argument's type:
 
 - **`Integer`**: The second argument is coerced to an integer, and multiplied with the first.
@@ -906,7 +901,7 @@ Examples:
 < 1 "4"    # => false
 < "A" "a"  # => true, ascii `"a"` is larger.
 < "a" "a0" # => true, `"a"` has smaller length.
-< "A" "a0" # => true, `"A" < "a"` 
+< "A" "a0" # => true, `"A" < "a"`
 < FALSE 0  # => false
 < FALSE 2  # => true
 < TRUE x   # => always false regardless of `x`
@@ -1110,7 +1105,7 @@ Note that, asides from the `X` function, Knight reserves the right to use any up
 While not strictly required, (because not every implementation language can access command-line arguments—such as Knight itself), there is a standardized set of command-line options that most Knight implementations follow:
 
 - If two arguments are given, and the first is `-e`, interpret the second as a Knight program and execute it.
-- If two arguments are given, and the first is `-f`, interpret the second as a path to a Knight program. Read the contents of that file, and then execute those. 
+- If two arguments are given, and the first is `-f`, interpret the second as a path to a Knight program. Read the contents of that file, and then execute those.
 - If no arguments are given, then print out a usage message (such as `usage: knight (-e 'expr' | -f <path>)`)
 
 Note that the Knight unit tester expects `-e 'expr'` to be defined, and you won't be able to use it without this.
@@ -1206,7 +1201,7 @@ A few other ideas:
 
 - Import path is relative from the `USE`ing file
 - The `.kn` extension can be omitted (and would be inferred)
-- Duplicate imports could be skipped 
+- Duplicate imports could be skipped
 - Only accept static strings at the top of a file
 
 Examples:
@@ -1376,3 +1371,4 @@ Some considerations:
 Instead of only supporting the vanilla Knight types (and any extensions you may have implemented), libraries may want to give the ability for users to use custom types.
 
 For some implementations (such as those that use inheritance), this should be pretty simple: Just ensure the custom types inherit from some `Value` parent class. However for those that don't use inheritance, it may be a bit more involved.
+ -->
