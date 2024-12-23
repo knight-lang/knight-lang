@@ -207,24 +207,32 @@ Here's an example of a simple guessing game, and how it should be parsed:
 ```
 
 # Types
-Knight itself only has a handful of types—[Integer](#integer)s, [String](#string)s, [Boolean](#boolean)s, [Null](#null), [List](#list)s, and [Block](#block)s. Knight functions frequently perform coercion, converting their arguments from one type to another. As such, every type but Block have the **integer**, **string**, **boolean**, and **list** coercions defined.
+Knight only has a handful of types: [Integer](#integer), [String](#string), [Boolean](#boolean), [Null](#null), [List](#list), and [Block](#block). All types in Knight are **immutable**, including strings and lists.
+
+
+
+<!-- Most Knight functions perform coercion between types, so conversions are defined on a lot
+
+Knight functions frequently perform coercion, converting their arguments from one type to another. As such, every type but Block have the **integer**, **string**, **boolean**, and **list** coercions defined.
 
 All types in Knight are **immutable**, including strings and lists.
-
+ -->
 ## Context Overview
 Many functions in Knight have contexts defined on them: They will automatically coerce their arguments from one type to another. For example, [`OUTPUT`](#fn-output) always coerces its argument into a string.
 
-The following is a rough overview of all the conversions. See each type's "Coercion" section for more details. Note that the `Block` has no conversions defined whatsoever, and using it in any conversion context is **undefined behaviour**.
+The following is a rough overview of all the conversions. See each type's "Coercion" section for more details.
 
-| Conversion From \ To | [Integer](#integer) | [String](#string) | [Boolean](#boolean) | [List](#list) |
-|----------------------|---------------------|-------------------|---------------------|---------------|
-| [Null](#null)        | `0`                 | `""`      | `false`             | empty list    |
-| [Integer](#integer)  | _itself_      | what you expect   | nonzero?       | digits (negate digits if negative) |
-| [String](#string)    | &lt;like C's `atoi`&gt;     | _itself_    | nonempty? | individual chars |
-| [Boolean](#boolean) (false/true)  | `0`/`1` | `"false"`/`"true"` | _itself_ | empty list/boxed `TRUE` |
-| [List](#list)        | Length of list      | list [joined](#fn-power) by newline | nonempty? | _itself_ |
+| Conversion From \ To | [Integer](#integer)     | [String](#string)                   | [Boolean](#boolean) | [List](#list)    |
+|----------------------|-------------------------|-------------------------------------|---------------------|------------------|
+| [Integer](#integer)  | _itself_                | (normal int->string conversion)     | nonzero?            | digits (**undefined** if negative) |
+| [String](#string)    | &lt;like C's `atoi`&gt; | _itself_                            | nonempty?           | individual chars |
+| [Boolean](#boolean)  | `0`/`1`                 | `"false"`/`"true"`                  | _itself_            | **undefined**    |
+| [List](#list)        | list length             | list [joined](#fn-power) by newline | nonempty?           | _itself_         |
+| [Null](#null)        | `0`                     | `""`                                | `false`             | empty list       |
+| [Block](#block)      | **undefined**           | **undefined**                       | **undefined**       | **undefined**    |
 
 ## Evaluation of Types
+
 All builtin types in Knight (i.e. Integer, String, Boolean, Null, and List) when evaluated, should return themselves. This is in contrast to variables and functions, which may return different values each time they're evaluated.
 
 ## Integer
