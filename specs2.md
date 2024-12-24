@@ -42,20 +42,27 @@
 # Overview
 Knight is a simple programing language, intentionally designed to be straightforward to implement in nearly any language. To ensure consistency across the many different implementations, these specifications describe the _bare minimum_ requirements that must be supported to be a valid Knight interpreter.
 
-> [!TIP]
+> [!CAUTION]
 > Implementations are encouraged to support more than the bare minimum, especially if it's easy in the host language. The specs are specifically designed with this in mind, and going "above and beyond" won't cause compatibility issues.
 
 Put another way, _writing_ Knight code is meant to be hard, so that writing implementations is easy.
 
 ## Undefined Behaviour
-To make interpreters easier to write, and to allow for custom extensions, the Knight specs make _heavy_ use of undefined behaviour[^1]. Throughout this document, there will be places where something is described as **undefined behaviour**.
+To make interpreters easier to write, and to allow for custom extensions, the Knight specs make _heavy_ use of undefined behaviour[^1]. Throughout this document, there will be places where something is described as **undefined behaviour**. No valid Knight program will ever encounter undefined behvaiour, and doing so immediately make the program
 
-[^1]: Undefined Behaviour is almost universally considered a bad idea, as it makes a programmer's life harder, but a compiler/interpreter's job easier. However, since Knight's primary focus _is_ to make writing interpreters easier (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, from [sed](https://github.com/knight-lang/sed), to [JavaScript](https://github.com/knight-lang/javascript), [Kotlin](https://github.com/knight-lang/kotlin) to [POSIX-Compliant sh](https://github.com/knight-lang/shell).
+It's up to the Knight programmer to ensure that their Knight programs will
+Valid Knight programs (i.e. things implementations must handle) will never encounter this undefined behaviour
 
-No valid Knight program will ever encounter undefined behaviour---it's up
+No valid Knight program will ever encounter this undefined behaviour—it's up to the Knight programming to ensure that their programs are free of undefined behaviour.
+
+Implementations are free to assume that
 
 If this undefined behaviour is _ever_ encountered during the parsing or execution of a Knight program, then the _entire program_ is invalid, and implementations may do what they want,
 including ignoring the error, throwing exceptions, segfaulting, custom extension behaviour, etc.). They're also free to just assume that undefined behaviour will never happen.
+
+
+
+[^1]: Undefined Behaviour is almost universally considered a bad idea, as it makes a programmer's life harder, but a compiler/interpreter's job easier. However, since Knight's primary focus _is_ to make writing interpreters easier (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, from [sed](https://github.com/knight-lang/sed), to [JavaScript](https://github.com/knight-lang/javascript), [Kotlin](https://github.com/knight-lang/kotlin) to [POSIX-Compliant sh](https://github.com/knight-lang/shell).
 
 
 ### Detecting undefined behaviour
