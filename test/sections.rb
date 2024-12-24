@@ -157,4 +157,8 @@ class Sections
   def require
     @sections.each(&:require)
   end
+
+  def enabled?(label)
+    p @sections.map(&:inspect).include? label.to_s
+ end
 end
