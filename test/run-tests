@@ -107,4 +107,5 @@ if !force && !File.executable?($tester.executable)
 end
 
 require 'minitest/autorun' # only after we confirmed we don't have a usage error
+require_relative 'unit/shared'
 $sections.require

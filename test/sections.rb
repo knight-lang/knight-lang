@@ -159,6 +159,6 @@ class Sections
   end
 
   def enabled?(label)
-    p @sections.map(&:inspect).include? label.to_s
+    @sections.map(&:inspect).include? label.to_s
  end
 end
