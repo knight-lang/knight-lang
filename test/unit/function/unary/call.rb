@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 # See also `types/block.rb`
 section 'CALL' do
 	it 'should run something returned by `BLOCK`' do
@@ -15,7 +13,7 @@ section 'CALL' do
 		assert_result 15, %|; = foo BLOCK * x 5 ; = x 3 : CALL foo|
 	end
 
-	it 'should _only_ eval BLOCK return values', when_testing: :strict_compliance do
+	it 'should _only_ eval blocks', when_testing: :strict_compliance do
 		refute_runs %|CALL 1|
 		refute_runs %|CALL "1"|
 		refute_runs %|CALL TRUE|

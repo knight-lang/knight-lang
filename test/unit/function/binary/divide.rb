@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '/' do
 	it 'divides nonzero integers normally' do
 		assert_result 1, %|/ 1 1|

@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'LENGTH' do
 	it 'returns 0 for NULL' do
 		assert_result 0, %|LENGTH NULL|

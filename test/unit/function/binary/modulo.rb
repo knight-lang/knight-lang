@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '%' do
 	it 'modulos positive bases normally' do
 		assert_result 0, %|% 1 1|

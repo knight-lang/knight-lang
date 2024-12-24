@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'IF' do
 	it 'executes and returns only the correct value' do
 		assert_result 12, %|IF TRUE 12 (QUIT 1)|

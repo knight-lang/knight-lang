@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'OUTPUT' do
 	before do
 		def assert_stdout(expected, expr)

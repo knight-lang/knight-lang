@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 # See `variable` for more unit tests with variables specifically
 section '=' do
 	it 'assigns to variables' do

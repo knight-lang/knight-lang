@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '^' do
 	describe 'when the first argument is an integer' do
 		it 'raises positive integers correctly' do

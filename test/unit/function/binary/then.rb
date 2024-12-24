@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section ';' do
 	it 'executes arguments in order' do
 		assert_result 3, %|; (= a 3) a|

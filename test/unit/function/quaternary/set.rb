@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'SET' do
 	describe 'when the first argument is a string' do
 		it 'can remove substrings' do

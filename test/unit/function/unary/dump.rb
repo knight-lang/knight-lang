@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 # Note that `DUMP`'s normal cases are tested by running unit tests,
 # so no need to actually check here.
 section 'DUMP' do

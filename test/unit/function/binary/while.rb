@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'WHILE' do
 	it 'returns null' do
 		assert_result :null, 'WHILE 0 0'

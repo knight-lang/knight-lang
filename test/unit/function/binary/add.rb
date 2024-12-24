@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '+' do
 	describe 'when the first arg is a string' do
 		it 'concatenates' do

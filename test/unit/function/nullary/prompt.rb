@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'PROMPT' do
 	it 'should read a line from stdin' do
 		assert_result "foo", %|PROMPT|, stdin: "foo"
@@ -13,16 +11,16 @@ section 'PROMPT' do
 		assert_result "foo", %|PROMPT|, stdin: "foo\r\nbar"
 	end
 
-	it 'should strip all trailing `\r`s' do
+	it 'should not strip trailing `\r`s' do
 		assert_result "foo", %|PROMPT|, stdin: "foo\r\n"
-		assert_result "foo", %|PROMPT|, stdin: "foo\r\r\r\r\n"
+		assert_result "foo\r\r\r", %|PROMPT|, stdin: "foo\r\r\r\r\n"
 		assert_result "foo", %|PROMPT|, stdin: "foo\r\nhello"
-		assert_result "foo", %|PROMPT|, stdin: "foo\r\r\r\r\nhello"
-		assert_result "foo", %|PROMPT|, stdin: "foo\r"
-		assert_result "foo", %|PROMPT|, stdin: "foo\r\r\r\r"
+		assert_result "foo\r\r\r", %|PROMPT|, stdin: "foo\r\r\r\r\nhello"
+		assert_result "foo\r", %|PROMPT|, stdin: "foo\r"
+		assert_result "foo\r\r\r\r", %|PROMPT|, stdin: "foo\r\r\r\r"
 	end
 
-	it 'does not strip `\r`s in the middle'do
+	it 'does not strip `\r`s in the middle, or consider them end of line'do
 		assert_result "foo\rhello", %|PROMPT|, stdin: "foo\rhello"
 		assert_result "foo\rhello", %|PROMPT|, stdin: "foo\rhello\n"
 		assert_result "foo\rhello", %|PROMPT|, stdin: "foo\rhello\r\n"
@@ -41,5 +39,7 @@ section 'PROMPT' do
 
 	it 'should return NULL at EOF' do
 		assert_result :null, %|PROMPT|, stdin: ""
+		assert_result :null, %|; PROMPT PROMPT|, stdin: "foobar\r\n"
+		assert_result :null, %|; PROMPT PROMPT|, stdin: "foobar\n"
 	end
 end

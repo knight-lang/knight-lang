@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '!' do
 	it 'inverts its argument' do
 		assert_result true,  %|! FALSE|

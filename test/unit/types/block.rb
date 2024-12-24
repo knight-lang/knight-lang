@@ -47,5 +47,10 @@ section 'boolean' do
       assert_runs %|IF TRUE  BLOCK QUIT 1 NULL|
       assert_runs %|IF FALSE BLOCK QUIT 1 NULL|
     end
+
+    it 'should be usable as the second argument of WHILE' do
+      assert_runs %|WHILE FALSE BLOCK QUIT 1|
+      assert_runs %|; = i TRUE : WHILE i ; = i FALSE : BLOCK QUIT 1|
+    end
   end
 end

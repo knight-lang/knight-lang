@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '~' do
   it 'negates its argument' do
     assert_result -1,  %|~ 1|

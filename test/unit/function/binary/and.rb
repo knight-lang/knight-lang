@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '&' do
 	it 'returns the lhs if its falsey' do
 		assert_result 0, %|& 0 QUIT 1|

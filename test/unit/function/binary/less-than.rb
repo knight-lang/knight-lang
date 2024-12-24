@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '<' do
 	describe 'when the first arg is a boolean' do
 		it 'is only true when FALSE and the rhs is truthy' do

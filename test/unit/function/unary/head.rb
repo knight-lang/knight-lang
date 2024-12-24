@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '[' do
   it 'gets the first element of lists' do
     # test different types of list construction methods
