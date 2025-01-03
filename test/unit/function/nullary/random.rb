@@ -5,15 +5,6 @@ section 'RANDOM' do
 		assert_result false, '| > 0 RANDOM '*100 + 'FALSE'
 	end
 
-		def exitstatus(expr)
-			# exit codes shouldn't print anything.
-			assert_silent do
-				tester.execute expr, raise_on_failure: false
-			end
-
-			$?.exitstatus
-		end
-
 	# NOTE: This could possibly fail in valid implementations, as `RANDOM` _can_ return the same value
 	# multiple times. If this happens, just rerun the tester. If it happens multiple times in a row,
 	# that probably means there's a problem with your implementation.

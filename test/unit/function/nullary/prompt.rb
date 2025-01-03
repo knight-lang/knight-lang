@@ -16,8 +16,8 @@ section 'PROMPT' do
 		assert_result "foo\r\r\r", %|PROMPT|, stdin: "foo\r\r\r\r\n"
 		assert_result "foo", %|PROMPT|, stdin: "foo\r\nhello"
 		assert_result "foo\r\r\r", %|PROMPT|, stdin: "foo\r\r\r\r\nhello"
-		assert_result "foo\r", %|PROMPT|, stdin: "foo\r"
-		assert_result "foo\r\r\r\r", %|PROMPT|, stdin: "foo\r\r\r\r"
+		assert_result "foo", %|PROMPT|, stdin: "foo\r"
+		assert_result "foo\r\r\r", %|PROMPT|, stdin: "foo\r\r\r\r"
 	end
 
 	it 'does not strip `\r`s in the middle, or consider them end of line'do
