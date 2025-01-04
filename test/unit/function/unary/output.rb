@@ -9,6 +9,10 @@ section 'OUTPUT' do
 		assert_stdout "\n", %|OUTPUT ""|
 	end
 
+	it 'should return NULL' do
+		assert_stdout "hello\nnull", %|DUMP OUTPUT "hello"|
+	end
+
 	it 'prints normally' do
 		assert_stdout "1\n", %|OUTPUT "1"|
 		assert_stdout "hello world\n", %|OUTPUT "hello world"|
