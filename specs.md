@@ -46,16 +46,6 @@ Knight is a simple programing language, intentionally designed to be straightfor
 
 Put another way, _writing_ Knight code is meant to be hard, so that writing implementations is easy.
 
-<!--
-To ensure host languages can implement Knight in an idiomatic way, the Knight specs describe the _bare minimum_ requirements that implementations must support, but implementations are free to go beyond these.
-
-
-To ensure languages can implement Knight in an idiomatic way, the Knight spec deliberately leaves quite a few details up to implementations.
-
- To accommodate these diverse paradigms,
- to be easily implementable in nearly any language. To ensure consistency, but also ease-of-design, across implementations, the Knight specs leave many
-Since each language has a slightly different way of doing things, the Knight specs may leave some things up to the implementation. This allows each language to implement Knight in the most idiomatic way possible. -->
-
 ## Undefined Behaviour
 To make 
 Yes, Knight has undefined behaviour, which is almost universally considered a bad idea (tm)—it makes a programmer's life harder but compiler implementation easier. However, since Knight's primary focus _is_ to make writing compilers easy (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, whether it be sed, Python, Prolog or APL.
