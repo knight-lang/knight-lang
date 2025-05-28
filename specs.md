@@ -42,19 +42,17 @@
 # Overview
 Knight is a simple programing language, intentionally designed to be straightforward to implement in nearly any language. To ensure consistency across implementations, the Knight specs describe the _bare minimum_ requirements. However, implementations are allowed (and encouraged) to go beyond these bare minimum requirements, supporting things that might be easy in their host language.
 
-(For example, if your language fully supports UTF-8, then you might consider supporting that. Or, if your language has 64 bit integers, maybe support that too?)
-
-Put another way, _writing_ Knight code is meant to be hard, so that writing implementations is easy.
+(For example, if your language fully supports UTF-8, then you might consider supporting that. Or, if your language has 64 bit integers, maybe support that too?) Put another way, _writing_ Knight code is meant to be hard, so that writing implementations is easy.
 
 ## Undefined Behaviour
-To make 
 Yes, Knight has undefined behaviour, which is almost universally considered a bad idea (tm)—it makes a programmer's life harder but compiler implementation easier. However, since Knight's primary focus _is_ to make writing compilers easy (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, whether it be sed, Python, Prolog or APL.
 
 Throughout this document, there will be places where something is described as **undefined behaviour**. If undefined behaviour is ever encountered during the parsing or execution of a Knight program, then the entire program is invalid; implementations may do whatever they want (including ignoring the error, segfaulting, custom extension behaviour, etc.).
 
 Some forms of undefined behaviour may be easier to check than others, depending on the implementation language. For example, most implementations should be able to detect a division-by-zero error (e.g. by an exception being thrown). However, it may be more impossible to detect standard out being closed (such as in brainf\*ck). Implementations are encouraged, but not required, to handle easily-checked undefined behaviour.
 
-To reiterate, **if undefined behaviour is encountered at any point during the parsing or execution of a Knight program, the entire program is ill-defined, and implementations may do whatever they want.**
+> [!IMPORTANT]
+> To reiterate, if undefined behaviour is encountered at any point during the parsing or execution of a Knight program, the entire program is ill-defined, and implementations may do whatever they want.
 
 # Syntax
 Knight is a Polish-Notation (PN) language: Instead of the traditional "infix notation" (e.g. `output(1 + 2 * 4)`), functions come _before_ their arguments (e.g. `OUTPUT + 1 * 2 4`).
