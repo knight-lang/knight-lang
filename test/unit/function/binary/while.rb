@@ -18,6 +18,15 @@ section 'WHILE' do
 		KNIGHT
 	end
 
+	it 'will return NULL, regardless of the condition' do
+		assert_result :null, %|WHILE FALSE 1234|
+		assert_result :null, <<~KNIGHT
+			; = i 0
+			: WHILE (< i 10)
+				: = i + i 1
+		KNIGHT
+	end
+
 	it 'does not accept BLOCK values', when_testing: :strict_types do
 		refute_runs %|; = a 0 : WHILE (BLOCK a) 1|
 		refute_runs %|WHILE (BLOCK QUIT 0) 1|

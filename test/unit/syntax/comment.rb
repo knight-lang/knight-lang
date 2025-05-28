@@ -10,6 +10,12 @@ section 'comment' do
     assert_result 3, %|# ; QUIT 1\n3|
   end
 
+  it 'plays well with strings' do
+    assert_result "\n#hello", %|"\n#hello"|
+    assert_result 34, %|# "\n34|
+    assert_result "X", %|;# "\n34 "X"|
+  end
+
   it 'can be interspersed as whitespace' do
     assert_result 3, %|+ 1#hello\n2|
     assert_result 3, %|; = a 1 : + a#world\n2|
