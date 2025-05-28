@@ -129,9 +129,11 @@ For those familiar with regex, strings are `/'[^']*'|"[^"]*"/`.
 ## <a name=parsing-variables></a> Variables
 In Knight, all [variable](#variables)s are lower case (upper case letters are reserved for builtin functions). Variable names must start with an ASCII lower case letter (i.e. `a` (`0x61`) through `z` (`0x7a`)) or an underscore (`_` (`0x5f`)). After the initial letter, variable names may optionally include lower case letters, underscores, or ASCII digits (i.e. `0` (`0x30`) through `9` (`0x39`)). Note that since upper case letters are not a part of variable names, they're allowed to immediately follow variables. `+aRANDOM` should be parsed as `+`, `a`, and `RANDOM`.
 
+For those familiar with regex, variables are `/^[a-z_][a-z_0-9]{,126}$/`.
+
 Implementations are required to support variable names of at most 127 characters, although they may choose to allow longer variable names. It is **undefined behaviour** for programs to have variable names longer than 127 characters.
 
-For those familiar with regex, variables are `/[a-z_][a-z_0-9]*/`.
+Implementations are only required to support a maximum of 65535 variables (however they may support more than that if they want). If a Knight program ever has more than 65535 variables, including variables only ever encountered during parsing (but are never executed, eg `IF FALSE variable`), it is **undefined behaviour**.
 
 ## <a name=parsing-functions></a> Functions
 In Knight, there are two different styles of functions: symbolic and word-based. In both cases, the function is uniquely identified by its first character; the distinction merely determines how the name is parsed.
