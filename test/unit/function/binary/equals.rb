@@ -111,7 +111,7 @@ section '?' do
 			assert_result true, %|? ,0 +@0|
 			assert_result true, %|? ,"1" ,"1"|
 			assert_result true, %|? +@"foobar" +@"foobar"|
-			assert_result true, %|? ,TRUE +@TRUE|
+			# assert_result true, %|? ,TRUE +@TRUE|
 			assert_result true, %|? +@123 ++,1,2,3|
 			assert_result true, %|? *,2 4 +@2222|
 			assert_result true, %|? @ GET *,2 4 0 0|

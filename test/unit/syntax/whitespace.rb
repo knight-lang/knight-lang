@@ -63,7 +63,7 @@ section 'whitespace' do
 
     it 'is not needed between other function pairs' do
       assert_result 0, %|*RANDOM 0| # symbol word
-      assert_result 1, %|LENGTH! 0| # word symbol
+      assert_result 1, %|LENGTH~ 0| # word symbol
       assert_result true, %|!! 1| # symbol symbol
     end
 
