@@ -293,7 +293,6 @@ In Knight, only integral numbers exist—all functions which might return non-in
 
 ### <a name=integer-bounds></a> Minimum Required Bounds
 All implementations must be able to represent all integers within the range `-2147483648 .. 2147483647`, inclusive on both sides. (These are the bounds for 32-bit signed integers using 2's complement.) Implementations are free to support larger, and smaller integers (for example, by using a 64 bit integer), however this is the bare minimum.
-Knight only supports integersOnly integers $[-2^{31}, 2^{31} -1]$
 
 > [!TIP]
 > Implementations are only required to support up to 32 bit integers, but can go beyond.
@@ -307,7 +306,7 @@ Note that all mathematical operations in Knight that would cause over/underflow 
 - **integer**: In integer contexts, the integer itself is simply returned.
 - **string**: In string contexts, integers are converted to their base-10 representation. Negative integers should have a `-` prepended to the beginning of the string (positive integers shouldn't get `+`). For example, `0 -> "0"`, `123 -> "123"`, and `~12 -> "-12"`.
 - **boolean**: In boolean contexts, zero becomes `false`, and all other integers (ie nonzero) become `true`.
-- **list**: In list contexts, the digits of the integer should be returned order of most significant to least significant. If the integer is negative, each digit should become negated as well. For example, `DUMP +@123` prints `[1, 2, 3]`, whereas `DUMP +@~123` prints `[-1, -2, -3]`.
+- **list**: In list contexts, the digits of the integer should be returned order of most significant to least significant. For example, `DUMP +@123` prints `[1, 2, 3]`. Converting negative integers to a list is **undefined behaviour**.
 
 ## String
 Strings in Knight are like strings in most other languages, albeit a bit simpler: They're immutable (like all types within Knight), and are _only_ required to be able to represent a [specific subset of ASCII](#required-encoding). Implementations are free to support more characters (e.g. all of ASCII, or Unicode), but this is not required.
@@ -331,8 +330,7 @@ The boolean type in Knight has two variants: `false` and `true`. These two value
 - **integer**: In integer contexts, `false` becomes `0` and `true` becomes `1`.
 - **string**: In string contexts, `false` becomes `"false"` and `true` becomes `"true"`.
 - **boolean**: In boolean contexts, the boolean itself is simply returned.
-- **list**: In list contexts, `false` becomes an empty list and `true` becomes a list just containing `true`. (i.e. `+@FALSE` is equivalent to `@`, whereas `+@TRUE` is equivalent to `,TRUE`).
-
+- **list**: Converting a boolean to a list is **undefined behaviour**.
 
 ## Null
 The `null` type is used to indicate the absence of a value within Knight, and is the return value of some functions (such as `OUTPUT` and `WHILE`). While it does have conversions defined for all contexts, no conversions _into_ `null` exist.
@@ -385,7 +383,7 @@ The Block type does not have any contexts defined. Attempting to coerce a Block 
 Because blocks aren't allowed to be used in any contexts, there's only a handful of places they may be used. Attempting to use them anywhere else is considered **undefined behaviour**
 
 - The sole argument to [`:`](#fn-noop), [`BLOCK`](#fn-block) itself (ie `BLOCK BLOCK ...`), [`CALL`](#fn-call), and [`,`](#fn-box).
-- The second argument to [`=`](#fn-while), [`&`](#fn-and), or [`|`](#fn-or)
+- The second argument to [`=`](#fn-while), [`&`](#fn-and), [`|`](#fn-or), or [`WHILE`](#fn-while)
 - Either argument of [`;`](#fn-then)
 - Either the second or third argument of [`IF`](#fn-if)
 
@@ -1216,8 +1214,7 @@ Examples:
 : CALL greet
 ```
 
-### <a name=ext-system></a> `$ string unchanged`: Run a shell command and return its stdout
-_This function was previously a required function named `` ` ``; it is now an optional extension_
+### <a name=ext-system></a> `` ` string unchanged``: Run a shell command and return its stdout
 
 This extension would convert the first argument to a string and run it as a shell command, returning the stdout as a string. The second argument would be the stdin to the function; if it was `NULL`, the subprocess would inherit the stdin of the parent process.
 
@@ -1247,17 +1244,17 @@ should be equivalent to
 ## <a name=ext-syntactic-sugar></a> Syntactic Sugar
 These extensions provide syntactic sugar for some common idioms in Knight
 
-### <a name=ext-string-interpolation></a> `` ` ``-string literals
+### <a name=ext-string-interpolation></a> `` X" ``-string literals
 Working with strings in Knight is a bit of a pain: There are no escape sequences, and the only way to generate a larger string is through concatenation.
 ```knight
 OUTPUT ++++greeting ", " name ", aged " age "!
 How are you?"
 ```
-Implementations could opt to allow for `` ` `` strings, which both include escape sequences _and_ perform string interpolation.
+Implementations could opt to allow for `` X" `` strings, which both include escape sequences _and_ perform string interpolation.
 
 Example:
 ```knight
-OUTPUT `{greeting}, {name}, aged {age}!\nHow are you?`
+OUTPUT X"{greeting}, {name}, aged {age}!\nHow are you?"
 ```
 
 ### <a name=ext-list-literal></a> `{ ... }`: List Literal
