@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '-' do
 	it 'subtracts integers normally' do
 		assert_result 0, %|- 0 0|

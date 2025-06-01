@@ -1,24 +1,22 @@
-require_relative '../../shared'
-
 section '[' do
   it 'gets the first element of lists' do
     # test different types of list construction methods
-    assert_result 1, %|[,1|
-    assert_result 1, %|[+,1 ,2|
-    assert_result 1, %|[+@123|
-    assert_result 1, %|[*,1 4|
-    assert_result 1, %|[GET +@123 0 1|
-    assert_result 2, %|[SET +@123 0 1 @|
+    assert_result 1, %|[ ,1|
+    assert_result 1, %|[ +,1 ,2|
+    assert_result 1, %|[ +@123|
+    assert_result 1, %|[ *,1 4|
+    assert_result 1, %|[ GET +@123 0 1| if $sections.enabled? :GET
+    assert_result 2, %|[ SET +@123 0 1 @| if $sections.enabled? :SET
   end
 
   it 'gets the first character of strings' do
-    assert_result 'a', %|['a'|
-    assert_result 'a', %|['abc'|
-    assert_result 'a', %|[+'abc' 'def'|
-    assert_result 'a', %|[+'' 'abc'|
-    assert_result 'a', %|[*'abc' 3|
-    assert_result 'a', %|[GET 'abc' 0 1|
-    assert_result 'b', %|[SET 'abc' 0 1 ''|
+    assert_result 'a', %|[ 'a'|
+    assert_result 'a', %|[ 'abc'|
+    assert_result 'a', %|[ +'abc' 'def'|
+    assert_result 'a', %|[ +'' 'abc'|
+    assert_result 'a', %|[ *'abc' 3|
+    assert_result 'a', %|[ GET 'abc' 0 1| if $sections.enabled? :GET
+    assert_result 'b', %|[ SET 'abc' 0 1 ''| if $sections.enabled? :GET
   end
 
   it 'only allows a string or list as the first operand', when_testing: :invalid_types do

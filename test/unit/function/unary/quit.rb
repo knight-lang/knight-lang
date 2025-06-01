@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'QUIT' do
 	before do
 		def exitstatus(expr)

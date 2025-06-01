@@ -1,4 +1,21 @@
 # Knight
+Specifically designed to be easily implemented, Knight is a minimalistic programming language that's still fully-functional and can perform complex tasks.
+
+Unofficial tagline: "Knight: Write once, run everywhere, because every supports Knightin some way."
+
+## Overview
+Knight's design is the opposite of most programming languages: Instead of making the user's life easier by giving them powerful abstractions, Knight makes the *implementation writer's life* life easier by markign ltos of things as UB.
+
+<!--
+
+Designed with ease-of-implementation in mind, Knight is a minimalistic programming language and is that perfect "weekend project" to get into langdev, or whatnot.
+
+
+
+Knight is a minimalistic programming language *designed* to be easily implemetned.
+
+
+
 Knight is a minimalistic programming language designed to be easily implementable in a variety of languages. While it _is_ a fully-functional programming language, it's main purpose is to be a somewhat-easy-to-implement language.
 
 Unofficial Tag-line: "Knight: Runs everywhere. Not because it's cross-platform, but because it works in any almost any language you have."
@@ -91,19 +108,19 @@ Here's some examples of the syntax to give you a feel for it:
 ## Guessing Game
 ```
 ; = max 100                                   # max = 100
-; = secret + 1 (% RAND max)                   # secret = rand(1, max)
-; = nguess 0                                  # nguess = 0
+; = secret + 1 (% RANDOM max)                 # secret = rand(1, max)
+; = guesses 0                                 # guesses = 0
 ; = guess 0                                   # guess = 0
 ; OUTPUT (+ 'guess 1-' max)                   # print('pick from 1-' + m)
 ; WHILE (| (< guess secret) (> guess secret)) # while guess != s:
   ; OUTPUT '> \'                              #   print('> ', end='')
   ; = guess (+ 0 PROMPT)                      #   guess = int(prompt())
-  ; = nguess (+ nguess 1)                     #   nguess += 1
+  ; = guesses (+ guesses 1)                   #   guesses += 1
   : OUTPUT (                                  #   print(
      IF (< guess secret) 'too low'            #     if guess < secret: 'too low'
      IF (> guess secret) 'too high'           #     if guess > secret: 'too high'
                          'correct')           #     else: 'correct')
-: OUTPUT (+ 'tries: ' nguess)                 # print('tries: ' + n)
+: OUTPUT (+ 'tries: ' guesses)                # print('tries: ' + n)
 ```
 
 ## Fibonacci
@@ -112,7 +129,7 @@ Here's some examples of the syntax to give you a feel for it:
     ; = a 0                             #    a = 0
     ; = b 1                             #    b = 1
     ; WHILE n                           #    while n != 0:
-        ; = b + a (= tmp b              #       b = a + (tmp = b)
+        ; = b + a (= tmp b)             #       b = a + (tmp = b)
         ; = a tmp                       #       a = tmp
         : = n - n 1                     #       n -= 1
     : a                                 #    return a
@@ -137,42 +154,4 @@ Tokens may follow directly one after another (eg `1a` is parsed as `1` and then 
 4. Between an identifier and a number, such as `+ a 3`.
 
 Additionally, while not technically whitesapce, `(`, `)`, and `:` can be safely interpreted as whitespace as well. As such, expressions such as `OUTPUT * a (IF b 3 b)` can be written as `O*aIb 3b`.
-
-## EBNF
-Knight's ENBF is as follows:
-```ebnf
-program := expr ;
-expr := integer-literal
-      | string-literal
-      | identifier
-      | nullary
-      | unary      expr
-      | binary     expr expr
-      | ternary    expr expr expr
-      | quaternary expr expr expr expr ;
-
-integer-literal := DIGIT {DIGIT} ;
-string-literal  := `'` {NON_SINGLE} `'` | `"` {NON_DOUBLE} `"` ;
-identifier      := LOWER {LOWER | DIGIT} ;
-
-nullary := '@'
-         | ('T' | 'F' | 'N' | 'P' | 'R') {UPPER} ;
-
-unary := ':' | '!' | '~' | ',' | '[' | ']'
-       | ('B' | 'C' | 'Q' | 'D' | 'O' | 'L' | 'A') {UPPER} ;
-
-binary := '+' | '-' | '*' | '/' | '%' | '^'
-        | '<' | '>' | '?' | '&' | '|' | ';' | '='
-        | 'W' {UPPER} ;
-
-ternary := ('I' | 'G') {UPPER} ;
-
-quaternary := 'S' {UPPER} ;
-
-UPPER := [A-Z] | '_' ;
-LOWER := [a-z] | '_' ;
-DIGIT := [0-9] ;
-NON_SINGLE := (? any character except single quote (`'`) *) ;
-NON_DOUBLE := (? any character except double quote (`"`) *) ;
-```
-
+ -->

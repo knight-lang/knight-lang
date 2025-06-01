@@ -1,7 +1,7 @@
 require 'minitest'
 require 'minitest/spec'
 
-def section(name, parallelize: true, &block)
+def section(name, parallelize: !ENV['KN_NO_PARALLELIZE'], &block)
   describe name do
     include Kn::Test::Spec
     parallelize_me! if parallelize

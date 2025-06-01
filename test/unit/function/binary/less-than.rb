@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section '<' do
 	describe 'when the first arg is a boolean' do
 		it 'is only true when FALSE and the rhs is truthy' do
@@ -76,12 +74,12 @@ section '<' do
 			assert_result false, %|< "12" 100|
 			assert_result false, %|< "12" 100|
 
-			assert_result true, %|< "trud" +@TRUE|
+			# assert_result true, %|< "trud" +@TRUE|
 			assert_result true, %|< "trud" TRUE|
 			assert_result false, %|< "true" TRUE|
 			assert_result false, %|< "true" ,TRUE|
 			assert_result false, %|< "truf" TRUE|
-			assert_result false, %|< "truf" +@TRUE|
+			# assert_result false, %|< "truf" +@TRUE|
 
 			assert_result true, %|< "falsd" FALSE|
 			assert_result true, %|< "falsd" ,FALSE|

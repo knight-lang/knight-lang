@@ -41,6 +41,7 @@ section 'boolean' do
       end
     end
 
+=begin
     describe 'list' do
       it 'converts false to an empty list' do
         assert_result [], %|+ @ FALSE|
@@ -50,5 +51,6 @@ section 'boolean' do
         assert_result [true], %|+ @ TRUE|
       end
     end
+=end
   end
 end

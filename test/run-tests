@@ -6,7 +6,7 @@ require_relative 'spec'
 require_relative 'sections'
 
 $tester = Kn::Test::Tester.new executable: File.join(Dir.pwd, 'knight')
-sections = Sections.new
+$sections = Sections.new
 force = false
 
 OptParse.new.instance_exec do
@@ -14,13 +14,13 @@ OptParse.new.instance_exec do
 	banner.concat ' [executable=./knight]'
 
 	on '-s', '--section[=SECTION,...]', 'Test the given sections; test all w/o args', Array do |secs|
-		sections.enable(*secs)
+		$sections.enable(*secs)
 	rescue Sections::UnknownSection => err
 		abort err
 	end
 
 	on '-S', '--disable-section[=SECTION,...]', 'Disable the given sections; disable all w/o args', Array do |secs|
-		sections.disable(*secs)
+		$sections.disable(*secs)
 	rescue Sections::UnknownSection => err
 		abort err
 	end
@@ -107,4 +107,5 @@ if !force && !File.executable?($tester.executable)
 end
 
 require 'minitest/autorun' # only after we confirmed we don't have a usage error
-sections.require
+require_relative 'unit/shared'
+$sections.require

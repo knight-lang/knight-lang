@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 # TODO: have checks for non-ascii values.
 section 'ASCII' do
 	it 'converts integers properly' do

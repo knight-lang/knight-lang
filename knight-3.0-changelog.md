@@ -13,7 +13,6 @@
 	- Boolean -> list conversion is UB
 	- Only 65535 unique variables need to be supported
 
-
 # Breaking Changes
 ## Changing how `PROMPT` strips newlines (Reverting Knight 2.0.1)
 This is the "big" breaking change for current implementations: `PROMPT` now must only strip a trailing `\r\n` or `\n`, if they're present.
@@ -26,7 +25,6 @@ However... that just doesn't really work all that nicely. Knight's meant to be e
 The `` ` `` extension is now (once again) used for running shell commands and getting their stdout, and string interpolation is now `X"..."`.
 
 I originally changed shell commands from `` ` `` to `$` to allow for `` ` `` to be used string interpolations/escaping in extensions (eg ``OUTPUT `hello\tworld!` ``). But it's always irked me, because `` ` `` has traditionally been used for shell functions in many other languages (eg php, sh, ruby, perl, to name a few).
-
 
 After three years, I haven't seen many implementations supporting interpolation or escaping, so the change to support it was somewhat pointless. And, since `X"..."` is nearly as short (and has precedence in many other langs like python's `f"..."`, C#'s `$"..."`, etc), I thought it time to swap them back.
 

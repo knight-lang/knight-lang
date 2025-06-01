@@ -1,4 +1,4 @@
-# Official Knight Specifications (v2.0.1)
+# Official Knight Specifications (v3.0.0)
 ## Table of Contents
 * [Overview](#overview)
 	- [Undefined Behaviour](#undefined-behaviour)
@@ -12,6 +12,7 @@
 	- [Functions](#parsing-functions)
 	- [Parenthesis Groupings](#parenthesis-groupings)
 	- [Parsing Example](#parsing-example)
+	- [EBNF](#ebnf)
 * [Types](#types)
 	- [Context Overview](#coercions-overview)
 	- [Integer](#integer)
@@ -38,10 +39,10 @@
 	- [Changing Functionality](#ext-changing-functionality)
 	- [Extensibility](#ext-extensibility)
 
-
-
 # Overview
-Knight is a simple programing language, designed with the goal of being easily implementable in nearly any language. Since each language has a slightly different way of doing things, the Knight specs may leave some things up to the implementation. This allows each language to implement Knight in the most idiomatic way possible.
+Knight is a simple programing language, intentionally designed to be straightforward to implement in nearly any language. To ensure consistency across implementations, the Knight specs describe the _bare minimum_ requirements. However, implementations are allowed (and encouraged) to go beyond these bare minimum requirements, supporting things that might be easy in their host language.
+
+(For example, if your language fully supports UTF-8, then you might consider supporting that. Or, if your language has 64 bit integers, maybe support that too?) Put another way, _writing_ Knight code is meant to be hard, so that writing implementations is easy.
 
 ## Undefined Behaviour
 Yes, Knight has undefined behaviour, which is almost universally considered a bad idea (tm)—it makes a programmer's life harder but compiler implementation easier. However, since Knight's primary focus _is_ to make writing compilers easy (being somewhat usable is only secondary), undefined behaviour is crucial in making Knight implementable in everything, whether it be sed, Python, Prolog or APL.
@@ -50,7 +51,8 @@ Throughout this document, there will be places where something is described as *
 
 Some forms of undefined behaviour may be easier to check than others, depending on the implementation language. For example, most implementations should be able to detect a division-by-zero error (e.g. by an exception being thrown). However, it may be more impossible to detect standard out being closed (such as in brainf\*ck). Implementations are encouraged, but not required, to handle easily-checked undefined behaviour.
 
-To reiterate, **if undefined behaviour is encountered at any point during the parsing or execution of a Knight program, the entire program is ill-defined, and implementations may do whatever they want.**
+> [!IMPORTANT]
+> To reiterate, if undefined behaviour is encountered at any point during the parsing or execution of a Knight program, the entire program is ill-defined, and implementations may do whatever they want.
 
 # Syntax
 Knight is a Polish-Notation (PN) language: Instead of the traditional "infix notation" (e.g. `output(1 + 2 * 4)`), functions come _before_ their arguments (e.g. `OUTPUT + 1 * 2 4`).
@@ -68,12 +70,12 @@ Knight allows you to utilize the return value of `IF`:
 OUTPUT IF < x 3 "hi" "bye"
 ```
 
-Each Knight program is a single expression expression—such as `OUTPUT 3`, `; (= a 4) (OUTPUT (+ "a=" a))`, etc. Any additional tokens after this first expression (i.e. anything other than [whitespace](#whitespace) and [comments](#comments)) is **undefined behaviour**. 
+Each Knight program is a single expression expression—such as `OUTPUT 3`, `; (= a 4) (OUTPUT (+ "a=" a))`, etc. Any additional tokens after this first expression (i.e. anything other than [whitespace](#whitespace) and [comments](#comments)) is **undefined behaviour**.
 
 ## Required Encoding
 To make Knight implementable in most languages, only the following subset of ASCII characters is required to be supported. Implementations may support a superset of this (for example, all of ASCII or Unicode), but this is not required.
 ```text
-	[tab] [newline] [carriage return] [space] 
+	[tab] [newline] [carriage return] [space]
 	  ! " # $ % & ' ( ) * + , - . /
 	0 1 2 3 4 5 6 7 8 9 : ; < = > ?
 	@ A B C D E F G H I J K L M N O
@@ -127,9 +129,11 @@ For those familiar with regex, strings are `/'[^']*'|"[^"]*"/`.
 ## <a name=parsing-variables></a> Variables
 In Knight, all [variable](#variables)s are lower case (upper case letters are reserved for builtin functions). Variable names must start with an ASCII lower case letter (i.e. `a` (`0x61`) through `z` (`0x7a`)) or an underscore (`_` (`0x5f`)). After the initial letter, variable names may optionally include lower case letters, underscores, or ASCII digits (i.e. `0` (`0x30`) through `9` (`0x39`)). Note that since upper case letters are not a part of variable names, they're allowed to immediately follow variables. `+aRANDOM` should be parsed as `+`, `a`, and `RANDOM`.
 
+For those familiar with regex, variables are `/^[a-z_][a-z_0-9]{,126}$/`.
+
 Implementations are required to support variable names of at most 127 characters, although they may choose to allow longer variable names. It is **undefined behaviour** for programs to have variable names longer than 127 characters.
 
-For those familiar with regex, variables are `/[a-z_][a-z_0-9]*/`.
+Implementations are only required to support a maximum of 65535 variables (however they may support more than that if they want). If a Knight program ever has more than 65535 variables, including variables only ever encountered during parsing (but are never executed, eg `IF FALSE variable`), it is **undefined behaviour**.
 
 ## <a name=parsing-functions></a> Functions
 In Knight, there are two different styles of functions: symbolic and word-based. In both cases, the function is uniquely identified by its first character; the distinction merely determines how the name is parsed.
@@ -206,32 +210,93 @@ Here's an example of a simple guessing game, and how it should be parsed:
              └──["wrong!"]
 ```
 
+## EBNF
+If you are familiar with [EBNF](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form), the following is Knight's EBNF in its entirety:
+```ebnf
+program := expr ; (* An entire program in Knight is just one expression *)
+expr := identifier
+      | integer
+      | string
+      | nullary
+      | unary      expr
+      | binary     expr expr
+      | ternary    expr expr expr
+      | quaternary expr expr expr expr ;
+
+(* Simple values *)
+identifier := LOWER , {LOWER | DIGIT} ;
+integer    := DIGIT , {DIGIT} ;
+string     := "'" , {NON_SINGLE} , "'"
+            | '"' , {NON_DOUBLE} , '"' ;
+
+(* Functions *)
+nullary    := "@"
+            | ("T" | "F" | "N" | "P" | "R") , {UPPER} ;
+
+unary      := ":" | "!" | "~" | "," | "[" | "]"
+            | ("B" | "C" | "Q" | "D" | "O" | "L" | "A") , {UPPER} ;
+
+binary     := "+" | "-" | "*" | "/" | "%" | "^"
+            | "<" | ">" | "?" | "&" | "|" | ";" | "="
+            | "W" , {UPPER} ;
+
+ternary    := ("I" | "G") , {UPPER} ;
+
+quaternary := "S" , {UPPER} ;
+
+(* Character sequences *)
+UPPER := "_" | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H"
+       | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q"
+       | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" ;
+
+LOWER := "_" | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h"
+       | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q"
+       | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+
+DIGIT := "0" | "1" | "2" | "3" | "4"
+       | "5" | "6" | "7" | "8" | "9" ;
+
+NON_SINGLE := ? any character except single quote (') ? ;
+NON_DOUBLE := ? any character except double quote (") ? ;
+```
+
 # Types
-Knight itself only has a handful of types—[Integer](#integer)s, [String](#string)s, [Boolean](#boolean)s, [Null](#null), [List](#list)s, and [Block](#block)s. Knight functions frequently perform coercion, converting their arguments from one type to another. As such, every type but Block have the **integer**, **string**, **boolean**, and **list** coercions defined.
+Knight only has a handful of types: [Integer](#integer), [String](#string), [Boolean](#boolean), [Null](#null), [List](#list), and [Block](#block). All types in Knight are **immutable**, including strings and lists.
+
+
+
+<!-- Most Knight functions perform coercion between types, so conversions are defined on a lot
+
+Knight functions frequently perform coercion, converting their arguments from one type to another. As such, every type but Block have the **integer**, **string**, **boolean**, and **list** coercions defined.
 
 All types in Knight are **immutable**, including strings and lists.
-
+ -->
 ## Context Overview
 Many functions in Knight have contexts defined on them: They will automatically coerce their arguments from one type to another. For example, [`OUTPUT`](#fn-output) always coerces its argument into a string.
 
-The following is a rough overview of all the conversions. See each type's "Coercion" section for more details. Note that the `Block` has no conversions defined whatsoever, and using it in any conversion context is **undefined behaviour**.
+The following is a rough overview of all the conversions. See each type's "Coercion" section for more details.
 
-| Conversion From \ To | [Integer](#integer) | [String](#string) | [Boolean](#boolean) | [List](#list) |
-|----------------------|---------------------|-------------------|---------------------|---------------|
-| [Null](#null)        | `0`                 | `""`      | `false`             | empty list    |
-| [Integer](#integer)  | _itself_      | what you expect   | nonzero?       | digits (negate digits if negative) |
-| [String](#string)    | &lt;like C's `atoi`&gt;     | _itself_    | nonempty? | individual chars |
-| [Boolean](#boolean) (false/true)  | `0`/`1` | `"false"`/`"true"` | _itself_ | empty list/boxed `TRUE` |
-| [List](#list)        | Length of list      | list [joined](#fn-power) by newline | nonempty? | _itself_ |
+| Conversion From \ To | [Integer](#integer)     | [String](#string)                   | [Boolean](#boolean) | [List](#list)    |
+|----------------------|-------------------------|-------------------------------------|---------------------|------------------|
+| [Integer](#integer)  | _itself_                | (normal int->string conversion)     | nonzero?            | digits (**undefined** if negative) |
+| [String](#string)    | &lt;like C's `atoi`&gt; | _itself_                            | nonempty?           | individual chars |
+| [Boolean](#boolean)  | `0`/`1`                 | `"false"`/`"true"`                  | _itself_            | **undefined**    |
+| [List](#list)        | list length             | list [joined](#fn-power) by newline | nonempty?           | _itself_         |
+| [Null](#null)        | `0`                     | `""`                                | `false`             | empty list       |
+| [Block](#block)      | **undefined**           | **undefined**                       | **undefined**       | **undefined**    |
 
 ## Evaluation of Types
 All builtin types in Knight (i.e. Integer, String, Boolean, Null, and List) when evaluated, should return themselves. This is in contrast to variables and functions, which may return different values each time they're evaluated.
 
-## Integer
+## <a name=integer></a> Integer
 In Knight, only integral numbers exist—all functions which might return non-integral numbers are simply truncated (look at each functions' respective definitions for details on what exactly truncation means in each case).
 
 ### <a name=integer-bounds></a> Minimum Required Bounds
 All implementations must be able to represent all integers within the range `-2147483648 .. 2147483647`, inclusive on both sides. (These are the bounds for 32-bit signed integers using 2's complement.) Implementations are free to support larger, and smaller integers (for example, by using a 64 bit integer), however this is the bare minimum.
+
+> [!TIP]
+> Implementations are only required to support up to 32 bit integers, but can go beyond.
+
 
 Note that all mathematical operations in Knight that would cause over/underflow for integers is considered **undefined behaviour**. This allows for implementations to freely use larger integer sizes and not have to worry about wraparounds.
 
@@ -241,7 +306,7 @@ Note that all mathematical operations in Knight that would cause over/underflow 
 - **integer**: In integer contexts, the integer itself is simply returned.
 - **string**: In string contexts, integers are converted to their base-10 representation. Negative integers should have a `-` prepended to the beginning of the string (positive integers shouldn't get `+`). For example, `0 -> "0"`, `123 -> "123"`, and `~12 -> "-12"`.
 - **boolean**: In boolean contexts, zero becomes `false`, and all other integers (ie nonzero) become `true`.
-- **list**: In list contexts, the digits of the integer should be returned order of most significant to least significant. If the integer is negative, each digit should become negated as well. For example, `DUMP +@123` prints `[1, 2, 3]`, whereas `DUMP +@~123` prints `[-1, -2, -3]`.
+- **list**: In list contexts, the digits of the integer should be returned order of most significant to least significant. For example, `DUMP +@123` prints `[1, 2, 3]`. Converting negative integers to a list is **undefined behaviour**.
 
 ## String
 Strings in Knight are like strings in most other languages, albeit a bit simpler: They're immutable (like all types within Knight), and are _only_ required to be able to represent a [specific subset of ASCII](#required-encoding). Implementations are free to support more characters (e.g. all of ASCII, or Unicode), but this is not required.
@@ -265,8 +330,7 @@ The boolean type in Knight has two variants: `false` and `true`. These two value
 - **integer**: In integer contexts, `false` becomes `0` and `true` becomes `1`.
 - **string**: In string contexts, `false` becomes `"false"` and `true` becomes `"true"`.
 - **boolean**: In boolean contexts, the boolean itself is simply returned.
-- **list**: In list contexts, `false` becomes an empty list and `true` becomes a list just containing `true`. (i.e. `+@FALSE` is equivalent to `@`, whereas `+@TRUE` is equivalent to `,TRUE`).
-
+- **list**: Converting a boolean to a list is **undefined behaviour**.
 
 ## Null
 The `null` type is used to indicate the absence of a value within Knight, and is the return value of some functions (such as `OUTPUT` and `WHILE`). While it does have conversions defined for all contexts, no conversions _into_ `null` exist.
@@ -319,7 +383,7 @@ The Block type does not have any contexts defined. Attempting to coerce a Block 
 Because blocks aren't allowed to be used in any contexts, there's only a handful of places they may be used. Attempting to use them anywhere else is considered **undefined behaviour**
 
 - The sole argument to [`:`](#fn-noop), [`BLOCK`](#fn-block) itself (ie `BLOCK BLOCK ...`), [`CALL`](#fn-call), and [`,`](#fn-box).
-- The second argument to [`=`](#fn-while), [`&`](#fn-and), or [`|`](#fn-or)
+- The second argument to [`=`](#fn-while), [`&`](#fn-and), [`|`](#fn-or), or [`WHILE`](#fn-while)
 - Either argument of [`;`](#fn-then)
 - Either the second or third argument of [`IF`](#fn-if)
 
@@ -328,7 +392,7 @@ Notably, functions like [`?`](#fn-equals) and [`DUMP`](#fn-dump) do not require 
 # Variables
 All variables in Knight are global and last for the duration of the program; there are no function-local variables. This means that once a variable is assigned a value, the variable should be accessible at any point for the duration of the program. Also, like most runtime languages, variables are not typed—you can assign a string to a variable that previously held a block.
 
-Implementations are only required to support variables between 1 and 127 characters long, however they may choose to support longer. As is described in the [variable parsing](#parsing-variables) section, names must conform to the regex `/[a-z_][a-z0-9_]*/`. 
+Implementations are only required to support variables between 1 and 127 characters long, however they may choose to support longer. As is described in the [variable parsing](#parsing-variables) section, names must conform to the regex `/[a-z_][a-z0-9_]*/`.
 
 ### Possible optimizations for Variables
 Note that while technically you're required to both have every variable accessible at all times _and_ able to be assigned every type, Knight supports no form of introspection or runtime evaluation (without optional extensions such as `EVAL` or `VALUE`). That is, there's no way at runtime to dynamically assign/lookup a variable. So, if you can prove that a variable is unused after a certain point, or is only assigned a specific type, you should feel free to perform optimizations.
@@ -336,7 +400,7 @@ Note that while technically you're required to both have every variable accessib
 ## Variable Evaluation
 When evaluated, the variable must return the value previously assigned to it, unevaluated. That is, if you say had `= foo BLOCK (QUIT 1)` beforehand and later on evaluated `foo`, it should return the block, and _not_ quit the program. Note that it's possible for multiple variables to be associated with the same object within Knight (e.g. `= foo (= bar ...)`).
 
-It's considered **undefined behaviour** to attempt to evaluate a variable when it hasn't been assigned a value yet. 
+It's considered **undefined behaviour** to attempt to evaluate a variable when it hasn't been assigned a value yet.
 
 # Functions
 Every function in Knight has a predetermined arity—there are no variadic functions.
@@ -350,49 +414,72 @@ As mentioned before, any operators which would return an integer outside of the 
 ## Evaluation Contexts
 Certain functions impose certain contexts on their arguments, coercing other types to the required type. (See each type's coercion contexts for their exact semantics.) The following are the contexts used within this document:
 
-- `string`: The argument must be evaluated, and then converted to a [String](#string).
-- `boolean`: The argument must be evaluated, and then converted to a [Boolean](#boolean).
-- `integer`: The argument must be evaluated, and then converted to an [Integer](#integer).
-- `list`: The argument must be evaluated, and then converted to a [List](#list).
-- `coerced`: The argument must be evaluated, and will then be coerced within the function itself.
-- `unchanged`: The argument must be evaluated, and is passed unchanged.
+- `string`:      The argument must be evaluated, and then converted to a [String](#string).
+- `boolean`:     The argument must be evaluated, and then converted to a [Boolean](#boolean).
+- `integer`:     The argument must be evaluated, and then converted to an [Integer](#integer).
+- `list`:        The argument must be evaluated, and then converted to a [List](#list).
+- `coerced`:     The argument must be evaluated, and will then be coerced within the function itself.
+- `unchanged`:   The argument must be evaluated, and passed unchanged.
 - `unevaluated`: The argument must not be evaluated at all before being passed.
+
+Some functions also express their arguments via `{...}` (eg `ASCII {string,integer}`). This is just a convenience to see what types are valid at a glance, and should be interpreted as `unchanged`.
 
 ## <a name=nullary-fns></a> Nullary (arity 0)
 ### <a name=fn-true></a> `TRUE`
-The function `TRUE` simply returns the true boolean value.
+The function `TRUE` returns the true boolean value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `TRUE` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
+#### Examples
+```nim
+DUMP TRUE #=> true
+```
+
 ### <a name=fn-false></a> `FALSE`
-The function `FALSE` simply returns the false boolean value.
+The function `FALSE` returns the false boolean value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `FALSE` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
+#### Examples
+```nim
+DUMP FALSE #=> false
+```
+
 ### <a name=fn-null></a> `NULL`
-The function `NULL` simply returns the null value.
+The function `NULL` returns the null value.
 
 As discussed in the [Literals Functions](#literal-functions) section, `NULL` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
-### <a name=fn-empty-list></a> `@` {#f
-The function `@` simply returns the an empty list. This function exists because there's no easy way to get an empty list (other than `GET ,1 0 0`, which is terrible.)
+#### Examples
+```nim
+DUMP NULL #=> null
+```
+
+### <a name=fn-empty-list></a> `@`
+The function `@` returns the an empty list.
 
 As discussed in the [Literals Functions](#literal-functions) section, `@` may either be interpreted as a function of arity 0, or a literal value—they're equivalent. See the section for more details.
 
+#### Examples
+```nim
+DUMP @ #=> []
+```
+
 ### <a name=fn-prompt></a> `PROMPT`
-The prompt function reads a line (terminated either by `\n` or end of file being reached, whichever is first) from standard in. Before returning the line, a trailing `\n` should be removed, and then as many trailing `\r`s as possible should be removed. If there's nothing left in standard in (i.e. end of file was reached before reading anything), `null` should be returned instead.
+The prompt function reads a line (terminated either by `\n` or end of file being reached, whichever is first) from standard in. Before returning the line, a trailing `\n`/`\r\n` should be removed. If there's nothing left to read from stdin (i.e. end of file was reached before reading anything), `null` should be returned instead. Implementations should be able to read lines of any length, up to the [maximum required size for strings](#string-bounds).
 
-If there's a problem reading from stdin (e.g, it's closed, permission issues, etc., but _not_ if EOF was reached—see previous line), it is considered **undefined behaviour**.
+It is considered **undefined behaviour** for there to be a problem reading a line from stdin (e.g, it's closed, permission issues, etc., but _not_ if EOF was reached—see the previous line).
 
-If the line that's read contains any characters that [are not supported in Knight](#required-encoding), it is considered **undefined behaviour**.
+If is considered **undefined behaviour** if the line that's read in contains any characters that [are not supported in Knight](#required-encoding).
 
+#### Examples
 Examples of how `PROMPT` functions (input (with escapes) on the left, result on the right):
 ```
 hello\n           #=> "hello"
 hello\r\n         #=> "hello"
-hello\r\r\r\r\r\n #=> "hello"
+hello\r\r\n       #=> "hello\r"
 hello\rworld\r\n  #=> "hello\rworld"
-hello\r\r\r<eof>  #=> "hello"
+hello\r\r\r<eof>  #=> "hello\r\r\r"
 hello<eof>        #=> "hello"
 <eof>             #=> NULL
 ```
@@ -400,41 +487,96 @@ hello<eof>        #=> "hello"
 ### <a name=fn-random></a> `RANDOM`
 This function must return a (pseudo-) random integer between 0 and—at a minimum—32767 (`0x7fff`). Implementations are free to return a larger random integer if they desire; however, all random integers must be zero or positive.
 
-Note that `RANDOM` _should_ return different integers between subsequent calls and program executions, although this isn't strictly verifiable by virtue of how random integers work. Regardless, programs should use a somewhat unique seed for every program run (e.g. a simple `srand(time(NULL)))` is sufficient).
+Note that `RANDOM` _should_ return different integers between subsequent calls and program executions, although this isn't strictly verifiable by virtue of how random integers work. Regardless, programs should attempt to use a somewhat unique seed for every program run (e.g. a simple `srand(time(NULL)))` is sufficient).
+
+### Examples
+```nim
+DUMP RANDOM        #=> 15503
+DUMP (% RANDOM 10) #=> 9
+```
 
 ## <a name=unary-fns></a> Unary (arity 1)
 
 ### <a name=fn-noop></a> `: unchanged`
-A no-op: Simply returns its value unchanged (after executing it of course).
+A no-op: Simply returns its value unchanged (after executing it).
 
-As discussed in the [Other Whitespace](#other-whitespace) section, `:` may either be interpreted as a function of arity 1 or whitespace. 
+As discussed in the [Other Whitespace](#other-whitespace) section, `:` may either be interpreted as a function of arity 1 or whitespace.
+
+#### Examples
+```nim
+: DUMP + 1 2       #=> 3
+DUMP : + 1 2       #=> 3
+: DUMP : + : 1 : 2 #=> 3
+::::::: DUMP + 1 2 #=> 3
+```
 
 ### <a name=fn-block></a> `BLOCK unevaluated`
-Unlike nearly every other function in Knight, the `BLOCK` function does _not_ execute its argument—instead, it returns the argument, unevaluated. This is the only way for Knight programs to get unevaluated blocks of code, which can be used for delayed execution.
+Unlike nearly every other function in Knight, the `BLOCK` function does _not_ execute its argument: Instead, it returns a [Block](#block), that when [`CALL`](#fn-call)ed later on, will actually evaluate the argument. This is the only way for Knight programs to get unevaluated blocks of code, which can be used for delayed execution.
 
-The `BLOCK` function is intended to be used to create user-defined "functions", which can be run via [`CALL`](#fn-call). However, as it simply returns its argument, there's no way to provide arguments to user-defined functions: you must simply use global variables:
-```knight
+The `BLOCK` function is intended to be used to create user-defined "functions". However, there's no way to pass arguments to blocks, and so Knight programs that wish to pass arguments must use global variables. See examples below.
+
+(Implementation Note: For most implementations, `BLOCK` can be implemented as just returning its argument, and `CALL` just executes its argument twice.)
+
+See the [Block type](#block) for exact semantics of how to use `BLOCK`'s return value.
+
+#### See Also
+The [Local Variables](#ext-local-variables) and [Methods](#ext-methods) extensions, for implementations that want to try their hand making `BLOCK`s easier to use.
+
+#### <a name=fn-block-examples></a> Examples
+Blocks defer execution
+```nim
+; = random_0_to_9 BLOCK (RANDOM % 10)
+; OUTPUT CALL random_0_to_9 #=> 3
+: OUTPUT CALL random_0_to_9 #=> 5
+```
+For implementations that support matching `()`, they're useful to ensure `BLOCK`s contain exactly one statement:\
+```nim
+; = get_name BLOCK (
+	; OUTPUT "What is your name?"
+	: PROMPT
+)
+
+# This would fail:
+# ; = get_name BLOCK (
+# 	; OUTPUT "What is your name?"
+# ) # <-- oops, forgot `PROMPT`
+
+: OUTPUT + "Hello, " (CALL get_name)
+
+```
+To pass arguments to blocks, you need to use global variables
+```nim
 ; = max BLOCK
    : IF (< a b) a b
+
 ; = a 3
 ; = b 4
 : OUTPUT + "maximum of a and b is: " (CALL max)
 ```
-See the [Block type](#block) for exact semantics of how to use `BLOCK`'s return value.
-
-### <a name=fn-call></a> `CALL <special>` <!-- nb: todo, {block}? -->
-Just as [`BLOCK`](#fn-block) delays the execution of its argument, `CALL` should "resume execution" of the argument, evaluating as if the `BLOCK` as defined at the call site.
-
-Examples:
-```knight
+Blocks can contain anything, not just functions
+```
 ; = foo BLOCK bar
-; = bar 3
-; OUTPUT CALL foo # => 3
-; = bar 4
+; = true BLOCK TRUE
+; = four BLOCK 4
+
+; = bar (CALL true)
+; OUTPUT CALL foo # => true
+; = bar (CALL four)
 : OUTPUT CALL foo # => 4
 ```
 
+### <a name=fn-call></a> `CALL {block}`
 Calling this function with anything other than [`BLOCK`](#fn-block)'s return value is considered **undefined behaviour**.
+
+The pair to [`BLOCK`](#fn-block), `CALL` evaluates whatever `BLOCK` was given.
+When given a Block, executes the Block's inner value
+
+Just as [`BLOCK`](#fn-block) delays the execution of its argument, `CALL` should "resume execution" of the argument, evaluating as if the `BLOCK` as defined at the call site.
+
+Calling this function with anything other than [`BLOCK`](#fn-block)'s return value is considered **undefined behaviour**.
+
+#### Examples
+See [`BLOCK`'s examples](#fn-block-examples)
 
 ### <a name=fn-quit></a> `QUIT integer`
 Stops the entire Knight program with the given status code.
@@ -535,7 +677,7 @@ LENGTH TRUE      # => 1
 LENGTH FALSE     # => 0
 LENGTH NULL      # => 0
 LENGTH 1234      # => 4
-LENGTH ~1234     # => 4
+LENGTH ~1234     # => undefined behaviour; negative int -> list is UB
 LENGTH "hello!"  # => 6
 LENGTH @         # => 0
 LENGTH (*,0 100) # => 100
@@ -1072,8 +1214,7 @@ Examples:
 : CALL greet
 ```
 
-### <a name=ext-system></a> `$ string unchanged`: Run a shell command and return its stdout
-_This function was previously a required function named `` ` ``; it is now an optional extension_
+### <a name=ext-system></a> `` ` string unchanged``: Run a shell command and return its stdout
 
 This extension would convert the first argument to a string and run it as a shell command, returning the stdout as a string. The second argument would be the stdin to the function; if it was `NULL`, the subprocess would inherit the stdin of the parent process.
 
@@ -1103,17 +1244,17 @@ should be equivalent to
 ## <a name=ext-syntactic-sugar></a> Syntactic Sugar
 These extensions provide syntactic sugar for some common idioms in Knight
 
-### <a name=ext-string-interpolation></a> `` ` ``-string literals
+### <a name=ext-string-interpolation></a> `` X" ``-string literals
 Working with strings in Knight is a bit of a pain: There are no escape sequences, and the only way to generate a larger string is through concatenation.
 ```knight
 OUTPUT ++++greeting ", " name ", aged " age "!
 How are you?"
 ```
-Implementations could opt to allow for `` ` `` strings, which both include escape sequences _and_ perform string interpolation.
+Implementations could opt to allow for `` X" `` strings, which both include escape sequences _and_ perform string interpolation.
 
 Example:
 ```knight
-OUTPUT `{greeting}, {name}, aged {age}!\nHow are you?`
+OUTPUT X"{greeting}, {name}, aged {age}!\nHow are you?"
 ```
 
 ### <a name=ext-list-literal></a> `{ ... }`: List Literal

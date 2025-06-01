@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 # See also `types/block.rb`
 section 'BLOCK' do
 	it 'should not eval its argument' do
@@ -7,8 +5,6 @@ section 'BLOCK' do
 		assert_runs %|BLOCK QUIT 1|
 		assert_runs %|BLOCK + a 4|
 	end
-
-	# TODO: ensure block functions accept it, and that `; = f BLOCK DUMP 3 : f` won't eval `f`.
 
 	it 'accepts blocks as its sole operand' do
 		assert_runs %|BLOCK BLOCK QUIT 1|

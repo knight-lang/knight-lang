@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'WHILE' do
 	it 'returns null' do
 		assert_result :null, 'WHILE 0 0'
@@ -17,6 +15,15 @@ section 'WHILE' do
 				; = sum + sum i
 				: = i + i 1
 			: sum
+		KNIGHT
+	end
+
+	it 'will return NULL, regardless of the condition' do
+		assert_result :null, %|WHILE FALSE 1234|
+		assert_result :null, <<~KNIGHT
+			; = i 0
+			: WHILE (< i 10)
+				: = i + i 1
 		KNIGHT
 	end
 

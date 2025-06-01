@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 # See also the `types/false.rb` file
 section 'FALSE' do
 	it 'is false' do

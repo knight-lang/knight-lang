@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section ':' do
 	it 'simply returns its argument' do
 		assert_result 4, %|: 4|

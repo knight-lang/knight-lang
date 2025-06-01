@@ -1,14 +1,14 @@
-require_relative '../../shared'
-
 section 'LENGTH' do
 	it 'returns 0 for NULL' do
 		assert_result 0, %|LENGTH NULL|
 	end
 
+=begin commented out section because no boolean conversions
 	it 'returns 1 for TRUE and 0 for FALSE' do
 		assert_result 1, %|LENGTH TRUE|
 		assert_result 0, %|LENGTH FALSE|
 	end
+=end
 
 	it 'returns the amount of digits in an integer' do
 		assert_result 1, %|LENGTH 0|
@@ -17,14 +17,17 @@ section 'LENGTH' do
 		assert_result 4, %|LENGTH 1111|
 	end
 
+=begin commented out section because no negative integers
 	it 'returns the same length for negative integers' do
 		assert_result 1, %|LENGTH ~0|
 		assert_result 1, %|LENGTH ~1|
 		assert_result 2, %|LENGTH ~59|
 		assert_result 4, %|LENGTH ~1111|
 	end
+=end
 
-	# Note that since basic Knight is ascii only, there's no difference between bytes and UTF8.
+	# Note that since basic Knight is ascii only, there's no difference between
+	# bytes and UTF8 chars.
 	it 'returns the amount of chars in strings' do
 		assert_result 0, %|LENGTH ""|
 		assert_result 3, %|LENGTH "foo"|

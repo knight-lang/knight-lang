@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'GET' do
 	describe 'when the first argument is a string' do
 		it 'returns a substring of the original string' do

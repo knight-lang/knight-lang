@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section ']' do
   it 'gets everything but first element of lists' do
     # test different types of list construction methods
@@ -7,8 +5,8 @@ section ']' do
     assert_result [2], %|]+,1 ,2|
     assert_result [2,3], %|]+@123|
     assert_result [1,1,1], %|]*,1 4|
-    assert_result [], %|]GET +@123 0 1|
-    assert_result [3], %|]SET +@123 0 1 @|
+    assert_result [], %|]GET +@123 0 1| if $sections.enabled? :GET
+    assert_result [3], %|]SET +@123 0 1 @| if $sections.enabled? :SET
   end
 
   it 'gets everything but first character of strings' do
@@ -17,8 +15,8 @@ section ']' do
     assert_result 'bcdef', %|]+'abc' 'def'|
     assert_result 'bc', %|]+'' 'abc'|
     assert_result 'bcabcabc', %|]*'abc' 3|
-    assert_result '', %|]GET 'abc' 0 1|
-    assert_result 'c', %|]SET 'abc' 0 1 ''|
+    assert_result '', %|]GET 'abc' 0 1| if $sections.enabled? :GET
+    assert_result 'c', %|]SET 'abc' 0 1 ''| if $sections.enabled? :SET
   end
 
   it 'only allows a string or list as the first operand', when_testing: :invalid_types do

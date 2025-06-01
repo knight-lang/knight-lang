@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section 'OUTPUT' do
 	before do
 		def assert_stdout(expected, expr)
@@ -9,6 +7,10 @@ section 'OUTPUT' do
 
 	it 'just prints a newline with no string' do
 		assert_stdout "\n", %|OUTPUT ""|
+	end
+
+	it 'should return NULL' do
+		assert_stdout "hello\nnull", %|DUMP OUTPUT "hello"|
 	end
 
 	it 'prints normally' do

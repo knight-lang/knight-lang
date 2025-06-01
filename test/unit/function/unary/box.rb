@@ -1,5 +1,3 @@
-require_relative '../../shared'
-
 section ',' do
   it 'converts normal arguments to a list of just that' do
     assert_result [0],  %|,0|
