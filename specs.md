@@ -525,7 +525,7 @@ The [Local Variables](#ext-local-variables) and [Methods](#ext-methods) extensio
 #### <a name=fn-block-examples></a> Examples
 Blocks defer execution
 ```nim
-; = random_0_to_9 BLOCK (RANDOM % 10)
+; = random_0_to_9 BLOCK (% RANDOM 10)
 ; OUTPUT CALL random_0_to_9 #=> 3
 : OUTPUT CALL random_0_to_9 #=> 5
 ```
